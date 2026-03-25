@@ -1,0 +1,29 @@
+In English, in Unity
+
+Adaptive solver, changing representation dynamically
+topology changing PD, cutting, tearing, fracturing (https://tiantianliu.cn/papers/li21chol/li21chol.html)
+Slider between PBD and VBD
+!Combine AVBD with a global solver
+!AVBD with higher order integrators
+	
+
+
+How to implement Plastic Deformation (can being crushed) - contrary to hyper-elastic meterials
+
+
+From most approximate to most physically detailed:
+1. Rigid body physics (games)
+2. Mass-spring systems
+	2.1 Position-Based Dynamics
+3. Finite Element Method
+4. Material Point Method
+5. Molecular Dynamics
+
+
+
+
+
+
+
+
+Mass-springs: once it pops due to large force, it stays like that (finds another stable state)
