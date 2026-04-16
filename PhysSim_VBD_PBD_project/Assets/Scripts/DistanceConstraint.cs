@@ -1,22 +1,15 @@
 using UnityEngine;
 
-public class DistanceConstraint
+public struct DistanceConstraint
 {
-    public ClothParticle p1;
-    public ClothParticle p2;
+    public int p1Idx; //storing particle indices
+    public int p2Idx;
     public float restLength;
 
-    public DistanceConstraint(ClothParticle a, ClothParticle b, float rL)
+    public DistanceConstraint(int particle1Index, int particle2Index, float restLength)
     {
-        p1 = a;
-        p2 = b;
-        restLength = rL;
-    }
-
-    public void Solve()
-    {
-        Vector3 delta = p2.position - p1.position;
-        float dist = delta.magnitude;
-        float diff = (dist - restLength) / dist;
+        p1Idx = particle1Index;
+        p2Idx = particle2Index;
+        this.restLength = restLength;
     }
 }
