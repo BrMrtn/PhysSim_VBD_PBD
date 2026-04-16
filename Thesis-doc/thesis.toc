@@ -1,0 +1,27 @@
+\select@language {magyar} \contentsline {chapter}{Kivonat}{i}{chapter*.2}%
+\select@language {english} \contentsline {chapter}{Abstract}{ii}{chapter*.3}%
+\select@language {english} \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\select@language {english} \contentsline {chapter}{\numberline {2}\LaTeX -eszközök}{2}{chapter.2}%
+\select@language {english} \contentsline {section}{\numberline {2.1}A szerkesztéshez használatos eszközök}{2}{section.2.1}%
+\select@language {english} \contentsline {section}{\numberline {2.2}A dokumentum lefordítása Windows alatt}{3}{section.2.2}%
+\select@language {english} \contentsline {section}{\numberline {2.3}Eszközök Linuxhoz}{4}{section.2.3}%
+\select@language {english} \contentsline {chapter}{\numberline {3}A dolgozat formai kivitele}{5}{chapter.3}%
+\select@language {english} \contentsline {section}{\numberline {3.1}A dolgozat kimérete}{5}{section.3.1}%
+\select@language {english} \contentsline {section}{\numberline {3.2}A dolgozat nyelve}{5}{section.3.2}%
+\select@language {english} \contentsline {section}{\numberline {3.3}A dokumentum nyomdatechnikai kivitele}{5}{section.3.3}%
+\select@language {english} \contentsline {chapter}{\numberline {4}A \LaTeX -sablon használata}{7}{chapter.4}%
+\select@language {english} \contentsline {section}{\numberline {4.1}Címkék és hivatkozások}{7}{section.4.1}%
+\select@language {english} \contentsline {section}{\numberline {4.2}Ábrák és táblázatok}{7}{section.4.2}%
+\select@language {english} \contentsline {section}{\numberline {4.3}Felsorolások és listák}{9}{section.4.3}%
+\select@language {english} \contentsline {section}{\numberline {4.4}Képletek}{10}{section.4.4}%
+\select@language {english} \contentsline {section}{\numberline {4.5}Irodalmi hivatkozások}{11}{section.4.5}%
+\select@language {english} \contentsline {section}{\numberline {4.6}A dolgozat szerkezete és a forrásfájlok}{14}{section.4.6}%
+\select@language {english} \contentsline {section}{\numberline {4.7}Alapadatok megadása}{16}{section.4.7}%
+\select@language {english} \contentsline {section}{\numberline {4.8}Új fejezet írása}{16}{section.4.8}%
+\select@language {english} \contentsline {section}{\numberline {4.9}Definíciók, tételek, példák}{16}{section.4.9}%
+\select@language {english} \contentsline {chapter}{Acknowledgements}{17}{chapter*.8}%
+\select@language {english} \contentsline {chapter}{Appendix}{18}{appendix*.9}%
+\select@language {english} \contentsline {section}{\numberline {A.1}Declaration on the Use of Generative Artificial Intelligence}{19}{section.A.1}%
+\select@language {english} \contentsline {section}{\numberline {A.2}A TeXstudio felülete}{20}{section.A.2}%
+\select@language {english} \contentsline {section}{\numberline {A.3}Válasz az ,,Élet, a világmindenség, meg minden'' kérdésére}{21}{section.A.3}%
+\select@language {english} \contentsline {chapter}{Bibliography}{18}{chapter*.8}%
