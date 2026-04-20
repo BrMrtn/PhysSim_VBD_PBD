@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using NUnit.Framework;
 using System;
 using System.Xml.Serialization;
 using Unity.VisualScripting;
@@ -15,6 +16,7 @@ public class ClothSimMeshBuilder
     private MeshFilter meshFilter;
 
     private Vector3[] vertices;
+    private Transform[] dots;
 
     public Vector3[] Build(MeshFilter _meshFilter)
     {
@@ -67,8 +69,9 @@ public class ClothSimMeshBuilder
         StretchMeshGeometryOnShortAxis(shortAxis, sizeArray[1], shortAxisScale);
 
         // Place a small spheres at each vertex
-        foreach (Vector3 vertex in vertices)
-            AddDot(vertex);
+        //dots = new Transform[vertices.Length];
+        //for (int i = 0; i < vertices.Length; i++)
+        //    dots[i] = AddDot(vertices[i]);
 
         return vertices;
     }
@@ -101,7 +104,7 @@ public class ClothSimMeshBuilder
         meshFilter.mesh.name = "PBD_ModifiedMesh";
     }
 
-    private void AddDot(Vector3 pos)
+    private Transform AddDot(Vector3 pos)
     {
         GameObject dot = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         dot.name = "Dot";
@@ -120,6 +123,22 @@ public class ClothSimMeshBuilder
         if (col != null)
         {
             GameObject.Destroy(col);
+        }
+
+        return dot.transform;
+    }
+
+    public void UpdateDotPositions(Vector3[] positions)
+    {
+        if (dots == null || positions == null || dots.Length != positions.Length)
+        {
+            Debug.LogWarning("Dots or positions array is invalid or lengths do not match.");
+            return;
+        }
+
+        for (int i = 0; i < positions.Length; i++)
+        {
+            dots[i].localPosition = positions[i];
         }
     }
 }
