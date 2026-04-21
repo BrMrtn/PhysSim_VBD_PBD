@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PBDClothSim : MonoBehaviour
+public class XPBDClothSim : MonoBehaviour
 {
     public int numSubsteps = 15;
     public float density = 0.2f; // kg/m^2
