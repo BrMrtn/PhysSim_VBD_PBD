@@ -15365,9 +15365,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PBDClothSim
   numSubsteps: 15
-  density: 0.2
+  density: 1
   stretchingCompliance: 0
   bendingCompliance: 1
+  handleSelfCollisions: 1
+  particleThickness: 0.01
+  clothClothFriction: 0
+  hashSpacing: 0.02
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
