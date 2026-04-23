@@ -13,6 +13,7 @@ public class XPBDClothSim : MonoBehaviour
     public float particleThickness = 0.01f;
     [Range(0f, 1f)] public float clothClothFriction = 0.0f;
     public float hashSpacing = 0.02f;
+    public bool addInitNoise = false;
 
     private int n;
     private Vector3 gravity = new Vector3(0, -9.81f, 0);
@@ -60,31 +61,30 @@ public class XPBDClothSim : MonoBehaviour
         restPositions = new Vector3[n];
 
         invMasses = new float[n];
-        
-        int[] tris = mesh.triangles;
-        for (int i = 0; i < tris.Length; i += 3)
-        {
-            int v1 = tris[i];
-            int v2 = tris[i + 1];
-            int v3 = tris[i + 2];
-
-            Vector3 p1 = positions[v1];
-            Vector3 p2 = positions[v2];
-            Vector3 p3 = positions[v3];
-
-            float area = Vector3.Cross(p2 - p1, p3 - p1).magnitude * 0.5f;
-            float triMass = area * density;
-            float pInvMass = triMass > 0.0f ? 1.0f / triMass / 3.0f : 0.0f;
-
-            invMasses[v1] += pInvMass;
-            invMasses[v2] += pInvMass;
-            invMasses[v3] += pInvMass;
-        }
 
         // Convert local-space particle positions to world-space
-        //for (int i = 0; i < n; i++)
-        //    positions[i] = tr.TransformPoint(positions[i]);
         tr.TransformPoints(positions);
+
+        //int[] tris = mesh.triangles;
+        //for (int i = 0; i < tris.Length; i += 3)
+        //{
+        //    int v1 = tris[i];
+        //    int v2 = tris[i + 1];
+        //    int v3 = tris[i + 2];
+
+        //    Vector3 p1 = positions[v1];
+        //    Vector3 p2 = positions[v2];
+        //    Vector3 p3 = positions[v3];
+
+        //    float area = Vector3.Cross(p2 - p1, p3 - p1).magnitude * 0.5f;
+        //    float triMass = area * density;
+        //    float pInvMass = triMass > 0.0f ? 1.0f / triMass / 3.0f : 0.0f;
+
+        //    invMasses[v1] += pInvMass;
+        //    invMasses[v2] += pInvMass;
+        //    invMasses[v3] += pInvMass;
+        //}
+        Array.Fill(invMasses, 1.0f);
 
         float minX = float.MaxValue;
         float maxX = float.MinValue;
@@ -108,10 +108,11 @@ public class XPBDClothSim : MonoBehaviour
 
         InitConstraints();
 
-        // Add small random noise to the positions to break perfect symmetries
-        for (int i = 0; i < n; i++)
-            if (invMasses[i] > 0f)
-                positions[i] += UnityEngine.Random.insideUnitSphere * 0.01f;
+        //Add small random noise to the positions to break perfect symmetries
+        if (addInitNoise)
+            for (int i = 0; i < n; i++)
+                if (invMasses[i] > 0f)
+                    positions[i] += UnityEngine.Random.insideUnitSphere * 0.01f;
 
         Array.Copy(positions, restPositions, n);
 

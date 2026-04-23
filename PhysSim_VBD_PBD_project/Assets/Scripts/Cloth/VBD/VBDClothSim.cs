@@ -5,8 +5,8 @@ using UnityEngine;
 public class VBDClothSim : MonoBehaviour
 {
     [Header("Time / Solver")]
-    public int numSubsteps = 15;
-    public int vbdIterations = 8;
+    public int numSubsteps = 1;
+    public int numIterations = 8;
 
     [Header("Material")]
     public float density = 0.2f; // kg/m^2
@@ -287,7 +287,7 @@ public class VBDClothSim : MonoBehaviour
                 positions[i] = previousPositions[i] + velocities[i] * sdt;
             }
 
-            for (int iter = 0; iter < vbdIterations; iter++)
+            for (int iter = 0; iter < numIterations; iter++)
                 SolveElasticVBDPass(invH2, stretchK, bendK);
 
             for (int i = 0; i < n; i++)
