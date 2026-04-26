@@ -2,7 +2,7 @@ using UnityEngine;
 
 public struct DistanceConstraint
 {
-    public int p1Idx; //storing particle indices
+    public int p1Idx;
     public int p2Idx;
     public float restLength;
 
