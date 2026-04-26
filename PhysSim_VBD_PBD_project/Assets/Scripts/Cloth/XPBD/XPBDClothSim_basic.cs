@@ -13,27 +13,25 @@ namespace XPBD_stripped_down_version
         public float shearCompliance = 0.0001f;
         public float bendingCompliance = 0.01f;
 
-        private int numVerts;
         private Vector3 gravity = new Vector3(0, -9.81f, 0);
 
         private MeshFilter meshFilter;
         private Mesh mesh;
         private Transform tr;
-        private Vector3[] renderVertices;
 
+        private int numVerts;
         private Vector3[] positions;
         private Vector3[] velocities;
         private Vector3[] predictedPositions;
         private float[] invMasses;
 
         private int[] meshToGrid;
+        private Vector3[] renderVertices;
 
         private struct DistanceConstraint
         {
-            public int p1Idx;
-            public int p2Idx;
-            public float restLength;
-            public float compliance;
+            public int p1Idx, p2Idx;
+            public float restLength, compliance;
         }
 
         private DistanceConstraint[] constraints;
@@ -42,58 +40,63 @@ namespace XPBD_stripped_down_version
         {
             meshFilter = gameObject.GetComponent<MeshFilter>();
             mesh = meshFilter.mesh;
-            tr = meshFilter.transform;
+            tr = transform;
             mesh.MarkDynamic();
 
-            if (meshFilter == null || mesh == null)
-            {
-                Debug.LogWarning("No MeshFilter or Mesh found!");
-                return;
-            }
-
             MeshCollider meshCollider = gameObject.GetComponent<MeshCollider>();
-            if (meshCollider != null)
+            if (meshCollider != null) Destroy(meshCollider);
+
+            Vector3[] localVerts = mesh.vertices;
+            numVerts = localVerts.Length;
+            renderVertices = new Vector3[numVerts];
+
+            // Get all different x and y values for numX and numY
+            float eps = 0.001f;
+            var xCoords = new List<float>();
+            var yCoords = new List<float>();
+
+            foreach (var v in localVerts)
             {
-                if (Application.isPlaying) Destroy(meshCollider);
-                else DestroyImmediate(meshCollider);
+                if (!xCoords.Any(x => Mathf.Abs(x - v.x) < eps)) xCoords.Add(v.x);
+                if (!yCoords.Any(y => Mathf.Abs(y - v.y) < eps)) yCoords.Add(v.y);
             }
 
-            positions = mesh.vertices;
-            numVerts = positions.Length;
+            xCoords.Sort();
+            yCoords.Sort();
+
+            int numX = xCoords.Count;
+            int numY = yCoords.Count;
+
+            positions = new Vector3[numVerts];
             velocities = new Vector3[numVerts];
             predictedPositions = new Vector3[numVerts];
-            renderVertices = new Vector3[numVerts];
             invMasses = new float[numVerts];
-
-            // Convert local-space particle positions to world-space
-            tr.TransformPoints(positions);
-
-            // TODO: Find the coordinates for which invMass should be set to 0.
-
-
             Array.Fill(invMasses, 1.0f);
 
-            float minX = float.MaxValue;
-            float maxX = float.MinValue;
-            float maxY = float.MinValue;
+            for (int iy = 0; iy < numY; iy++)
+                for (int ix = 0; ix < numX; ix++)
+                {
+                    int idx = iy * numX + ix;
+                    Vector3 localPos = new Vector3(xCoords[ix], yCoords[iy], 0f);
+                    positions[idx] = tr.TransformPoint(localPos);
+                }
 
-            for (int i = 0; i < numVerts; i++)
+            int topLeft = (numY - 1) * numX;
+            int topRight = (numY - 1) * numX + (numX - 1);
+
+            invMasses[topLeft] = 0f;
+            invMasses[topRight] = 0f;
+
+            // Map each mesh vertex to its grid particle index
+            meshToGrid = new int[numVerts];
+            for (int vi = 0; vi < numVerts; vi++)
             {
-                if (positions[i].x < minX) minX = positions[i].x;
-                if (positions[i].x > maxX) maxX = positions[i].x;
-                if (positions[i].y > maxY) maxY = positions[i].y;
+                int ix = xCoords.FindIndex(x => Mathf.Abs(x - localVerts[vi].x) < eps);
+                int iy = yCoords.FindIndex(y => Mathf.Abs(y - localVerts[vi].y) < eps);
+                meshToGrid[vi] = iy * numX + ix;
             }
 
-            float eps = 0.0001f;
-            for (int i = 0; i < numVerts; i++)
-            {
-                float x = positions[i].x;
-                float y = positions[i].y;
-                if ((y > maxY - eps) && (x < minX + eps || x > maxX - eps))
-                    invMasses[i] = 0f;
-            }
-
-            InitConstraints();
+            InitConstraints(numX, numY);
         }
 
         void FixedUpdate()
@@ -141,91 +144,63 @@ namespace XPBD_stripped_down_version
                 }
             }
 
-            // update mesh vertices
             for (int i = 0; i < numVerts; i++)
-                renderVertices[i] = tr.InverseTransformPoint(positions[i]); // TODO renderVertices might be used wrong
+                renderVertices[i] = tr.InverseTransformPoint(positions[meshToGrid[i]]);
 
             mesh.SetVertices(renderVertices);
             mesh.RecalculateNormals();
         }
-        private void InitConstraints()
+
+        private void InitConstraints(int numX, int numY)
         {
-            // Determine grid dimensions (numX, numY)
-            var xCoords = new List<float>();
-            var yCoords = new List<float>();
-            var zCoords = new List<float>();
-            float epsilon = 0.001f;
-
-            foreach (var v in positions)
+            var offsets = new int[]
             {
-                if (!xCoords.Any(x => Mathf.Abs(x - v.x) < epsilon)) xCoords.Add(v.x);
-                if (!yCoords.Any(y => Mathf.Abs(y - v.y) < epsilon)) yCoords.Add(v.y);
-                if (!zCoords.Any(z => Mathf.Abs(z - v.z) < epsilon)) zCoords.Add(v.z);
-            }
-
-            xCoords.Sort();
-            yCoords.Sort();
-            zCoords.Sort();
-
-            int numX, numY;
-            bool isXZ = zCoords.Count > yCoords.Count;
-
-            if (isXZ)
+                0, 0,  1, 0,  // stretch horizontal
+                0, 0,  0, 1,  // stretch vertical
+                0, 0,  1, 1,  // shear
+                1, 0,  0, 1,  // shear (other)
+                0, 0,  2, 0,  // bend horizontal
+                0, 0,  0, 2,  // bend vertical
+            };
+            var compliances = new float[]
             {
-                numX = xCoords.Count;
-                numY = zCoords.Count;
-            }
-            else
-            {
-                numX = xCoords.Count;
-                numY = yCoords.Count;
-            }
-
-            // Map particles to a grid
-            var particleGridMap = new int[numX, numY];
-            for (int i = 0; i < numVerts; i++)
-            {
-                var p = positions[i];
-                int x = xCoords.FindIndex(c => Mathf.Abs(c - p.x) < epsilon);
-                int y = isXZ ? zCoords.FindIndex(c => Mathf.Abs(c - p.z) < epsilon) : yCoords.FindIndex(c => Mathf.Abs(c - p.y) < epsilon);
-                if (x != -1 && y != -1)
-                {
-                    particleGridMap[x, y] = i;
-                }
-            }
+                stretchingCompliance, stretchingCompliance,
+                shearCompliance,      shearCompliance,
+                bendingCompliance,    bendingCompliance
+            };
 
             var constraintsList = new List<DistanceConstraint>();
-            var offsets = new int[] { 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 2, 0, 0, 2, 0 };
-            var compliances = new float[] { stretchingCompliance, stretchingCompliance, shearCompliance, shearCompliance, bendingCompliance, bendingCompliance };
 
-            for (int constType = 0; constType < 6; constType++)
+            for (int type = 0; type < 6; type++)
             {
-                for (int i = 0; i < numX; i++)
-                {
-                    for (int j = 0; j < numY; j++)
-                    {
-                        int p = 4 * constType;
-                        int i0 = i + offsets[p];
-                        int j0 = j + offsets[p + 1];
-                        int i1 = i + offsets[p + 2];
-                        int j1 = j + offsets[p + 3];
+                int p = type * 4;
+                int offset_i0 = offsets[p];
+                int offset_j0 = offsets[p + 1];
+                int offset_i1 = offsets[p + 2];
+                int offset_j1 = offsets[p + 3];
 
+                for (int iy = 0; iy < numY; iy++)
+                    for (int ix = 0; ix < numX; ix++)
+                    {
+                        int i0 = ix + offset_i0;
+                        int j0 = iy + offset_j0;
+                        int i1 = ix + offset_i1;
+                        int j1 = iy + offset_j1;
                         if (i0 < numX && j0 < numY && i1 < numX && j1 < numY)
                         {
-                            int p1Idx = particleGridMap[i0, j0];
-                            int p2Idx = particleGridMap[i1, j1];
-
+                            int p1 = j0 * numX + i0;
+                            int p2 = j1 * numX + i1;
                             constraintsList.Add(new DistanceConstraint
                             {
-                                p1Idx = p1Idx,
-                                p2Idx = p2Idx,
-                                restLength = Vector3.Distance(positions[p1Idx], positions[p2Idx]),
-                                compliance = compliances[constType]
+                                p1Idx = p1,
+                                p2Idx = p2,
+                                restLength = Vector3.Distance(positions[p1], positions[p2]),
+                                compliance = compliances[type]
                             });
                         }
                     }
-                }
             }
+
             constraints = constraintsList.ToArray();
         }
     }
