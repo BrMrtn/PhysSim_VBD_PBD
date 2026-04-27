@@ -34,12 +34,11 @@ public class SpatialHash
         return Math.Abs(h) % tableSize;
     }
 
-    private int IntCoord(float coord) => Mathf.FloorToInt(coord / spacing);
+    private int IntCoord(float coord) => Mathf.FloorToInt(coord / spacing); // particles in the same cell will have the same integer coordinates
 
-    private int HashPos(Vector3[] pos, int id) // returns the position of the particle in the hash table
+    private int HashPos(Vector3 pos) // returns the position of the particle in the hash table
     {
-        Vector3 p = pos[id];
-        return HashCoords(IntCoord(p.x), IntCoord(p.y), IntCoord(p.z));
+        return HashCoords(IntCoord(pos.x), IntCoord(pos.y), IntCoord(pos.z));
     }
 
     public void Create(Vector3[] pos)
@@ -51,37 +50,35 @@ public class SpatialHash
 
         for (int i = 0; i < numObjects; i++)
         {
-            int h = HashPos(pos, i);
-            cellStart[h]++;
+            int h = HashPos(pos[i]);
+            cellStart[h]++; // count how many particles are in each cell
         }
 
         int start = 0;
         for (int i = 0; i < tableSize; i++)
         {
             start += cellStart[i];
-            cellStart[i] = start;
+            cellStart[i] = start; // cellStart[i] and cellStart[i+1] are now the indices in cellEntries where the entries for cell i start and end
         }
-        cellStart[tableSize] = start;
+        cellStart[tableSize] = start; // guard entry for iteration
 
         for (int i = 0; i < numObjects; i++)
         {
-            int h = HashPos(pos, i);
+            int h = HashPos(pos[i]);
             cellStart[h]--;
-            cellEntries[cellStart[h]] = i;
+            cellEntries[cellStart[h]] = i; // particles in the same cell are next to each other
         }
     }
 
-    private void Query(Vector3[] pos, int nr, float maxDist)
+    private void Query(Vector3 pos, float maxDist) // query a block of cells around the position
     {
-        Vector3 p = pos[nr];
-        int x0 = IntCoord(p.x - maxDist);
-        int y0 = IntCoord(p.y - maxDist);
-        int z0 = IntCoord(p.z - maxDist);
-
-        int x1 = IntCoord(p.x + maxDist);
-        int y1 = IntCoord(p.y + maxDist);
-        int z1 = IntCoord(p.z + maxDist);
-
+        int x0 = IntCoord(pos.x - maxDist);
+        int y0 = IntCoord(pos.y - maxDist);
+        int z0 = IntCoord(pos.z - maxDist);
+        
+        int x1 = IntCoord(pos.x + maxDist);
+        int y1 = IntCoord(pos.y + maxDist);
+        int z1 = IntCoord(pos.z + maxDist);
         querySize = 0;
 
         for (int xi = x0; xi <= x1; xi++)
@@ -108,8 +105,8 @@ public class SpatialHash
 
         for (int i = 0; i < maxNumObjects; i++)
         {
-            firstAdjId[i] = adjIds.Count;
-            Query(pos, i, maxDist);
+            firstAdjId[i] = adjIds.Count; // store where i's neighbors will start in adjIds
+            Query(pos[i], maxDist);
 
             for (int j = 0; j < querySize; j++)
             {
