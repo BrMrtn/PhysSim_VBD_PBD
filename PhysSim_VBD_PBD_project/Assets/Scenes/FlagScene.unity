@@ -520,6 +520,7 @@ MonoBehaviour:
   handleSelfCollisions: 1
   logMsPerFrame: 1
   selfCollisionFriction: 1
+  addInitNoise: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
