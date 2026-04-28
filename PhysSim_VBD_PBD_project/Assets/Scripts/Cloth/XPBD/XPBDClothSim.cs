@@ -18,6 +18,7 @@ public class XPBDClothSim : MonoBehaviour
     private const int logEveryNFrames = 10;
     private float spacing;
     private float thickness;
+    public SphereCollider sphereCollider;
 
     private string performanceText = "XPBD Simulation: -- ms/frame";
     private GUIStyle performanceStyle;
@@ -61,7 +62,7 @@ public class XPBDClothSim : MonoBehaviour
         int numY = yCoords.Count;
 
         if (numX > 1) spacing = xCoords[1] - xCoords[0];
-        thickness = spacing * 0.9f; // could also be 1f
+        thickness = spacing;
 
         positions = new Vector3[numVerts];
         velocities = new Vector3[numVerts];
@@ -137,6 +138,7 @@ public class XPBDClothSim : MonoBehaviour
                 positions[id1] -= grad * (s * w1);
             }
 
+            if (sphereCollider != null) SolveSphereCollision();
             if (handleSelfCollisions) SolveSelfCollisions();
 
             for (int i = 0; i < numVerts; i++)
@@ -259,6 +261,27 @@ public class XPBDClothSim : MonoBehaviour
                     });
                 }
             }
+    }
+
+    private void SolveSphereCollision()
+    {
+        Vector3 center = sphereCollider.transform.TransformPoint(sphereCollider.center);
+        float radius = sphereCollider.radius * sphereCollider.transform.lossyScale.x * 1.1f;
+        for (int i = 0; i < numVerts; i++)
+        {
+            if (invMasses[i] == 0f) continue;
+            Vector3 delta = positions[i] - center;
+            float dist = delta.magnitude;
+            if (dist < radius)
+            {
+                Vector3 correction = delta.normalized * (radius - dist);
+                positions[i] += correction;
+                Vector3 v = positions[i] - previousPosition[i];
+                Vector3 vNormal = Vector3.Dot(v, delta.normalized) * delta.normalized;
+                Vector3 vTangent = v - vNormal;
+                velocities[i] = vTangent + vNormal * selfCollisionFriction;
+            }
+        }
     }
 
     private void SolveSelfCollisions()
