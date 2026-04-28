@@ -15,11 +15,9 @@ public class XPBDClothSim : MonoBehaviour
     public bool addInitNoise = false;
     // TODO damping
 
-    // TODO spacing and thickness should be set automatically
-    private float spacing = 0.1f;
-    private float thickness = 0.01f;
-
     private const int logEveryNFrames = 10;
+    private float spacing;
+    private float thickness;
 
     private string performanceText = "XPBD Simulation: -- ms/frame";
     private GUIStyle performanceStyle;
@@ -33,7 +31,7 @@ public class XPBDClothSim : MonoBehaviour
     private int numVerts;
     private Vector3[] positions;
     private Vector3[] velocities;
-    private Vector3[] predictedPositions;
+    private Vector3[] previousPosition;
     private Vector3[] restPositions;
     private float[] invMasses;
 
@@ -62,9 +60,12 @@ public class XPBDClothSim : MonoBehaviour
         int numX = xCoords.Count;
         int numY = yCoords.Count;
 
+        if (numX > 1) spacing = xCoords[1] - xCoords[0];
+        thickness = spacing * 0.9f; // could also be 1f
+
         positions = new Vector3[numVerts];
         velocities = new Vector3[numVerts];
-        predictedPositions = new Vector3[numVerts];
+        previousPosition = new Vector3[numVerts];
         restPositions = new Vector3[numVerts];
         invMasses = new float[numVerts];
         Array.Fill(invMasses, 1.0f);
@@ -80,10 +81,9 @@ public class XPBDClothSim : MonoBehaviour
         if (addInitNoise)
             for (int i = 0; i < numVerts; i++)
                 if (invMasses[i] > 0f)
-                    positions[i] += UnityEngine.Random.insideUnitSphere * 0.01f;
+                    positions[i] += UnityEngine.Random.insideUnitSphere * 0.001f;
 
-        //spacing = constraints[0].restLength;
-        //thickness = spacing * 0.5f;
+        
         spatialHash = new SpatialHash(spacing, numVerts);
     }
 
@@ -109,7 +109,7 @@ public class XPBDClothSim : MonoBehaviour
             {
                 if (invMasses[i] == 0f) continue;
                 velocities[i] += gravity * sdt;
-                predictedPositions[i] = positions[i];
+                previousPosition[i] = positions[i];
                 positions[i] += velocities[i] * sdt;
             }
 
@@ -142,7 +142,7 @@ public class XPBDClothSim : MonoBehaviour
             for (int i = 0; i < numVerts; i++)
             {
                 if (invMasses[i] == 0f) continue;
-                velocities[i] = (positions[i] - predictedPositions[i]) / sdt;
+                velocities[i] = (positions[i] - previousPosition[i]) / sdt;
             }
         }
 
@@ -196,7 +196,7 @@ public class XPBDClothSim : MonoBehaviour
         int topRight = (numY - 1) * numX + (numX - 1);
 
         invMasses[topLeft] = 0f;
-        //invMasses[topRight] = 0f;
+        invMasses[topRight] = 0f;
     }
 
     private void BuildSimulationGrid(List<float> xCoords, List<float> yCoords, int numX, int numY)
@@ -289,24 +289,22 @@ public class XPBDClothSim : MonoBehaviour
 
                 float minDist = thickness;
                 if (restDist2 < thickness2)
-                    minDist = Mathf.Sqrt(restDist2);
+                    minDist = Mathf.Sqrt(restDist2); // minDist is min(thickness, restDist), so collision detection doesn't clash with constraints
 
                 float dist = Mathf.Sqrt(dist2);
                 Vector3 correction = delta * ((minDist - dist) / dist);
                 positions[id0] += 0.5f * correction;
                 positions[id1] -= 0.5f * correction;
 
-                if (selfCollisionFriction > 0f)
-                {
-                    Vector3 vel0 = positions[id0] - predictedPositions[id0];
-                    Vector3 vel1 = positions[id1] - predictedPositions[id1];
-                    Vector3 avgVel = (vel0 + vel1) * 0.5f;
+                Vector3 v0 = positions[id0] - previousPosition[id0];
+                Vector3 v1 = positions[id1] - previousPosition[id1];
+                Vector3 vAvg = 0.5f * (v0 + v1);
 
-                    Vector3 vel0Correction = (vel0 - avgVel) * selfCollisionFriction;
-                    Vector3 vel1Correction = (vel1 - avgVel) * selfCollisionFriction;
-                    predictedPositions[id0] += vel0Correction;
-                    predictedPositions[id1] += vel1Correction;
-                }
+                Vector3 v0Corr = vAvg - v0;
+                Vector3 v1Corr = vAvg - v1;
+
+                positions[id0] += v0Corr * selfCollisionFriction;
+                positions[id1] += v1Corr * selfCollisionFriction;
             }
         }
     }
