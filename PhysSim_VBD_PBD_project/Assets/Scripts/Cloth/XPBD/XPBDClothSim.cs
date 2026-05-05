@@ -6,19 +6,19 @@ using UnityEngine;
 public class XPBDClothSim : MonoBehaviour
 {
     public int numSubsteps = 15;
-    public float stretchingCompliance = 0.0f;
+    public float stretchingCompliance = 1e-6f;
     public float shearCompliance = 0.0001f;
-    public float bendingCompliance = 0.01f;
+    public float bendingCompliance = 0.001f;
     public bool handleSelfCollisions = true;
     public bool logMsPerFrame = true;
     public float selfCollisionFriction = 0.0f;
     public bool addInitNoise = false;
+    public event Action OnUpdate;
     // TODO damping
 
     private const int logEveryNFrames = 10;
     private float spacing;
     private float thickness;
-    public SphereCollider sphereCollider;
 
     private string performanceText = "XPBD Simulation: -- ms/frame";
     private GUIStyle performanceStyle;
@@ -29,20 +29,21 @@ public class XPBDClothSim : MonoBehaviour
     private Mesh mesh;
     private Transform tr;
 
-    private int numVerts;
-    private Vector3[] positions;
-    private Vector3[] velocities;
-    private Vector3[] previousPosition;
-    private Vector3[] restPositions;
-    private float[] invMasses;
+    [HideInInspector] public int numVerts;
+    [HideInInspector] public int numX;
+    [HideInInspector] public int numY;
+    [HideInInspector] public Vector3[] positions;
+    [HideInInspector] public Vector3[] velocities;
+    [HideInInspector] public Vector3[] previousPosition;
+    [HideInInspector] public Vector3[] restPositions;
+    [HideInInspector] public float[] invMasses;
 
     private int[] meshToGrid;
     private Vector3[] renderVertices;
     private SpatialHash spatialHash;
 
-    private DistanceConstraint[] constraints;
-
-    void Start()
+    [HideInInspector] public DistanceConstraint[] constraints;
+    void Awake()
     {
         meshFilter = gameObject.GetComponent<MeshFilter>();
         mesh = meshFilter.mesh;
@@ -58,8 +59,8 @@ public class XPBDClothSim : MonoBehaviour
         float eps = 0.001f;
         List<float> xCoords = GetDistinctSortedCoordinates(localVerts, v => v.x, eps);
         List<float> yCoords = GetDistinctSortedCoordinates(localVerts, v => v.y, eps);
-        int numX = xCoords.Count;
-        int numY = yCoords.Count;
+        numX = xCoords.Count;
+        numY = yCoords.Count;
 
         if (numX > 1) spacing = xCoords[1] - xCoords[0];
         thickness = spacing;
@@ -69,14 +70,13 @@ public class XPBDClothSim : MonoBehaviour
         previousPosition = new Vector3[numVerts];
         restPositions = new Vector3[numVerts];
         invMasses = new float[numVerts];
-        Array.Fill(invMasses, 1.0f);
+        Array.Fill(invMasses, 1f);
 
-        BuildSimulationGrid(xCoords, yCoords, numX, numY);
+        BuildSimulationGrid(xCoords, yCoords);
         Array.Copy(positions, restPositions, numVerts);
 
-        SetFixedVertices(numX, numY);
-        BuildMeshToGrid(localVerts, xCoords, yCoords, eps, numX);
-        InitConstraints(numX, numY);
+        BuildMeshToGrid(localVerts, xCoords, yCoords, eps);
+        InitConstraints();
 
         //Add small random noise to the positions to break perfect symmetries
         if (addInitNoise)
@@ -84,7 +84,6 @@ public class XPBDClothSim : MonoBehaviour
                 if (invMasses[i] > 0f)
                     positions[i] += UnityEngine.Random.insideUnitSphere * 0.001f;
 
-        
         spatialHash = new SpatialHash(spacing, numVerts);
     }
 
@@ -93,14 +92,15 @@ public class XPBDClothSim : MonoBehaviour
         bool shouldLogPerformance = logMsPerFrame && Time.frameCount % logEveryNFrames == 0;
         double simStartTime = shouldLogPerformance ? Time.realtimeSinceStartupAsDouble : 0;
 
-        float sdt = Time.deltaTime / numSubsteps;
+        float dt = 1 / 24f; // Time.deltaTime
+        float sdt = dt / numSubsteps;
         float invSdt2 = 1.0f / (sdt * sdt);
         float maxVelocity = 0.2f * thickness / sdt;
 
         if (handleSelfCollisions)
         {
             spatialHash.Create(positions);
-            float maxTravelDistance = maxVelocity * Time.deltaTime;
+            float maxTravelDistance = maxVelocity * dt;
             spatialHash.QueryAll(positions, maxTravelDistance);
         }
 
@@ -110,6 +110,11 @@ public class XPBDClothSim : MonoBehaviour
             {
                 if (invMasses[i] == 0f) continue;
                 velocities[i] += gravity * sdt;
+
+                float v = velocities[i].magnitude;
+                if (v > maxVelocity)
+                    velocities[i] *= maxVelocity / v;
+
                 previousPosition[i] = positions[i];
                 positions[i] += velocities[i] * sdt;
             }
@@ -138,8 +143,8 @@ public class XPBDClothSim : MonoBehaviour
                 positions[id1] -= grad * (s * w1);
             }
 
-            if (sphereCollider != null) SolveSphereCollision();
             if (handleSelfCollisions) SolveSelfCollisions();
+            OnUpdate?.Invoke();
 
             for (int i = 0; i < numVerts; i++)
             {
@@ -192,16 +197,7 @@ public class XPBDClothSim : MonoBehaviour
         return coords;
     }
 
-    private void SetFixedVertices(int numX, int numY)
-    {
-        int topLeft = (numY - 1) * numX;
-        int topRight = (numY - 1) * numX + (numX - 1);
-
-        invMasses[topLeft] = 0f;
-        invMasses[topRight] = 0f;
-    }
-
-    private void BuildSimulationGrid(List<float> xCoords, List<float> yCoords, int numX, int numY)
+    private void BuildSimulationGrid(List<float> xCoords, List<float> yCoords)
     {
         for (int iy = 0; iy < numY; iy++)
             for (int ix = 0; ix < numX; ix++)
@@ -212,7 +208,7 @@ public class XPBDClothSim : MonoBehaviour
             }
     }
 
-    private void BuildMeshToGrid(Vector3[] localVerts, List<float> xCoords, List<float> yCoords, float eps, int numX)
+    private void BuildMeshToGrid(Vector3[] localVerts, List<float> xCoords, List<float> yCoords, float eps)
     {
         meshToGrid = new int[numVerts];
         for (int i = 0; i < numVerts; i++)
@@ -223,21 +219,21 @@ public class XPBDClothSim : MonoBehaviour
         }
     }
 
-    private void InitConstraints(int numX, int numY)
+    private void InitConstraints()
     {
         var constraintsList = new List<DistanceConstraint>();
 
-        AddConstraint(constraintsList, 0, 0, 1, 0, stretchingCompliance, numX, numY);     // stretch horizontal
-        AddConstraint(constraintsList, 0, 0, 0, 1, stretchingCompliance, numX, numY);     // stretch vertical
-        AddConstraint(constraintsList, 0, 0, 1, 1, shearCompliance, numX, numY);          // shear down
-        AddConstraint(constraintsList, 1, 0, 0, 1, shearCompliance, numX, numY);          // shear up
-        AddConstraint(constraintsList, 0, 0, 2, 0, bendingCompliance, numX, numY);        // bend horizontal
-        AddConstraint(constraintsList, 0, 0, 0, 2, bendingCompliance, numX, numY);        // bend vertical
+        AddConstraint(constraintsList, 0, 0, 1, 0, stretchingCompliance);     // stretch horizontal
+        AddConstraint(constraintsList, 0, 0, 0, 1, stretchingCompliance);     // stretch vertical
+        AddConstraint(constraintsList, 0, 0, 1, 1, shearCompliance);          // shear down
+        AddConstraint(constraintsList, 1, 0, 0, 1, shearCompliance);          // shear up
+        AddConstraint(constraintsList, 0, 0, 2, 0, bendingCompliance);        // bend horizontal
+        AddConstraint(constraintsList, 0, 0, 0, 2, bendingCompliance);        // bend vertical
 
         constraints = constraintsList.ToArray();
     }
 
-    private void AddConstraint(List<DistanceConstraint> constraintsList, int offset_i0, int offset_j0, int offset_i1, int offset_j1, float compliance, int numX, int numY)
+    private void AddConstraint(List<DistanceConstraint> constraintsList, int offset_i0, int offset_j0, int offset_i1, int offset_j1, float compliance)
     {
         for (int iy = 0; iy < numY; iy++)
             for (int ix = 0; ix < numX; ix++)
@@ -261,27 +257,6 @@ public class XPBDClothSim : MonoBehaviour
                     });
                 }
             }
-    }
-
-    private void SolveSphereCollision()
-    {
-        Vector3 center = sphereCollider.transform.TransformPoint(sphereCollider.center);
-        float radius = sphereCollider.radius * sphereCollider.transform.lossyScale.x * 1.1f;
-        for (int i = 0; i < numVerts; i++)
-        {
-            if (invMasses[i] == 0f) continue;
-            Vector3 delta = positions[i] - center;
-            float dist = delta.magnitude;
-            if (dist < radius)
-            {
-                Vector3 correction = delta.normalized * (radius - dist);
-                positions[i] += correction;
-                Vector3 v = positions[i] - previousPosition[i];
-                Vector3 vNormal = Vector3.Dot(v, delta.normalized) * delta.normalized;
-                Vector3 vTangent = v - vNormal;
-                velocities[i] = vTangent + vNormal * selfCollisionFriction;
-            }
-        }
     }
 
     private void SolveSelfCollisions()

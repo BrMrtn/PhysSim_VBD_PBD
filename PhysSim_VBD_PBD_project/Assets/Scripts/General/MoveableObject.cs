@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Moveable : MonoBehaviour
+public class MoveableObject : MonoBehaviour
 {
     private float zDepth;
     private Camera mainCamera;
