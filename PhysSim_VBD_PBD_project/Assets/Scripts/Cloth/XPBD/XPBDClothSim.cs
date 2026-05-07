@@ -6,20 +6,21 @@ using UnityEngine;
 public class XPBDClothSim : MonoBehaviour
 {
     public int numSubsteps = 15;
+
     public float stretchingCompliance = 1e-6f;
     public float shearCompliance = 0.0001f;
     public float bendingCompliance = 0.001f;
+
     public bool handleSelfCollisions = true;
-    public bool logMsPerFrame = true;
     public float selfCollisionFriction = 0.0f;
+    public bool logMsPerFrame = true;
     public bool addInitNoise = false;
     public event Action OnUpdate;
-    // TODO damping
 
-    private const int logEveryNFrames = 10;
     private float spacing;
     private float thickness;
 
+    private const int logEveryNFrames = 10;
     private string performanceText = "XPBD Simulation: -- ms/frame";
     private GUIStyle performanceStyle;
 

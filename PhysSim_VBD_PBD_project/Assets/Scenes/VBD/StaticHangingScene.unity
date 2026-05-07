@@ -185,55 +185,13 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 678287667}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 678287668}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 678287669}
   m_SourcePrefab: {fileID: 100100000, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
 --- !u!1 &678287662 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
   m_PrefabInstance: {fileID: 678287661}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &678287667
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 678287662}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97629d8e058f2e94da9750bf5d49ea97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GPT.GPT_VBDClothSim
-  numSubsteps: 15
-  vbdIterations: 8
-  collisionIterations: 1
-  density: 0.2
-  stretchingCompliance: 0
-  bendingCompliance: 1
-  velocityDamping: 0
-  handleSelfCollisions: 1
-  particleThickness: 0.01
-  clothClothFriction: 0
-  hashSpacing: 0.02
-  collisionRebuildFrequency: 1
-  hessianRegularization: 0.00000001
-  maxLocalStep: 0.02
-  meshFilter: {fileID: 0}
-  mesh: {fileID: 0}
-  tr: {fileID: 0}
-  n: 0
-  positions: []
-  previousPositions: []
-  velocities: []
-  renderVertices: []
-  restPositions: []
-  invMasses: []
 --- !u!114 &678287668
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,50 +205,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VBDClothSim
   numSubsteps: 1
-  numIterations: 30
+  numIterations: 15
   stretchingStiffness: 100000
   shearStiffness: 10000
   bendingStiffness: 1000
-  useChebyshevAcceleration: 1
-  chebyshevRho: 0.95
-  adaptiveInitialGuess: 1
-  adaptiveAccelerationCap: 10
-  hessianRegularization: 0.00000001
-  maxLocalStep: 0
-  addInitNoise: 0
-  handleSelfCollisions: 1
-  selfCollisionFriction: 0
   logMsPerFrame: 1
-  numVerts: 0
-  numX: 0
-  numY: 0
-  positions: []
-  velocities: []
-  previousPosition: []
-  restPositions: []
-  invMasses: []
---- !u!114 &678287669
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 678287662}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85c1191af0fee024482efdb4e7a0ef56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Claude_VBDClothSim
-  numSubsteps: 1
-  numIterations: 15
-  stretchingStiffness: 1000000
-  shearStiffness: 10000
-  bendingStiffness: 1000
+  addInitNoise: 0
   useAcceleration: 0
   accelerationRho: 0.5
-  logMsPerFrame: 1
-  selfCollisionFriction: 0
-  addInitNoise: 0
   numVerts: 0
   numX: 0
   numY: 0
@@ -442,6 +364,8 @@ GameObject:
   - component: {fileID: 2127188338}
   - component: {fileID: 2127188337}
   - component: {fileID: 2127188336}
+  - component: {fileID: 2127188340}
+  - component: {fileID: 2127188339}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -523,6 +447,64 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2127188339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2127188335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_TaaSettings:
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
+  m_Version: 2
+--- !u!114 &2127188340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2127188335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c04f21575fc98d4cb85d6ca33bd8a12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MoveableCamera
+  moveSpeed: 10
+  lookSpeed: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

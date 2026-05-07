@@ -8,7 +8,7 @@ Slider between PBD and VBD
 	
 
 
-How to implement Plastic Deformation (can being crushed) - contrary to hyper-elastic meterials
+How to implement Plastic Deformation (can be crushed) - contrary to hyper-elastic meterials
 
 
 From most approximate to most physically detailed:
