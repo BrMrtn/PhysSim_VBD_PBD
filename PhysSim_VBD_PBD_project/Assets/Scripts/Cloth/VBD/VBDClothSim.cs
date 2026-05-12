@@ -187,9 +187,15 @@ public class VBDClothSim : MonoBehaviour
 
         for (int i = 0; i < numVerts; i++)
         {
-            if (invMasses[i] == 0f) velocities[i] = Vector3.zero;
-            else velocities[i] += gravity * dt;
-            inertia[i] = previousPosition[i] + velocities[i] * dt;
+            if (invMasses[i] == 0f)
+            {
+                velocities[i] = Vector3.zero;
+                inertia[i] = previousPosition[i];
+            }
+            else
+            {
+                inertia[i] = previousPosition[i] + dt * velocities[i] + dt2 * gravity;
+            }
         }
     }
 
@@ -232,7 +238,7 @@ public class VBDClothSim : MonoBehaviour
                 float ratio = l0 * invL;
 
                 // h_spring = k * ((1 - l0/l) I + (l0/l) d d^T) = coeff1 * I + coeff2 * d d^T
-                float coeff1 = k * Mathf.Max(1f - ratio, 0f);
+                float coeff1 = k * (1f - ratio);
                 float coeff2 = k * ratio;
 
                 h00 += coeff1 + coeff2 * dir.x * dir.x;
