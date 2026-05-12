@@ -133,11 +133,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
       propertyPath: m_LocalRotation.w
@@ -186,6 +186,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
       insertIndex: -1
       addedObject: {fileID: 678287668}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 678287672}
   m_SourcePrefab: {fileID: 100100000, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
 --- !u!1 &678287662 stripped
 GameObject:
@@ -226,6 +229,18 @@ MonoBehaviour:
   restPositions: []
   masses: []
   invMasses: []
+--- !u!114 &678287672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 678287662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 679d9f14c0c4999428091dca39784157, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VBDFixedCorners
 --- !u!1 &1398431920
 GameObject:
   m_ObjectHideFlags: 0

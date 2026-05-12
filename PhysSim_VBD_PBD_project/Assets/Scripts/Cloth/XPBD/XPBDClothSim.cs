@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class XPBDClothSim : MonoBehaviour
 {
@@ -93,7 +94,7 @@ public class XPBDClothSim : MonoBehaviour
         bool shouldLogPerformance = logMsPerFrame && Time.frameCount % logEveryNFrames == 0;
         double simStartTime = shouldLogPerformance ? Time.realtimeSinceStartupAsDouble : 0;
 
-        float dt = 1 / 24f; // Time.deltaTime
+        float dt = 1 / 24f;
         float sdt = dt / numSubsteps;
         float invSdt2 = 1.0f / (sdt * sdt);
         float maxVelocity = 0.2f * thickness / sdt;
@@ -123,7 +124,7 @@ public class XPBDClothSim : MonoBehaviour
             // Solve constraints
             for (int i = 0; i < constraints.Length; i++)
             {
-                var constraint = constraints[i];
+                ref var constraint = ref constraints[i];
                 int id0 = constraint.p1Idx;
                 int id1 = constraint.p2Idx;
                 float w0 = invMasses[id0];
@@ -145,20 +146,21 @@ public class XPBDClothSim : MonoBehaviour
             }
 
             if (handleSelfCollisions) SolveSelfCollisions();
-            OnUpdate?.Invoke();
 
             for (int i = 0; i < numVerts; i++)
             {
                 if (invMasses[i] == 0f) continue;
                 velocities[i] = (positions[i] - previousPosition[i]) / sdt;
             }
+
+            OnUpdate?.Invoke();
         }
 
         Matrix4x4 worldToLocal = tr.worldToLocalMatrix;
         for (int i = 0; i < numVerts; i++)
             renderVertices[i] = worldToLocal.MultiplyPoint3x4(positions[meshToGrid[i]]);
 
-        mesh.SetVertices(renderVertices, 0, numVerts, UnityEngine.Rendering.MeshUpdateFlags.DontRecalculateBounds);
+        mesh.SetVertices(renderVertices, 0, numVerts, MeshUpdateFlags.DontRecalculateBounds);
         mesh.RecalculateNormals();
 
         if (shouldLogPerformance)
