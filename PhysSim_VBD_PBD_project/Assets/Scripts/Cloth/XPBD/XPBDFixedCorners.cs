@@ -1,13 +1,13 @@
 using UnityEngine;
 
-[RequireComponent(typeof(XPBDClothSim))]
+[RequireComponent(typeof(XPBDCloth))]
 public class XPBDFixedCorners : MonoBehaviour
 {
-    private XPBDClothSim clothSim;
+    private XPBDCloth clothSim;
 
     void Start()
     {
-        clothSim = GetComponent<XPBDClothSim>();
+        clothSim = GetComponent<XPBDCloth>();
 
         if (clothSim == null)
             return;

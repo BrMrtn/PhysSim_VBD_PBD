@@ -1,16 +1,16 @@
 using UnityEngine;
 
-[RequireComponent(typeof(XPBDClothSim))]
+[RequireComponent(typeof(XPBDCloth))]
 public class XPBDSphereCollision : MonoBehaviour
 {
     public SphereCollider sphereCollider;
     public float friction = 0.0f;
 
-    private XPBDClothSim clothSim;
+    private XPBDCloth clothSim;
 
     void Start()
     {
-        clothSim = GetComponent<XPBDClothSim>();
+        clothSim = GetComponent<XPBDCloth>();
         if (clothSim != null)
         {
             clothSim.OnUpdate += HandleCollision;

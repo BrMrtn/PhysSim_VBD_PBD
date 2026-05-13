@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class XPBDClothSim : MonoBehaviour
+public class XPBDCloth : MonoBehaviour
 {
     public int numSubsteps = 15;
 

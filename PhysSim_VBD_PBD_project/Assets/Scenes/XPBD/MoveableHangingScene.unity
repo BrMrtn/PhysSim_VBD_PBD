@@ -138,8 +138,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::XPBDClothSim
   numSubsteps: 10
   stretchingCompliance: 0
-  shearCompliance: 0.001
-  bendingCompliance: 0.1
+  shearCompliance: 0.0001
+  bendingCompliance: 0.001
   handleSelfCollisions: 0
   selfCollisionFriction: 0
   logMsPerFrame: 1

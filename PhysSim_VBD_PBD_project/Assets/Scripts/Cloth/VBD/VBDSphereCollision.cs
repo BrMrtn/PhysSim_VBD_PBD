@@ -4,17 +4,17 @@ using UnityEngine;
 // Hooks the cloth's OnUpdate event (fired once per substep, after the VBD
 // iterations) and projects vertices that are inside the sphere back to the
 // surface, with optional friction.
-[RequireComponent(typeof(VBDClothSim))]
+[RequireComponent(typeof(VBDCloth))]
 public class VBDSphereCollision : MonoBehaviour
 {
     public SphereCollider sphereCollider;
     public float friction = 0.0f;
 
-    private VBDClothSim clothSim;
+    private VBDCloth clothSim;
 
     void Start()
     {
-        clothSim = GetComponent<VBDClothSim>();
+        clothSim = GetComponent<VBDCloth>();
         if (clothSim != null)
             clothSim.OnUpdate += HandleCollision;
     }

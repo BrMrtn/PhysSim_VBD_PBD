@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
-public class VBDClothSim : MonoBehaviour
+public class VBDCloth : MonoBehaviour
 {
     public int numSubsteps = 1;
     public int numIterations = 15;

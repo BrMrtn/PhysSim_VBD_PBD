@@ -3,13 +3,13 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-[RequireComponent(typeof(XPBDClothSim))]
+[RequireComponent(typeof(XPBDCloth))]
 public class XPBDFollowCorners : MonoBehaviour
 {
     public SphereCollider sphereColliderLeft;
     public SphereCollider sphereColliderRight;
 
-    private XPBDClothSim clothSim;
+    private XPBDCloth clothSim;
 
     private int leftAnchorIdx;
     private int rightAnchorIdx;
@@ -19,7 +19,7 @@ public class XPBDFollowCorners : MonoBehaviour
 
     void Start()
     {
-        clothSim = GetComponent<XPBDClothSim>();
+        clothSim = GetComponent<XPBDCloth>();
         if (clothSim != null)
         {
             leftTransform = sphereColliderLeft.transform;

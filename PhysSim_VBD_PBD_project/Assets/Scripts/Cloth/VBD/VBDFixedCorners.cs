@@ -1,13 +1,13 @@
 using UnityEngine;
 
-[RequireComponent(typeof(VBDClothSim))]
+[RequireComponent(typeof(VBDCloth))]
 public class VBDFixedCorners : MonoBehaviour
 {
-    private VBDClothSim clothSim;
+    private VBDCloth clothSim;
 
     void Start()
     {
-        clothSim = GetComponent<VBDClothSim>();
+        clothSim = GetComponent<VBDCloth>();
         if (clothSim == null) return;
 
         int numX = clothSim.numX;
