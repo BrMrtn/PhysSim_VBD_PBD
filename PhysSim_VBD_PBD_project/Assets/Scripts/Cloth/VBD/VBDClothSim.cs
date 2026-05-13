@@ -115,7 +115,7 @@ public class VBDClothSim : MonoBehaviour
 
         for (int step = 0; step < numSubsteps; step++)
         {
-            ForwardStep(sdt);
+            AdaptiveInitialization(sdt);
 
             float omega = 1f;
             for (int iter = 0; iter < numIterations; iter++)
@@ -152,49 +152,23 @@ public class VBDClothSim : MonoBehaviour
         }
     }
 
-    void ForwardStep(float dt)
+    void AdaptiveInitialization(float dt)
     {
         float dt2 = dt * dt;
-        float invDt = 1f / dt;
-
-        Vector3 gravDir = new Vector3(0f, -1f, 0f);
-        float gravNorm = gravity.magnitude;
-
         Array.Copy(positions, previousPosition, numVerts);
-
-        if (hasPrevVelocities)
-        {
-            for (int i = 0; i < numVerts; i++)
-            {
-                if (invMasses[i] == 0f) continue;
-
-                Vector3 approxAcceleration = (velocities[i] - previousVelocities[i]) * invDt;
-                float accelComponent = Vector3.Dot(approxAcceleration, gravDir);
-                if (accelComponent > gravNorm) accelComponent = gravNorm;
-                if (accelComponent < 0f) accelComponent = 0f;
-
-                positions[i] = previousPosition[i]
-                             + dt * velocities[i]
-                             + dt2 * gravDir * accelComponent;
-            }
-        }
-        else
-        {
-            for (int i = 0; i < numVerts; i++)
-                if (invMasses[i] != 0f)
-                    positions[i] += dt * velocities[i] + dt2 * gravity;
-        }
 
         for (int i = 0; i < numVerts; i++)
         {
             if (invMasses[i] == 0f)
             {
-                velocities[i] = Vector3.zero;
                 inertia[i] = previousPosition[i];
+                positions[i] = previousPosition[i];
+                velocities[i] = Vector3.zero;
             }
             else
             {
                 inertia[i] = previousPosition[i] + dt * velocities[i] + dt2 * gravity;
+                positions[i] = inertia[i];
             }
         }
     }
