@@ -409,7 +409,6 @@ GameObject:
   - component: {fileID: 1477842771}
   - component: {fileID: 1477842770}
   - component: {fileID: 1477842769}
-  - component: {fileID: 1477842768}
   m_Layer: 0
   m_Name: Chain
   m_TagString: Untagged
@@ -417,18 +416,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1477842768
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1477842767}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ecdea996cc1e7e441a35715ac0a806b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::XPBDFixedEnd
 --- !u!114 &1477842769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -443,9 +430,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::XPBDChain
   numSubsteps: 15
   numParticles: 20
+  restLength: 1
   stretchingCompliance: 0.000001
-  restLength: 0.5
+  hasBendingConstraints: 1
+  bendingCompliance: 0.00001
   logMsPerFrame: 1
+  sphereMaterial: {fileID: 2100000, guid: 93ea19cb492d8914a9a1e2678ec6c8ba, type: 2}
 --- !u!120 &1477842770
 LineRenderer:
   serializedVersion: 3
@@ -472,7 +462,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: bbcad39595315ce4f97a994c8990f658, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -506,7 +496,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.20267677
+        value: 0.098676085
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -555,7 +545,7 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
-  m_ApplyActiveColorSpace: 1
+  m_ApplyActiveColorSpace: 0
 --- !u!4 &1477842771
 Transform:
   m_ObjectHideFlags: 0
@@ -565,7 +555,7 @@ Transform:
   m_GameObject: {fileID: 1477842767}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 6, z: 6}
+  m_LocalPosition: {x: 0, y: 8, z: 8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

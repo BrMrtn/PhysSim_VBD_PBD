@@ -75,6 +75,8 @@ public class XPBDChain : MonoBehaviour
 
         renderPositions = new Vector3[numParticles];
 
+        Solver.invMasses[0] = 0f; // Fix the first particle in place
+
         // Create small spheres at each vertex position
         float sphereRadius = restLength / 10f;
         vertexSpheres = new GameObject[numParticles];
