@@ -1,0 +1,163 @@
+using System;
+using UnityEngine;
+
+public class XPBDSolver
+{
+    public int numSubsteps = 15;
+    public bool handleSelfCollisions = false;
+    public float selfCollisionFriction = 0f;
+    public float thickness;
+    public Vector3 gravity = new Vector3(0, -9.81f, 0);
+
+    public int numVerts;
+    public Vector3[] positions;
+    public Vector3[] velocities;
+    public Vector3[] previousPositions;
+    public Vector3[] restPositions;
+    public float[] invMasses;
+    public DistanceConstraint[] constraints;
+
+    private SpatialHash spatialHash;
+
+    public event Action OnSubstep;
+
+    public XPBDSolver(int numVerts)
+    {
+        this.numVerts = numVerts;
+        positions = new Vector3[numVerts];
+        velocities = new Vector3[numVerts];
+        previousPositions = new Vector3[numVerts];
+        restPositions = new Vector3[numVerts];
+        invMasses = new float[numVerts];
+        Array.Fill(invMasses, 1f);
+        constraints = Array.Empty<DistanceConstraint>();
+    }
+
+    public void CreateSpatialHash(float spacing)
+    {
+        spatialHash = new SpatialHash(spacing, numVerts);
+    }
+
+    public void Step(float dt)
+    {
+        float sdt = dt / numSubsteps;
+        float invSdt2 = 1.0f / (sdt * sdt);
+        float maxVelocity = thickness > 0f ? 0.2f * thickness / sdt : float.PositiveInfinity;
+
+        if (handleSelfCollisions)
+        {
+            spatialHash.Create(positions);
+            float maxTravelDistance = maxVelocity * dt;
+            spatialHash.QueryAll(positions, maxTravelDistance);
+        }
+
+        for (int step = 0; step < numSubsteps; step++)
+        {
+            Integrate(sdt, maxVelocity);
+            SolveDistanceConstraints(invSdt2);
+            if (handleSelfCollisions) SolveSelfCollisions();
+            UpdateVelocities(sdt);
+
+            OnSubstep?.Invoke();
+        }
+    }
+
+    private void Integrate(float sdt, float maxVelocity)
+    {
+        for (int i = 0; i < numVerts; i++)
+        {
+            if (invMasses[i] == 0f) continue;
+            velocities[i] += gravity * sdt;
+
+            float v = velocities[i].magnitude;
+            if (v > maxVelocity)
+                velocities[i] *= maxVelocity / v;
+
+            previousPositions[i] = positions[i];
+            positions[i] += velocities[i] * sdt;
+        }
+    }
+
+    private void SolveDistanceConstraints(float invSdt2)
+    {
+        for (int i = 0; i < constraints.Length; i++)
+        {
+            ref var constraint = ref constraints[i];
+            int id0 = constraint.p1Idx;
+            int id1 = constraint.p2Idx;
+            float w0 = invMasses[id0];
+            float w1 = invMasses[id1];
+            float w = w0 + w1;
+            if (w == 0f) continue;
+
+            Vector3 grad = positions[id0] - positions[id1];
+            float len = grad.magnitude;
+            if (len == 0f) continue;
+
+            grad /= len;
+            float C = len - constraint.restLength;
+            float alpha = constraint.compliance * invSdt2;
+            float s = -C / (w + alpha);
+
+            positions[id0] += grad * (s * w0);
+            positions[id1] -= grad * (s * w1);
+        }
+    }
+
+    private void UpdateVelocities(float sdt)
+    {
+        for (int i = 0; i < numVerts; i++)
+        {
+            if (invMasses[i] == 0f) continue;
+            velocities[i] = (positions[i] - previousPositions[i]) / sdt;
+        }
+    }
+
+    private void SolveSelfCollisions()
+    {
+        float thickness2 = thickness * thickness;
+
+        for (int id0 = 0; id0 < numVerts; id0++)
+        {
+            if (invMasses[id0] == 0f)
+                continue;
+            int first = spatialHash.firstAdjId[id0];
+            int last = spatialHash.firstAdjId[id0 + 1];
+
+            for (int j = first; j < last; j++)
+            {
+                int id1 = spatialHash.adjIds[j];
+                if (invMasses[id1] == 0f)
+                    continue;
+
+                Vector3 delta = positions[id0] - positions[id1];
+                float dist2 = delta.sqrMagnitude;
+                if (dist2 == 0f || dist2 > thickness2)
+                    continue;
+
+                float restDist2 = (restPositions[id0] - restPositions[id1]).sqrMagnitude;
+                if (dist2 > restDist2)
+                    continue;
+
+                float minDist = thickness;
+                if (restDist2 < thickness2)
+                    minDist = Mathf.Sqrt(restDist2);
+
+                float dist = Mathf.Sqrt(dist2);
+                Vector3 correction = delta * ((minDist - dist) / dist);
+                positions[id0] += 0.5f * correction;
+                positions[id1] -= 0.5f * correction;
+
+                Vector3 v0 = positions[id0] - previousPositions[id0];
+                Vector3 v1 = positions[id1] - previousPositions[id1];
+                Vector3 vAvg = 0.5f * (v0 + v1);
+
+                Vector3 v0Corr = vAvg - v0;
+                Vector3 v1Corr = vAvg - v1;
+
+                positions[id0] += v0Corr * selfCollisionFriction;
+                positions[id1] += v1Corr * selfCollisionFriction;
+            }
+        }
+    }
+}

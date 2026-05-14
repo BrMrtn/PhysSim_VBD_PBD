@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,11 +12,12 @@ public class XPBDCloth : MonoBehaviour
     public float shearCompliance = 0.0001f;
     public float bendingCompliance = 0.001f;
 
-    public bool handleSelfCollisions = true;
+    public bool handleSelfCollisions = false;
     public float selfCollisionFriction = 0.0f;
     public bool logMsPerFrame = true;
     public bool addInitNoise = false;
-    public event Action OnUpdate;
+
+    public XPBDSolver Solver { get; private set; }
 
     private float spacing;
     private float thickness;
@@ -25,8 +26,6 @@ public class XPBDCloth : MonoBehaviour
     private string performanceText = "XPBD Simulation: -- ms/frame";
     private GUIStyle performanceStyle;
 
-    private Vector3 gravity = new Vector3(0, -9.81f, 0);
-
     private MeshFilter meshFilter;
     private Mesh mesh;
     private Transform tr;
@@ -34,17 +33,10 @@ public class XPBDCloth : MonoBehaviour
     [HideInInspector] public int numVerts;
     [HideInInspector] public int numX;
     [HideInInspector] public int numY;
-    [HideInInspector] public Vector3[] positions;
-    [HideInInspector] public Vector3[] velocities;
-    [HideInInspector] public Vector3[] previousPosition;
-    [HideInInspector] public Vector3[] restPositions;
-    [HideInInspector] public float[] invMasses;
 
     private int[] meshToGrid;
     private Vector3[] renderVertices;
-    private SpatialHash spatialHash;
 
-    [HideInInspector] public DistanceConstraint[] constraints;
     void Awake()
     {
         meshFilter = gameObject.GetComponent<MeshFilter>();
@@ -67,26 +59,26 @@ public class XPBDCloth : MonoBehaviour
         if (numX > 1) spacing = xCoords[1] - xCoords[0];
         thickness = spacing;
 
-        positions = new Vector3[numVerts];
-        velocities = new Vector3[numVerts];
-        previousPosition = new Vector3[numVerts];
-        restPositions = new Vector3[numVerts];
-        invMasses = new float[numVerts];
-        Array.Fill(invMasses, 1f);
+        Solver = new XPBDSolver(numVerts)
+        {
+            numSubsteps = numSubsteps,
+            handleSelfCollisions = handleSelfCollisions,
+            selfCollisionFriction = selfCollisionFriction,
+            thickness = thickness
+        };
 
         BuildSimulationGrid(xCoords, yCoords);
-        Array.Copy(positions, restPositions, numVerts);
+        Array.Copy(Solver.positions, Solver.restPositions, numVerts);
 
         BuildMeshToGrid(localVerts, xCoords, yCoords, eps);
         InitConstraints();
 
-        //Add small random noise to the positions to break perfect symmetries
         if (addInitNoise)
             for (int i = 0; i < numVerts; i++)
-                if (invMasses[i] > 0f)
-                    positions[i] += UnityEngine.Random.insideUnitSphere * 0.001f;
+                if (Solver.invMasses[i] > 0f)
+                    Solver.positions[i] += UnityEngine.Random.insideUnitSphere * 0.001f;
 
-        spatialHash = new SpatialHash(spacing, numVerts);
+        if (handleSelfCollisions) Solver.CreateSpatialHash(spacing);
     }
 
     void Update()
@@ -95,70 +87,11 @@ public class XPBDCloth : MonoBehaviour
         double simStartTime = shouldLogPerformance ? Time.realtimeSinceStartupAsDouble : 0;
 
         float dt = 1 / 24f;
-        float sdt = dt / numSubsteps;
-        float invSdt2 = 1.0f / (sdt * sdt);
-        float maxVelocity = 0.2f * thickness / sdt;
-
-        if (handleSelfCollisions)
-        {
-            spatialHash.Create(positions);
-            float maxTravelDistance = maxVelocity * dt;
-            spatialHash.QueryAll(positions, maxTravelDistance);
-        }
-
-        for (int step = 0; step < numSubsteps; step++)
-        {
-            for (int i = 0; i < numVerts; i++)
-            {
-                if (invMasses[i] == 0f) continue;
-                velocities[i] += gravity * sdt;
-
-                float v = velocities[i].magnitude;
-                if (v > maxVelocity)
-                    velocities[i] *= maxVelocity / v;
-
-                previousPosition[i] = positions[i];
-                positions[i] += velocities[i] * sdt;
-            }
-
-            // Solve constraints
-            for (int i = 0; i < constraints.Length; i++)
-            {
-                ref var constraint = ref constraints[i];
-                int id0 = constraint.p1Idx;
-                int id1 = constraint.p2Idx;
-                float w0 = invMasses[id0];
-                float w1 = invMasses[id1];
-                float w = w0 + w1;
-                if (w == 0f) continue;
-
-                Vector3 grad = positions[id0] - positions[id1];
-                float len = grad.magnitude;
-                if (len == 0f) continue;
-
-                grad /= len;
-                float C = len - constraint.restLength;
-                float alpha = constraint.compliance * invSdt2;
-                float s = -C / (w + alpha);
-
-                positions[id0] += grad * (s * w0);
-                positions[id1] -= grad * (s * w1);
-            }
-
-            if (handleSelfCollisions) SolveSelfCollisions();
-
-            for (int i = 0; i < numVerts; i++)
-            {
-                if (invMasses[i] == 0f) continue;
-                velocities[i] = (positions[i] - previousPosition[i]) / sdt;
-            }
-
-            OnUpdate?.Invoke();
-        }
+        Solver.Step(dt);
 
         Matrix4x4 worldToLocal = tr.worldToLocalMatrix;
         for (int i = 0; i < numVerts; i++)
-            renderVertices[i] = worldToLocal.MultiplyPoint3x4(positions[meshToGrid[i]]);
+            renderVertices[i] = worldToLocal.MultiplyPoint3x4(Solver.positions[meshToGrid[i]]);
 
         mesh.SetVertices(renderVertices, 0, numVerts, MeshUpdateFlags.DontRecalculateBounds);
         mesh.RecalculateNormals();
@@ -207,7 +140,7 @@ public class XPBDCloth : MonoBehaviour
             {
                 int idx = iy * numX + ix;
                 Vector3 localPos = new Vector3(xCoords[ix], yCoords[iy], 0f);
-                positions[idx] = tr.TransformPoint(localPos);
+                Solver.positions[idx] = tr.TransformPoint(localPos);
             }
     }
 
@@ -233,7 +166,7 @@ public class XPBDCloth : MonoBehaviour
         AddConstraint(constraintsList, 0, 0, 2, 0, bendingCompliance);        // bend horizontal
         AddConstraint(constraintsList, 0, 0, 0, 2, bendingCompliance);        // bend vertical
 
-        constraints = constraintsList.ToArray();
+        Solver.constraints = constraintsList.ToArray();
     }
 
     private void AddConstraint(List<DistanceConstraint> constraintsList, int offset_i0, int offset_j0, int offset_i1, int offset_j1, float compliance)
@@ -255,58 +188,10 @@ public class XPBDCloth : MonoBehaviour
                     {
                         p1Idx = p1,
                         p2Idx = p2,
-                        restLength = Vector3.Distance(positions[p1], positions[p2]),
+                        restLength = Vector3.Distance(Solver.positions[p1], Solver.positions[p2]),
                         compliance = compliance
                     });
                 }
             }
-    }
-
-    private void SolveSelfCollisions()
-    {
-        float thickness2 = thickness * thickness;
-
-        for (int id0 = 0; id0 < numVerts; id0++)
-        {
-            if (invMasses[id0] == 0f)
-                continue;
-            int first = spatialHash.firstAdjId[id0];
-            int last = spatialHash.firstAdjId[id0 + 1];
-
-            for (int j = first; j < last; j++)
-            {
-                int id1 = spatialHash.adjIds[j];
-                if (invMasses[id1] == 0f)
-                    continue;
-
-                Vector3 delta = positions[id0] - positions[id1];
-                float dist2 = delta.sqrMagnitude;
-                if (dist2 == 0f || dist2 > thickness2)
-                    continue;
-
-                float restDist2 = (restPositions[id0] - restPositions[id1]).sqrMagnitude;
-                if (dist2 > restDist2)
-                    continue;
-
-                float minDist = thickness;
-                if (restDist2 < thickness2)
-                    minDist = Mathf.Sqrt(restDist2); // minDist is min(thickness, restDist), so collision detection doesn't clash with constraints
-
-                float dist = Mathf.Sqrt(dist2);
-                Vector3 correction = delta * ((minDist - dist) / dist);
-                positions[id0] += 0.5f * correction;
-                positions[id1] -= 0.5f * correction;
-
-                Vector3 v0 = positions[id0] - previousPosition[id0];
-                Vector3 v1 = positions[id1] - previousPosition[id1];
-                Vector3 vAvg = 0.5f * (v0 + v1);
-
-                Vector3 v0Corr = vAvg - v0;
-                Vector3 v1Corr = vAvg - v1;
-
-                positions[id0] += v0Corr * selfCollisionFriction;
-                positions[id1] += v1Corr * selfCollisionFriction;
-            }
-        }
     }
 }

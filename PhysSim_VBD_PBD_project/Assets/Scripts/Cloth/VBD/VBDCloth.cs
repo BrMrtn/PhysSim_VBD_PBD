@@ -50,7 +50,7 @@ public class VBDCloth : MonoBehaviour
     [HideInInspector] public Spring[] springs;
     [HideInInspector] public List<int>[] perVertSprings;    // array of connecting spring's lists for each vertex
 
-    private bool hasPrevVelocities = false;
+    //private bool hasPrevVelocities = false;
 
     private int[] meshToGrid;
     private Vector3[] renderVertices;
@@ -274,7 +274,7 @@ public class VBDCloth : MonoBehaviour
             velocities[i] = (positions[i] - previousPosition[i]) * invDt;
         }
         
-        hasPrevVelocities = true;
+        //hasPrevVelocities = true;
     }
 
     // Chebyshev semi-iterative acceleration (VBD paper)

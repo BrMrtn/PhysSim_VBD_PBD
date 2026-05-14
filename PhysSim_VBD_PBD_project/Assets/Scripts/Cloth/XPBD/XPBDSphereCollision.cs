@@ -6,21 +6,22 @@ public class XPBDSphereCollision : MonoBehaviour
     public SphereCollider sphereCollider;
     public float friction = 0.0f;
 
-    private XPBDCloth clothSim;
+    private XPBDSolver solver;
 
     void Start()
     {
-        clothSim = GetComponent<XPBDCloth>();
+        var clothSim = GetComponent<XPBDCloth>();
         if (clothSim != null)
         {
-            clothSim.OnUpdate += HandleCollision;
+            solver = clothSim.Solver;
+            solver.OnSubstep += HandleCollision;
         }
     }
 
     void OnDestroy()
     {
-        if (clothSim != null)
-            clothSim.OnUpdate -= HandleCollision;
+        if (solver != null)
+            solver.OnSubstep -= HandleCollision;
     }
 
     void HandleCollision()
@@ -31,10 +32,10 @@ public class XPBDSphereCollision : MonoBehaviour
         // Calculate world radius based on scale (assuming uniform scale for simplicity)
         float radius = sphereCollider.radius * sphereCollider.transform.lossyScale.x * 1.1f;
 
-        int numVerts = clothSim.numVerts;
-        Vector3[] positions = clothSim.positions;
-        Vector3[] prevPositions = clothSim.previousPosition;
-        float[] invMasses = clothSim.invMasses;
+        int numVerts = solver.numVerts;
+        Vector3[] positions = solver.positions;
+        Vector3[] prevPositions = solver.previousPositions;
+        float[] invMasses = solver.invMasses;
 
         for (int i = 0; i < numVerts; i++)
         {

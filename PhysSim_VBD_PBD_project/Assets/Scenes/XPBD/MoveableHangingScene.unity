@@ -147,11 +147,6 @@ MonoBehaviour:
   numVerts: 0
   numX: 0
   numY: 0
-  positions: []
-  velocities: []
-  previousPosition: []
-  restPositions: []
-  invMasses: []
 --- !u!114 &150870325
 MonoBehaviour:
   m_ObjectHideFlags: 0

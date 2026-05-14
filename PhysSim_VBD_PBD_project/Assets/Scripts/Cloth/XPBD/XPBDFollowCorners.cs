@@ -10,6 +10,7 @@ public class XPBDFollowCorners : MonoBehaviour
     public SphereCollider sphereColliderRight;
 
     private XPBDCloth clothSim;
+    private XPBDSolver solver;
 
     private int leftAnchorIdx;
     private int rightAnchorIdx;
@@ -22,6 +23,7 @@ public class XPBDFollowCorners : MonoBehaviour
         clothSim = GetComponent<XPBDCloth>();
         if (clothSim != null)
         {
+            solver = clothSim.Solver;
             leftTransform = sphereColliderLeft.transform;
             rightTransform = sphereColliderRight.transform;
 
@@ -30,22 +32,22 @@ public class XPBDFollowCorners : MonoBehaviour
             int topLeftIdx = (numY - 1) * numX;
             int topRightIdx = (numY - 1) * numX + (numX - 1);
 
-            int currentLength = clothSim.positions.Length;
+            int currentLength = solver.positions.Length;
             leftAnchorIdx = currentLength;
             rightAnchorIdx = currentLength + 1;
 
-            Array.Resize(ref clothSim.positions, clothSim.positions.Length + 2);
-            Array.Resize(ref clothSim.invMasses, clothSim.invMasses.Length + 2);
+            Array.Resize(ref solver.positions, solver.positions.Length + 2);
+            Array.Resize(ref solver.invMasses, solver.invMasses.Length + 2);
 
-            clothSim.invMasses[leftAnchorIdx] = 0f;
-            clothSim.invMasses[rightAnchorIdx] = 0f;
+            solver.invMasses[leftAnchorIdx] = 0f;
+            solver.invMasses[rightAnchorIdx] = 0f;
 
             SetAnchorPositions();
 
-            var constraintsList = new List<DistanceConstraint>(clothSim.constraints);
+            var constraintsList = new List<DistanceConstraint>(solver.constraints);
             constraintsList.Add(new DistanceConstraint(topLeftIdx, leftAnchorIdx, 0f, 0f));
             constraintsList.Add(new DistanceConstraint(topRightIdx, rightAnchorIdx, 0f, 0f));
-            clothSim.constraints = constraintsList.ToArray();
+            solver.constraints = constraintsList.ToArray();
         }
     }
 
@@ -57,7 +59,7 @@ public class XPBDFollowCorners : MonoBehaviour
 
     private void SetAnchorPositions()
     {
-        clothSim.positions[leftAnchorIdx] = leftTransform.position;
-        clothSim.positions[rightAnchorIdx] = rightTransform.position;
+        solver.positions[leftAnchorIdx] = leftTransform.position;
+        solver.positions[rightAnchorIdx] = rightTransform.position;
     }
 }
