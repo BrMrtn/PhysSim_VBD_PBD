@@ -26,10 +26,15 @@ public class VBDSolver
     public float[] masses;
     public float[] invMasses;
 
+    public bool[] isColliding;
+
     public Spring[] springs;
     public List<int>[] perVertSprings;    // array of connecting spring's lists for each vertex
 
     public event Action OnSubstep;
+
+    public delegate void VertexSolveDelegate(int i, Vector3 pos, ref Vector3 f, ref float h00, ref float h11, ref float h22, ref float h01, ref float h02, ref float h12);
+    public event VertexSolveDelegate OnVertexSolve;
 
     public VBDSolver(int numVerts)
     {
@@ -44,6 +49,7 @@ public class VBDSolver
         restPositions = new Vector3[numVerts];
         masses = new float[numVerts];
         invMasses = new float[numVerts];
+        isColliding = new bool[numVerts];
         Array.Fill(masses, 1f);
         Array.Fill(invMasses, 1f);
         springs = Array.Empty<Spring>();
@@ -53,6 +59,7 @@ public class VBDSolver
     public void Step(float dt)
     {
         float sdt = dt / numSubsteps;
+        Array.Clear(isColliding, 0, numVerts);
 
         for (int step = 0; step < numSubsteps; step++)
         {
@@ -75,7 +82,7 @@ public class VBDSolver
 
             UpdateVelocity(sdt);
 
-            OnSubstep?.Invoke();
+            //OnSubstep?.Invoke(); // TODO: for fixed stuff handling
         }
     }
 
@@ -89,21 +96,17 @@ public class VBDSolver
         for (int i = 0; i < numVerts; i++)
         {
             if (invMasses[i] == 0f) continue;
+            float alpha = 1f;
 
-            if (hasPrevVelocities)
+            if (hasPrevVelocities && gravMag > 1e-10f)
             {
                 Vector3 prevAcc = (velocities[i] - previousVelocities[i]) / dt;
                 float extAcc = Vector3.Dot(prevAcc, gravDir);
-                float alpha = Mathf.Clamp01(extAcc / gravMag);
-
-                inertia[i] = previousPosition[i] + dt * velocities[i] + (alpha * dt2 * gravity);
-            }
-            else
-            {
-                inertia[i] = previousPosition[i] + dt * velocities[i] + (dt2 * gravity);
+                alpha = Mathf.Clamp01(extAcc / gravMag);
             }
 
-            positions[i] = inertia[i];
+            inertia[i] = previousPosition[i] + dt * velocities[i] +  dt2 * gravity;
+            positions[i] = previousPosition[i] + dt * velocities[i] + alpha * dt2 * gravity;
         }
     }
 
@@ -140,7 +143,6 @@ public class VBDSolver
 
                 float l0 = spring.restLength;
                 float k = spring.stiffness;
-
                 float invL = 1f / len;
                 Vector3 dir = diff * invL;
                 float ratio = l0 * invL;
@@ -160,6 +162,8 @@ public class VBDSolver
                 if (v1 == i) f += k * (l0 - len) * invL * diff;
                 else f -= k * (l0 - len) * invL * diff;
             }
+
+            OnVertexSolve?.Invoke(i, positions[i], ref f, ref h00, ref h11, ref h22, ref h01, ref h02, ref h12);
 
             Vector3 dx = SolveSymmetric3x3(h00, h11, h22, h01, h02, h12, f);
 
@@ -207,6 +211,8 @@ public class VBDSolver
             if (invMasses[i] == 0f) { velocities[i] = Vector3.zero; continue; }
             velocities[i] = (positions[i] - previousPosition[i]) * invDt;
         }
+
+        hasPrevVelocities = true;
     }
 
     // Chebyshev semi-iterative acceleration (VBD paper)
@@ -222,7 +228,7 @@ public class VBDSolver
         if (omega <= 1f) return;
         for (int i = 0; i < numVerts; i++)
         {
-            if (invMasses[i] == 0f) continue;
+            if (invMasses[i] == 0f || isColliding[i]) continue;
             positions[i] = omega * (positions[i] - prevprevPos[i]) + prevprevPos[i];
         }
     }
