@@ -16,7 +16,7 @@ public class VBDFixedCorners : MonoBehaviour
         int topLeftIdx = (numY - 1) * numX;
         int topRightIdx = (numY - 1) * numX + (numX - 1);
 
-        clothSim.invMasses[topLeftIdx] = 0f;
-        clothSim.invMasses[topRightIdx] = 0f;
+        clothSim.Solver.invMasses[topLeftIdx] = 0f;
+        clothSim.Solver.invMasses[topRightIdx] = 0f;
     }
 }
