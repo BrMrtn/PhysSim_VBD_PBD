@@ -4,7 +4,7 @@ using UnityEngine;
 public class XPBDSphereCollision : MonoBehaviour
 {
     public SphereCollider sphereCollider;
-    public float friction = 0.0f;
+    public float friction = 0.3f;
 
     private XPBDSolver solver;
 
@@ -29,7 +29,6 @@ public class XPBDSphereCollision : MonoBehaviour
         if (sphereCollider == null) return;
 
         Vector3 center = sphereCollider.transform.TransformPoint(sphereCollider.center);
-        // Calculate world radius based on scale (assuming uniform scale for simplicity)
         float radius = sphereCollider.radius * sphereCollider.transform.lossyScale.x * 1.1f;
 
         int numVerts = solver.numVerts;
@@ -54,7 +53,6 @@ public class XPBDSphereCollision : MonoBehaviour
                 Vector3 dispNormal = Vector3.Dot(displacement, normal) * normal;
                 Vector3 dispTangent = displacement - dispNormal;
 
-                // Apply friction
                 positions[i] -= dispTangent * friction;
             }
         }

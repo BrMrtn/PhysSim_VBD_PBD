@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.ProBuilder;
 
 public class XPBDSolver
 {
@@ -56,9 +57,8 @@ public class XPBDSolver
             Integrate(sdt, maxVelocity);
             SolveDistanceConstraints(invSdt2);
             if (handleSelfCollisions) SolveSelfCollisions();
-            UpdateVelocities(sdt);
-
             OnSubstep?.Invoke();
+            UpdateVelocities(sdt);
         }
     }
 
@@ -127,36 +127,33 @@ public class XPBDSolver
             for (int j = first; j < last; j++)
             {
                 int id1 = spatialHash.adjIds[j];
-                if (invMasses[id1] == 0f)
-                    continue;
+                if (invMasses[id1] == 0f) continue;
 
                 Vector3 delta = positions[id0] - positions[id1];
                 float dist2 = delta.sqrMagnitude;
-                if (dist2 == 0f || dist2 > thickness2)
-                    continue;
+                if (dist2 == 0f || dist2 > thickness2) continue;
 
                 float restDist2 = (restPositions[id0] - restPositions[id1]).sqrMagnitude;
-                if (dist2 > restDist2)
-                    continue;
+                if (dist2 > restDist2) continue;
 
                 float minDist = thickness;
                 if (restDist2 < thickness2)
                     minDist = Mathf.Sqrt(restDist2);
 
                 float dist = Mathf.Sqrt(dist2);
-                Vector3 correction = delta * ((minDist - dist) / dist);
+                Vector3 normal = delta / dist;
+                Vector3 correction = normal * (minDist - dist);
                 positions[id0] += 0.5f * correction;
                 positions[id1] -= 0.5f * correction;
 
-                Vector3 v0 = positions[id0] - previousPositions[id0];
-                Vector3 v1 = positions[id1] - previousPositions[id1];
-                Vector3 vAvg = 0.5f * (v0 + v1);
+                // Friction logic: compute relative displacement of contact points over the substep
+                Vector3 relDisp = (positions[id0] - previousPositions[id0]) -
+                                  (positions[id1] - previousPositions[id1]);
+                Vector3 dispNormal = Vector3.Dot(relDisp, normal) * normal;
+                Vector3 dispTangent = relDisp - dispNormal;
 
-                Vector3 v0Corr = vAvg - v0;
-                Vector3 v1Corr = vAvg - v1;
-
-                positions[id0] += v0Corr * selfCollisionFriction;
-                positions[id1] += v1Corr * selfCollisionFriction;
+                positions[id0] -= 0.5f * dispTangent * selfCollisionFriction;
+                positions[id1] += 0.5f * dispTangent * selfCollisionFriction;
             }
         }
     }

@@ -526,7 +526,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VBDSphereCollision
   sphereCollider: {fileID: 2060921299}
-  friction: 0
+  collisionStiffness: 100000
+  friction: 0.115
+  frictionEpsV: 0.01
+  radiusPadding: 1.1
 --- !u!1 &2060921298
 GameObject:
   m_ObjectHideFlags: 0
