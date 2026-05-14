@@ -12,6 +12,8 @@ public class VBDSolver
     public bool useAcceleration = false;
     public float accelerationRho = 0.5f;
 
+    bool hasPrevVelocities = false;
+
     public int numVerts;
     public Vector3[] positions;
     public Vector3[] previousPosition;
@@ -77,24 +79,31 @@ public class VBDSolver
         }
     }
 
-    private void AdaptiveInitialization(float dt) // TODO: not adaptive
+    private void AdaptiveInitialization(float dt)
     {
+        Vector3 gravDir = gravity.normalized;
+        float gravMag = gravity.magnitude;
         float dt2 = dt * dt;
         Array.Copy(positions, previousPosition, numVerts);
 
         for (int i = 0; i < numVerts; i++)
         {
-            if (invMasses[i] == 0f)
+            if (invMasses[i] == 0f) continue;
+
+            if (hasPrevVelocities)
             {
-                inertia[i] = previousPosition[i];
-                positions[i] = previousPosition[i];
-                velocities[i] = Vector3.zero;
+                Vector3 prevAcc = (velocities[i] - previousVelocities[i]) / dt;
+                float extAcc = Vector3.Dot(prevAcc, gravDir);
+                float alpha = Mathf.Clamp01(extAcc / gravMag);
+
+                inertia[i] = previousPosition[i] + dt * velocities[i] + (alpha * dt2 * gravity);
             }
             else
             {
-                inertia[i] = previousPosition[i] + dt * velocities[i] + dt2 * gravity;
-                positions[i] = inertia[i];
+                inertia[i] = previousPosition[i] + dt * velocities[i] + (dt2 * gravity);
             }
+
+            positions[i] = inertia[i];
         }
     }
 
