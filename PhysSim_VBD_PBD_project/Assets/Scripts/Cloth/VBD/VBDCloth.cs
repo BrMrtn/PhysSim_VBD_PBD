@@ -171,7 +171,28 @@ public class VBDCloth : MonoBehaviour
         AddSprings(springsList, perVertSprings, 0, 0, 0, 2, bendingStiffness);    // bend vertical
 
         Solver.springs = springsList.ToArray();
-        Solver.perVertSprings = perVertSprings;
+
+        // Flatten into Solver.springIds + Solver.springListStart
+        var listStart = new int[numVerts + 1];
+        int running = 0;
+        for (int i = 0; i < numVerts; i++)
+        {
+            listStart[i] = running;
+            running += perVertSprings[i].Count;
+        }
+        listStart[numVerts] = running;
+
+        var flat = new int[running];
+        for (int i = 0; i < numVerts; i++)
+        {
+            var list = perVertSprings[i];
+            int s = listStart[i];
+            for (int j = 0; j < list.Count; j++)
+                flat[s + j] = list[j];
+        }
+
+        Solver.springIds = flat;
+        Solver.springListStart = listStart;
     }
 
     private void AddSprings(List<Spring> springsList,

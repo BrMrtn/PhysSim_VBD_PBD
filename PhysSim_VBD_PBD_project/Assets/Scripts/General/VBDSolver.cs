@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class VBDSolver
@@ -29,8 +28,10 @@ public class VBDSolver
     public bool[] isColliding;
 
     public Spring[] springs;
-    public List<int>[] perVertSprings;    // array of connecting spring's lists for each vertex
+    public int[] springIds;
+    public int[] springListStart;
 
+    public event Action OnPreSubstep;
     public event Action OnSubstep;
 
     public delegate void VertexSolveDelegate(int i, Vector3 pos, ref Vector3 f, ref float h00, ref float h11, ref float h22, ref float h01, ref float h02, ref float h12);
@@ -53,7 +54,8 @@ public class VBDSolver
         Array.Fill(masses, 1f);
         Array.Fill(invMasses, 1f);
         springs = Array.Empty<Spring>();
-        perVertSprings = Array.Empty<List<int>>();
+        springIds = Array.Empty<int>();
+        springListStart = new int[numVerts + 1];
     }
 
     public void Step(float dt)
@@ -63,6 +65,7 @@ public class VBDSolver
 
         for (int step = 0; step < numSubsteps; step++)
         {
+            OnPreSubstep?.Invoke(); // cache values for faster access in OnVertexSolve
             AdaptiveInitialization(sdt);
 
             float omega = 1f;
@@ -79,10 +82,8 @@ public class VBDSolver
                     Array.Copy(prevIterPos, prevprevPos, numVerts);
                 }
             }
-
+            OnSubstep?.Invoke(); // TODO: for fixed stuff handling
             UpdateVelocity(sdt);
-
-            //OnSubstep?.Invoke(); // TODO: for fixed stuff handling
         }
     }
 
@@ -134,10 +135,11 @@ public class VBDSolver
             float h22 = massInvDt2;
 
             // Spring contributions from all incident springs
-            var adjSprings = perVertSprings[i];
-            for (int s = 0; s < adjSprings.Count; s++)
+            int start = springListStart[i];
+            int end = springListStart[i + 1];
+            for (int s = start; s < end; s++)
             {
-                Spring spring = springs[adjSprings[s]];
+                Spring spring = springs[springIds[s]];
                 int v1 = spring.p1Idx;
                 int v2 = spring.p2Idx;
 

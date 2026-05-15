@@ -4,7 +4,7 @@ using UnityEngine;
 public class XPBDSphereCollision : MonoBehaviour
 {
     public SphereCollider sphereCollider;
-    public float friction = 0.3f;
+    [Range(0f, 1f)] public float friction = 0.3f;
 
     private XPBDSolver solver;
 
@@ -42,19 +42,16 @@ public class XPBDSphereCollision : MonoBehaviour
 
             Vector3 delta = positions[i] - center;
             float dist = delta.magnitude;
+            if (dist >= radius || dist < 1e-6f) continue;
 
-            if (dist < radius)
-            {
-                Vector3 normal = delta / dist;
-                positions[i] = center + normal * radius;
+            Vector3 normal = delta / dist;
+            positions[i] = center + normal * radius;
 
-                // Friction logic
-                Vector3 displacement = positions[i] - prevPositions[i];
-                Vector3 dispNormal = Vector3.Dot(displacement, normal) * normal;
-                Vector3 dispTangent = displacement - dispNormal;
-
-                positions[i] -= dispTangent * friction;
-            }
+            // Friction logic
+            Vector3 disp = positions[i] - prevPositions[i];
+            Vector3 dispNormal = Vector3.Dot(disp, normal) * normal;
+            Vector3 dispTangent = disp - dispNormal;
+            positions[i] -= dispTangent * friction;
         }
     }
 }
