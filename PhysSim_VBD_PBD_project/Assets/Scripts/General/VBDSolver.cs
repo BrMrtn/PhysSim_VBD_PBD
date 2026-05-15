@@ -152,7 +152,7 @@ public class VBDSolver
                 float ratio = l0 * invL;
 
                 // h_spring = k * ((1 - l0/l) I + (l0/l) d d^T) = coeff1 * I + coeff2 * d d^T
-                float coeff1 = k * 1f - ratio; // TODO:Max only needed if big dt + few substeps
+                float coeff1 = k * Mathf.Max(0f, 1f - ratio); // TODO:Max only needed if big dt + few substeps
                 float coeff2 = k * ratio;
 
                 h00 += coeff1 + coeff2 * dir.x * dir.x;
