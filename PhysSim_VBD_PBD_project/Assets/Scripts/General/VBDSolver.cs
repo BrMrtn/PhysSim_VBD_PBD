@@ -96,6 +96,7 @@ public class VBDSolver
         for (int i = 0; i < numVerts; i++)
         {
             if (invMasses[i] == 0f) continue;
+            inertia[i] = previousPosition[i] + dt * velocities[i] + dt2 * gravity;
             float alpha = 1f;
 
             if (hasPrevVelocities && gravMag > 1e-10f)
@@ -103,10 +104,13 @@ public class VBDSolver
                 Vector3 prevAcc = (velocities[i] - previousVelocities[i]) / dt;
                 float extAcc = Vector3.Dot(prevAcc, gravDir);
                 alpha = Mathf.Clamp01(extAcc / gravMag);
-            }
 
-            inertia[i] = previousPosition[i] + dt * velocities[i] +  dt2 * gravity;
-            positions[i] = previousPosition[i] + dt * velocities[i] + alpha * dt2 * gravity;
+                positions[i] = previousPosition[i] + dt * velocities[i] + alpha * dt2 * gravity;
+            }
+            else
+            {
+                positions[i] = inertia[i];
+            }
         }
     }
 
@@ -148,7 +152,7 @@ public class VBDSolver
                 float ratio = l0 * invL;
 
                 // h_spring = k * ((1 - l0/l) I + (l0/l) d d^T) = coeff1 * I + coeff2 * d d^T
-                float coeff1 = k * (1f - ratio);
+                float coeff1 = k * 1f - ratio; // TODO:Max only needed if big dt + few substeps
                 float coeff2 = k * ratio;
 
                 h00 += coeff1 + coeff2 * dir.x * dir.x;
