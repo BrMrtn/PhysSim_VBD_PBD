@@ -12,8 +12,8 @@ public class XPBDFollowCorners : MonoBehaviour
     private XPBDCloth clothSim;
     private XPBDSolver solver;
 
-    private int leftAnchorIdx;
-    private int rightAnchorIdx;
+    private int topLeftIdx;
+    private int topRightIdx;
 
     private Transform leftTransform;
     private Transform rightTransform;
@@ -29,25 +29,13 @@ public class XPBDFollowCorners : MonoBehaviour
 
             int numX = clothSim.numX;
             int numY = clothSim.numY;
-            int topLeftIdx = (numY - 1) * numX;
-            int topRightIdx = (numY - 1) * numX + (numX - 1);
+            topLeftIdx = (numY - 1) * numX;
+            topRightIdx = (numY - 1) * numX + (numX - 1);
 
-            int currentLength = solver.positions.Length;
-            leftAnchorIdx = currentLength;
-            rightAnchorIdx = currentLength + 1;
-
-            Array.Resize(ref solver.positions, solver.positions.Length + 2);
-            Array.Resize(ref solver.invMasses, solver.invMasses.Length + 2);
-
-            solver.invMasses[leftAnchorIdx] = 0f;
-            solver.invMasses[rightAnchorIdx] = 0f;
+            solver.invMasses[topLeftIdx] = 0f;
+            solver.invMasses[topRightIdx] = 0f;
 
             SetAnchorPositions();
-
-            var constraintsList = new List<DistanceConstraint>(solver.constraints);
-            constraintsList.Add(new DistanceConstraint(topLeftIdx, leftAnchorIdx, 0f, 0f));
-            constraintsList.Add(new DistanceConstraint(topRightIdx, rightAnchorIdx, 0f, 0f));
-            solver.constraints = constraintsList.ToArray();
         }
     }
 
@@ -59,7 +47,7 @@ public class XPBDFollowCorners : MonoBehaviour
 
     private void SetAnchorPositions()
     {
-        solver.positions[leftAnchorIdx] = leftTransform.position;
-        solver.positions[rightAnchorIdx] = rightTransform.position;
+        solver.positions[topLeftIdx] = leftTransform.position;
+        solver.positions[topRightIdx] = rightTransform.position;
     }
 }

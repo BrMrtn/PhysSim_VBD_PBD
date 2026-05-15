@@ -558,7 +558,7 @@ MonoBehaviour:
   numParticles: 20
   restLength: 1
   stretchingStiffness: 100000
-  hasBendingConstraints: 1
+  hasBendingConstraints: 0
   bendingStiffness: 1000
   logMsPerFrame: 1
   addInitNoise: 0
