@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  20 APR 2026 16:44
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  16 MAY 2026 22:12
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -599,7 +599,7 @@ Package hyperref Info: Option `colorlinks' set `true' on input line 39.
 \c@currtheoremctr=\count347
 \c@endtheoremctr=\count348
 \c@theorem=\count349
-) (./thesis.aux (./include/guideline.aux) (./include/project.aux) (./include/titlepage.aux) (./include/declaration_EN.aux) (./content/abstract.aux) (./content/introduction.aux) (./content/latex-tools.aux) (./content/thesis-format.aux) (./content/template-usage.aux) (./content/acknowledgement.aux) (./content/appendices.aux))
+) (./thesis.aux (./include/titlepage.aux) (./include/declaration_EN.aux) (./content/abstract.aux) (./content/introduction.aux) (./content/latex-tools.aux) (./content/thesis-format.aux) (./content/template-usage.aux) (./content/acknowledgement.aux) (./content/appendices.aux))
 \openout1 = `thesis.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 45.
@@ -703,36 +703,20 @@ LaTeX Info: Redefining \mit on input line 578.
 )
 Package babel Info: 'magyar' activates 'magyar' shorthands.
 (babel)             Reported on input line 45.
-\openout2 = `include/guideline.aux'.
-
- (./include/guideline.tex
-LaTeX Font Info:    Trying to load font information for U+msa on input line 29.
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Trying to load font information for U+msb on input line 29.
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)) [1
-
-
-
-]
-\openout2 = `include/project.aux'.
-
- (./include/project.tex) [2
-
-
-
-
-]
 \openout2 = `include/titlepage.aux'.
 
  (./include/titlepage.tex
 Package hyperref Info: Option `pageanchor' set `false' on input line 1.
 File: figures/bme_logo.pdf Graphic file (type pdf)
 <use figures/bme_logo.pdf>
- [1
+LaTeX Font Info:    Trying to load font information for U+msa on input line 20.
+ (d:/Programok/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 20.
+ (d:/Programok/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+) [1
 
 
 
@@ -959,7 +943,7 @@ Underfull \hbox (badness 1577) in paragraph at lines 28--28
 
 Package natbib Warning: There were undefined citations.
 
-(./thesis.aux (./include/guideline.aux) (./include/project.aux) (./include/titlepage.aux) (./include/declaration_EN.aux) (./content/abstract.aux) (./content/introduction.aux) (./content/latex-tools.aux) (./content/thesis-format.aux) (./content/template-usage.aux) (./content/acknowledgement.aux) (./content/appendices.aux))
+(./thesis.aux (./include/titlepage.aux) (./include/declaration_EN.aux) (./content/abstract.aux) (./content/introduction.aux) (./content/latex-tools.aux) (./content/thesis-format.aux) (./content/template-usage.aux) (./content/acknowledgement.aux) (./content/appendices.aux))
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -968,12 +952,12 @@ Package rerunfilecheck Info: File `thesis.out' has not changed.
 (rerunfilecheck)             Checksum: 71A682A5FFAE7AB62EBC857B9B8EE57F;4806.
  ) 
 Here is how much of TeX's memory you used:
- 19683 strings out of 469581
- 366692 string characters out of 5461843
- 1447002 words of memory out of 5000000
- 47944 multiletter control sequences out of 15000+600000
+ 19633 strings out of 469581
+ 365164 string characters out of 5461843
+ 1445301 words of memory out of 5000000
+ 47908 multiletter control sequences out of 15000+600000
  642428 words of font info for 131 fonts, out of 8000000 for 9000
  376 hyphenation exceptions out of 8191
  78i,16n,82p,1534b,1934s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on thesis.pdf (29 pages).
+Output written on thesis.pdf (27 pages).
