@@ -1,13 +1,13 @@
 using UnityEngine;
 
-[RequireComponent(typeof(XPBDCloth))]
-public class XPBDFixedSides : MonoBehaviour
+[RequireComponent(typeof(VBDCloth))]
+public class VBDFixedSides : MonoBehaviour
 {
     public Transform topCuboid;
     public Transform bottomCuboid;
 
-    private XPBDCloth clothSim;
-    private XPBDSolver solver;
+    private VBDCloth clothSim;
+    private VBDSolver solver;
 
     private int[] topIndices;
     private int[] bottomIndices;
@@ -18,10 +18,10 @@ public class XPBDFixedSides : MonoBehaviour
 
     void Start()
     {
-        clothSim = GetComponent<XPBDCloth>();
+        clothSim = GetComponent<VBDCloth>();
         if (clothSim == null)
         {
-            Debug.LogError($"{nameof(XPBDFixedSides)} requires an {nameof(XPBDCloth)} component on the same GameObject.");
+            Debug.LogError($"{nameof(VBDFixedSides)} requires a {nameof(VBDCloth)} component on the same GameObject.");
             enabled = false;
             return;
         }
