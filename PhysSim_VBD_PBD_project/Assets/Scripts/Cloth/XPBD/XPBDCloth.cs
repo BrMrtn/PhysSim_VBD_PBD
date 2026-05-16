@@ -13,7 +13,8 @@ public class XPBDCloth : MonoBehaviour
     public float bendingCompliance = 0.001f;
 
     public bool handleSelfCollisions = false;
-    public float selfCollisionFriction = 0.0f;
+    public float selfCollisionFriction = 0f;
+
     public bool logMsPerFrame = true;
     public bool addInitNoise = false;
 

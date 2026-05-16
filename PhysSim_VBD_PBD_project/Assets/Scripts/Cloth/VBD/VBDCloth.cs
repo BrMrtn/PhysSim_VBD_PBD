@@ -13,6 +13,9 @@ public class VBDCloth : MonoBehaviour
     public float shearStiffness = 1e4f;
     public float bendingStiffness = 1e3f;
 
+    public bool handleSelfCollisions = false;
+    public float selfCollisionFriction = 0f;
+
     public bool logMsPerFrame = true;
     public bool addInitNoise = false;
 
@@ -21,6 +24,9 @@ public class VBDCloth : MonoBehaviour
     [Range(0f, 1f)] public float accelerationRho = 0.5f;
 
     public VBDSolver Solver { get; private set; }
+
+    private float spacing;
+    private float thickness;
 
     private const int logEveryNFrames = 10;
     private string performanceText = "VBD Simulation: -- ms/frame";
@@ -63,12 +69,18 @@ public class VBDCloth : MonoBehaviour
 
         renderVertices = new Vector3[numVerts];
 
+        if (numX > 1) spacing = xCoords[1] - xCoords[0];
+        thickness = spacing;
+
         Solver = new VBDSolver(numVerts)
         {
             numSubsteps = numSubsteps,
             numIterations = numIterations,
             useAcceleration = useAcceleration,
-            accelerationRho = accelerationRho
+            accelerationRho = accelerationRho,
+            handleSelfCollisions = handleSelfCollisions,
+            selfCollisionFriction = selfCollisionFriction,
+            thickness = thickness
         };
 
         BuildSimulationGrid(xCoords, yCoords);
@@ -81,6 +93,8 @@ public class VBDCloth : MonoBehaviour
             for (int i = 0; i < numVerts; i++)
                 if (Solver.invMasses[i] > 0f)
                     Solver.positions[i] += UnityEngine.Random.insideUnitSphere * 0.001f;
+
+        if (handleSelfCollisions) Solver.CreateSpatialHash(spacing);
     }
 
     void Update()
