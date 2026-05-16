@@ -17,9 +17,11 @@ public class XPBDSolver
     public Vector3[] restPositions;
     public float[] invMasses;
     public DistanceConstraint[] constraints;
+    public Vector3[] externalForces;
 
     private SpatialHash spatialHash;
 
+    public event Action OnPreSubstep;
     public event Action OnSubstep;
 
     public XPBDSolver(int numVerts)
@@ -30,6 +32,7 @@ public class XPBDSolver
         previousPositions = new Vector3[numVerts];
         restPositions = new Vector3[numVerts];
         invMasses = new float[numVerts];
+        externalForces = new Vector3[numVerts];
         Array.Fill(invMasses, 1f);
         constraints = Array.Empty<DistanceConstraint>();
     }
@@ -54,6 +57,7 @@ public class XPBDSolver
 
         for (int step = 0; step < numSubsteps; step++)
         {
+            OnPreSubstep?.Invoke();
             Integrate(sdt, maxVelocity);
             SolveDistanceConstraints(invSdt2);
             if (handleSelfCollisions) SolveSelfCollisions();
@@ -66,8 +70,13 @@ public class XPBDSolver
     {
         for (int i = 0; i < numVerts; i++)
         {
+            Vector3 externalForce = externalForces[i];
+            externalForces[i] = Vector3.zero;
+
             if (invMasses[i] == 0f) continue;
-            velocities[i] += gravity * sdt;
+            float sdtInvMass = sdt * invMasses[i];
+            velocities[i] += gravity * sdtInvMass;
+            velocities[i] += externalForce * sdtInvMass;
 
             float v = velocities[i].magnitude;
             if (v > maxVelocity)
