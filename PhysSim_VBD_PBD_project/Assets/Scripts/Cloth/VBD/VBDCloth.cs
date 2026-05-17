@@ -173,44 +173,40 @@ public class VBDCloth : MonoBehaviour
 
     private void InitSprings()
     {
-        var springsList = new List<Spring>();
-        var perVertSprings = new List<int>[numVerts];
-        for (int i = 0; i < numVerts; i++) perVertSprings[i] = new List<int>();
+        var perVertEdges = new List<VertexSpringEdge>[numVerts];
+        for (int i = 0; i < numVerts; i++) perVertEdges[i] = new List<VertexSpringEdge>();
 
-        AddSprings(springsList, perVertSprings, 0, 0, 1, 0, stretchingStiffness); // stretch horizontal
-        AddSprings(springsList, perVertSprings, 0, 0, 0, 1, stretchingStiffness); // stretch vertical
-        AddSprings(springsList, perVertSprings, 0, 0, 1, 1, shearStiffness);      // shear  /
-        AddSprings(springsList, perVertSprings, 1, 0, 0, 1, shearStiffness);      // shear  \
-        AddSprings(springsList, perVertSprings, 0, 0, 2, 0, bendingStiffness);    // bend horizontal
-        AddSprings(springsList, perVertSprings, 0, 0, 0, 2, bendingStiffness);    // bend vertical
+        AddSprings(perVertEdges, 0, 0, 1, 0, stretchingStiffness); // stretch horizontal
+        AddSprings(perVertEdges, 0, 0, 0, 1, stretchingStiffness); // stretch vertical
+        AddSprings(perVertEdges, 0, 0, 1, 1, shearStiffness);      // shear  /
+        AddSprings(perVertEdges, 1, 0, 0, 1, shearStiffness);      // shear  \
+        AddSprings(perVertEdges, 0, 0, 2, 0, bendingStiffness);    // bend horizontal
+        AddSprings(perVertEdges, 0, 0, 0, 2, bendingStiffness);    // bend vertical
 
-        Solver.springs = springsList.ToArray();
-
-        // Flatten into Solver.springIds + Solver.springListStart
+        // Flatten per-vertex lists into CSR (springListStart + springEdges).
         var listStart = new int[numVerts + 1];
         int running = 0;
         for (int i = 0; i < numVerts; i++)
         {
             listStart[i] = running;
-            running += perVertSprings[i].Count;
+            running += perVertEdges[i].Count;
         }
         listStart[numVerts] = running;
 
-        var flat = new int[running];
+        var flat = new VertexSpringEdge[running];
         for (int i = 0; i < numVerts; i++)
         {
-            var list = perVertSprings[i];
+            var list = perVertEdges[i];
             int s = listStart[i];
             for (int j = 0; j < list.Count; j++)
                 flat[s + j] = list[j];
         }
 
-        Solver.springIds = flat;
+        Solver.springEdges = flat;
         Solver.springListStart = listStart;
     }
 
-    private void AddSprings(List<Spring> springsList,
-                            List<int>[] perVertSprings,
+    private void AddSprings(List<VertexSpringEdge>[] perVertEdges,
                             int offset_i0, int offset_j0,
                             int offset_i1, int offset_j1,
                             float stiffness)
@@ -228,16 +224,10 @@ public class VBDCloth : MonoBehaviour
                     int p1 = j0 * numX + i0;
                     int p2 = j1 * numX + i1;
 
-                    int springId = springsList.Count;
-                    springsList.Add(new Spring
-                    {
-                        p1Idx = p1,
-                        p2Idx = p2,
-                        restLength = Vector3.Distance(Solver.positions[p1], Solver.positions[p2]),
-                        stiffness = stiffness
-                    });
-                    perVertSprings[p1].Add(springId);
-                    perVertSprings[p2].Add(springId);
+                    float restLen = Vector3.Distance(Solver.positions[p1], Solver.positions[p2]);
+
+                    perVertEdges[p1].Add(new VertexSpringEdge { otherIdx = p2, restLength = restLen, stiffness = stiffness });
+                    perVertEdges[p2].Add(new VertexSpringEdge { otherIdx = p1, restLength = restLen, stiffness = stiffness });
                 }
             }
     }

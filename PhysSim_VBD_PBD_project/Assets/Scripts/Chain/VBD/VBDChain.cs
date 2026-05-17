@@ -52,22 +52,16 @@ public class VBDChain : MonoBehaviour
 
         System.Array.Copy(Solver.positions, Solver.restPositions, numParticles);
 
-        // Build springs between consecutive particles (and optional bending springs)
-        var springsList = new List<Spring>();
-        var perVertSprings = new List<int>[numParticles];
-        for (int i = 0; i < numParticles; i++) perVertSprings[i] = new List<int>();
+        // Build per-incidence edge lists (each spring stored once per endpoint).
+        var perVertEdges = new List<VertexSpringEdge>[numParticles];
+        for (int i = 0; i < numParticles; i++) perVertEdges[i] = new List<VertexSpringEdge>();
 
         // Stretching springs between consecutive particles
         for (int i = 0; i < numParticles - 1; i++)
         {
-            int springId = springsList.Count;
-            springsList.Add(new Spring(
-                i,
-                i + 1,
-                Vector3.Distance(Solver.positions[i], Solver.positions[i + 1]),
-                stretchingStiffness));
-            perVertSprings[i].Add(springId);
-            perVertSprings[i + 1].Add(springId);
+            float restLen = Vector3.Distance(Solver.positions[i], Solver.positions[i + 1]);
+            perVertEdges[i].Add(new VertexSpringEdge { otherIdx = i + 1, restLength = restLen, stiffness = stretchingStiffness });
+            perVertEdges[i + 1].Add(new VertexSpringEdge { otherIdx = i, restLength = restLen, stiffness = stretchingStiffness });
         }
 
         // Bending springs connecting every second vertex
@@ -75,29 +69,30 @@ public class VBDChain : MonoBehaviour
         {
             for (int i = 0; i < numParticles - 2; i++)
             {
-                int springId = springsList.Count;
-                springsList.Add(new Spring(
-                    i,
-                    i + 2,
-                    Vector3.Distance(Solver.positions[i], Solver.positions[i + 2]),
-                    bendingStiffness));
-                perVertSprings[i].Add(springId);
-                perVertSprings[i + 2].Add(springId);
+                float restLen = Vector3.Distance(Solver.positions[i], Solver.positions[i + 2]);
+                perVertEdges[i].Add(new VertexSpringEdge { otherIdx = i + 2, restLength = restLen, stiffness = bendingStiffness });
+                perVertEdges[i + 2].Add(new VertexSpringEdge { otherIdx = i, restLength = restLen, stiffness = bendingStiffness });
             }
         }
 
-        Solver.springs = springsList.ToArray();
-
-        // Convert perVertSprings list of lists to flat arrays (springIds & springListStart)
-        List<int> flatSpringIds = new List<int>();
+        // Flatten into CSR (springListStart + springEdges).
         Solver.springListStart = new int[numParticles + 1];
+        int total = 0;
         for (int i = 0; i < numParticles; i++)
         {
-            Solver.springListStart[i] = flatSpringIds.Count;
-            flatSpringIds.AddRange(perVertSprings[i]);
+            Solver.springListStart[i] = total;
+            total += perVertEdges[i].Count;
         }
-        Solver.springListStart[numParticles] = flatSpringIds.Count;
-        Solver.springIds = flatSpringIds.ToArray();
+        Solver.springListStart[numParticles] = total;
+
+        Solver.springEdges = new VertexSpringEdge[total];
+        for (int i = 0; i < numParticles; i++)
+        {
+            int s = Solver.springListStart[i];
+            var list = perVertEdges[i];
+            for (int j = 0; j < list.Count; j++)
+                Solver.springEdges[s + j] = list[j];
+        }
 
         renderPositions = new Vector3[numParticles];
 

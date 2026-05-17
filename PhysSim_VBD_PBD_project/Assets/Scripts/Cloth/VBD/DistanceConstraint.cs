@@ -1,17 +1,12 @@
-using UnityEngine;
-
-public struct Spring
+// Per-vertex view of a spring: stores the OTHER endpoint plus its rest length
+// and stiffness. VBDSolver's Gauss-Seidel pass walks these directly out of a
+// CSR (springListStart + springEdges), so each spring is duplicated once per
+// endpoint. That trades 2x memory for: no indirection into a global springs[]
+// table, no branch on which endpoint is the current vertex, and sequential
+// per-vertex access.
+public struct VertexSpringEdge
 {
-    public int p1Idx;
-    public int p2Idx;
+    public int otherIdx;
     public float restLength;
     public float stiffness;
-
-    public Spring(int particle1Index, int particle2Index, float restLength, float stiffness)
-    {
-        p1Idx = particle1Index;
-        p2Idx = particle2Index;
-        this.restLength = restLength;
-        this.stiffness = stiffness;
-    }
 }

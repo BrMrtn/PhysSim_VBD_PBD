@@ -33,8 +33,7 @@ public class VBDSolver
 
     public bool[] isColliding;
 
-    public Spring[] springs;
-    public int[] springIds;
+    public VertexSpringEdge[] springEdges;
     public int[] springListStart;
 
     public event Action OnPreSubstep;
@@ -59,8 +58,7 @@ public class VBDSolver
         isColliding = new bool[numVerts];
         Array.Fill(masses, 1f);
         Array.Fill(invMasses, 1f);
-        springs = Array.Empty<Spring>();
-        springIds = Array.Empty<int>();
+        springEdges = Array.Empty<VertexSpringEdge>();
         springListStart = new int[numVerts + 1];
     }
 
@@ -168,21 +166,21 @@ public class VBDSolver
             float h11 = massInvDt2, h12 = 0f;
             float h22 = massInvDt2;
 
-            // Spring contributions from all incident springs
+            // Spring contributions from all incident springs. Per-incidence
+            // storage means diff is always (pos[i] - pos[other]), so the force
+            // sign is unconditional.
             int start = springListStart[i];
             int end = springListStart[i + 1];
             for (int s = start; s < end; s++)
             {
-                Spring spring = springs[springIds[s]];
-                int v1 = spring.p1Idx;
-                int v2 = spring.p2Idx;
+                VertexSpringEdge edge = springEdges[s];
 
-                Vector3 diff = positions[v1] - positions[v2];
+                Vector3 diff = positions[i] - positions[edge.otherIdx];
                 float len = diff.magnitude;
                 if (len < 1e-10f) continue;
 
-                float l0 = spring.restLength;
-                float k = spring.stiffness;
+                float l0 = edge.restLength;
+                float k = edge.stiffness;
                 float invL = 1f / len;
                 Vector3 dir = diff * invL;
                 float ratio = l0 * invL;
@@ -198,9 +196,7 @@ public class VBDSolver
                 h02 += coeff2 * dir.x * dir.z;
                 h12 += coeff2 * dir.y * dir.z;
 
-                // F_v1 = k (l0 - l)/l * diff,  F_v2 = -F_v1
-                if (v1 == i) f += k * (l0 - len) * invL * diff;
-                else f -= k * (l0 - len) * invL * diff;
+                f += (k * (l0 - len) * invL) * diff;
             }
 
             // Self-collision as a contact energy E = 1/2 kc (minDist - d)^2.
