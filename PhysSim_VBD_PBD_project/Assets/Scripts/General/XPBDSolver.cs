@@ -131,7 +131,8 @@ public class XPBDSolver
 
         for (int id0 = 0; id0 < numVerts; id0++)
         {
-            if (invMasses[id0] == 0f)
+            float w0 = invMasses[id0];
+            if (w0 == 0f)
                 continue;
             int first = spatialHash.firstAdjId[id0];
             int last = spatialHash.firstAdjId[id0 + 1];
@@ -139,7 +140,9 @@ public class XPBDSolver
             for (int j = first; j < last; j++)
             {
                 int id1 = spatialHash.adjIds[j];
-                if (invMasses[id1] == 0f) continue;
+                float w1 = invMasses[id1];
+                float w = w0 + w1;
+                if (w == 0f) continue;
 
                 Vector3 delta = positions[id0] - positions[id1];
                 float dist2 = delta.sqrMagnitude;
@@ -155,8 +158,8 @@ public class XPBDSolver
                 float dist = Mathf.Sqrt(dist2);
                 Vector3 normal = delta / dist;
                 Vector3 correction = normal * (minDist - dist);
-                positions[id0] += 0.5f * correction;
-                positions[id1] -= 0.5f * correction;
+                positions[id0] += correction * (w0 / w);
+                positions[id1] -= correction * (w1 / w);
 
                 // Friction logic: compute relative displacement of contact points over the substep
                 Vector3 relDisp = (positions[id0] - previousPositions[id0]) -
@@ -164,8 +167,8 @@ public class XPBDSolver
                 Vector3 dispNormal = Vector3.Dot(relDisp, normal) * normal;
                 Vector3 dispTangent = relDisp - dispNormal;
 
-                positions[id0] -= 0.5f * dispTangent * selfCollisionFriction;
-                positions[id1] += 0.5f * dispTangent * selfCollisionFriction;
+                positions[id0] -= dispTangent * (selfCollisionFriction * w0 / w);
+                positions[id1] += dispTangent * (selfCollisionFriction * w1 / w);
             }
         }
     }
