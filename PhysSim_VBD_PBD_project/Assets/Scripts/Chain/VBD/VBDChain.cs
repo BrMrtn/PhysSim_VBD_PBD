@@ -8,9 +8,9 @@ public class VBDChain : MonoBehaviour
     public int numIterations = 15;
     public int numParticles = 20;
     public float restLength = 1f;
-    public float stretchingStiffness = 1e5f;
+    public float stretchingStiffness = 1e6f;
     public bool hasBendingConstraints = false;
-    public float bendingStiffness = 1e3f;
+    public float bendingStiffness = 1e5f;
     public bool logMsPerFrame = true;
     public bool addInitNoise = false;
     public Material sphereMaterial;
@@ -41,7 +41,8 @@ public class VBDChain : MonoBehaviour
             numSubsteps = numSubsteps,
             numIterations = numIterations,
             useAcceleration = useAcceleration,
-            accelerationRho = accelerationRho
+            accelerationRho = accelerationRho,
+            thickness = restLength
         };
 
         // Initialize particles in a straight line extending to the left

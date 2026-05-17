@@ -9,12 +9,12 @@ public class VBDCloth : MonoBehaviour
     public int numSubsteps = 1;
     public int numIterations = 15;
 
-    public float stretchingStiffness = 1e5f;
+    public float stretchingStiffness = 1e6f;
     public float shearStiffness = 1e4f;
     public float bendingStiffness = 1e3f;
 
     public bool handleSelfCollisions = false;
-    public float selfCollisionStiffness = 1e4f;
+    public float selfCollisionStiffness = 1e6f;
 
     public bool logMsPerFrame = true;
     public bool addInitNoise = false;

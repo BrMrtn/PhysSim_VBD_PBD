@@ -110,7 +110,7 @@ public class VBDSolver
         }
     }
 
-    private float MaxVelocityMagnitude() // TODO: is this needed
+    private float MaxVelocityMagnitude()
     {
         float vMaxSq = 0f;
         for (int i = 0; i < numVerts; i++)
@@ -220,9 +220,6 @@ public class VBDSolver
                 f += (k * (l0 - len) * invL) * diff;
             }
 
-            // Self-collision as a contact energy E = 1/2 kc (minDist - d)^2.
-            // Gradient/Hessian fold into the local Newton step the same way
-            // springs do; no out-of-band position projection or velocity cap.
             if (handleSelfCollisions && selfCollisionStiffness > 0f)
             {
                 float kc = selfCollisionStiffness;
@@ -302,15 +299,14 @@ public class VBDSolver
         float invDt = 1f / dt;
 
         float dtFrame = dt * numSubsteps;
-        bool doCap = thickness > 0f && dtFrame > 0f;
-        float velCap = doCap ? 3f * thickness / dtFrame : float.PositiveInfinity;
+        float velCap = handleSelfCollisions ? 3f * thickness / dtFrame : float.PositiveInfinity;
         float velCap2 = velCap * velCap;
 
         for (int i = 0; i < numVerts; i++)
         {
             if (invMasses[i] == 0f) { velocities[i] = Vector3.zero; continue; }
             Vector3 v = (positions[i] - previousPosition[i]) * invDt;
-            if (doCap)
+            if (handleSelfCollisions)
             {
                 float vSq = v.sqrMagnitude;
                 if (vSq > velCap2)

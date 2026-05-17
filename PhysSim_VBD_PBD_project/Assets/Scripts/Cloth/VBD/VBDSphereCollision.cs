@@ -55,8 +55,8 @@ public class VBDSphereCollision : MonoBehaviour
     }
 
     void HandleVertexSolve(int i, Vector3 pos, ref Vector3 f,
-                            ref float h00, ref float h11, ref float h22,
-                            ref float h01, ref float h02, ref float h12)
+                           ref float h00, ref float h11, ref float h22,
+                           ref float h01, ref float h02, ref float h12)
     {
         if (mode != CollisionMode.EnergyBased) return;
         if (sphereCollider == null) return;
