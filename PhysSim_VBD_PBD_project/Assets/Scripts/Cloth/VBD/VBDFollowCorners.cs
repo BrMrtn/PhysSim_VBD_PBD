@@ -1,7 +1,4 @@
-using NUnit.Framework;
 using UnityEngine;
-using System.Collections.Generic;
-using System;
 
 [RequireComponent(typeof(VBDCloth))]
 public class VBDFollowCorners : MonoBehaviour

@@ -1,5 +1,4 @@
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 // Mirror of XPBDSphereCollision so the same scene setup works with VBD.
 // Hooks the solver's OnSubstep event (fired once per substep, after the VBD
