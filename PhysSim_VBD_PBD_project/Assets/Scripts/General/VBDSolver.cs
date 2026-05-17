@@ -32,9 +32,10 @@ public class VBDSolver
     public float[] invMasses;
 
     public bool[] isColliding;
-
     public VertexSpringEdge[] springEdges;
     public int[] springListStart;
+    public Vector3[] externalForces;
+    private float[] cachedSelfCollisionMinDist;
 
     public event Action OnPreSubstep;
     public event Action OnSubstep;
@@ -60,6 +61,7 @@ public class VBDSolver
         Array.Fill(invMasses, 1f);
         springEdges = Array.Empty<VertexSpringEdge>();
         springListStart = new int[numVerts + 1];
+        externalForces = new Vector3[numVerts];
     }
 
     public void CreateSpatialHash(float spacing)
@@ -74,22 +76,21 @@ public class VBDSolver
         if (handleSelfCollisions)
         {
             spatialHash.Create(positions);
-            // Search radius = collision distance + max per-frame motion. No
-            // velocity clamping is applied; the contact energy itself resists
-            // interpenetration during the implicit solve.
             float maxTravelDistance = thickness + MaxVelocityMagnitude() * dt;
             spatialHash.QueryAllSymmetric(positions, maxTravelDistance);
+            CacheSelfCollisionMinDist();
         }
 
         for (int step = 0; step < numSubsteps; step++)
         {
-            OnPreSubstep?.Invoke(); // cache values for faster access in OnVertexSolve
+            Array.Clear(externalForces, 0, numVerts);
+            OnPreSubstep?.Invoke(); // accumulate into externalForces / cache values for OnVertexSolve
             AdaptiveInitialization(sdt);
 
             float omega = 1f;
             for (int iter = 0; iter < numIterations; iter++)
             {
-                Array.Copy(positions, prevIterPos, numVerts);
+                if (useAcceleration) Array.Copy(positions, prevIterPos, numVerts);
                 Array.Clear(isColliding, 0, numVerts);
 
                 Solve(sdt);
@@ -101,12 +102,12 @@ public class VBDSolver
                     Array.Copy(prevIterPos, prevprevPos, numVerts);
                 }
             }
-            OnSubstep?.Invoke(); // TODO: for fixed stuff handling
+            OnSubstep?.Invoke();
             UpdateVelocity(sdt);
         }
     }
 
-    private float MaxVelocityMagnitude()
+    private float MaxVelocityMagnitude() // TODO: is this needed
     {
         float vMaxSq = 0f;
         for (int i = 0; i < numVerts; i++)
@@ -116,6 +117,27 @@ public class VBDSolver
             if (vSq > vMaxSq) vMaxSq = vSq;
         }
         return Mathf.Sqrt(vMaxSq);
+    }
+
+    private void CacheSelfCollisionMinDist()
+    {
+        int total = spatialHash.firstAdjId[numVerts];
+        if (cachedSelfCollisionMinDist == null || cachedSelfCollisionMinDist.Length < total)
+            cachedSelfCollisionMinDist = new float[total];
+
+        float thickness2 = thickness * thickness;
+        for (int i = 0; i < numVerts; i++)
+        {
+            int s = spatialHash.firstAdjId[i];
+            int e = spatialHash.firstAdjId[i + 1];
+            for (int c = s; c < e; c++)
+            {
+                int j = spatialHash.adjIdsSym[c];
+                float restDist2 = (restPositions[i] - restPositions[j]).sqrMagnitude;
+                float minDist2 = restDist2 < thickness2 ? restDist2 : thickness2;
+                cachedSelfCollisionMinDist[c] = Mathf.Sqrt(minDist2);
+            }
+        }
     }
 
     private void AdaptiveInitialization(float dt)
@@ -158,17 +180,15 @@ public class VBDSolver
 
             float massInvDt2 = masses[i] * invDt2;
 
-            // f = m/dt^2 * (inertia - x)
-            Vector3 f = (inertia[i] - positions[i]) * massInvDt2;
+            // f = m/dt^2 * (inertia - x) + F_ext
+            Vector3 f = (inertia[i] - positions[i]) * massInvDt2 + externalForces[i];
 
-            // H = m/dt^2 * I - we only need Hessian is symmetric, because f_{xy} = f_{yx} for twice-continuously-differentiable functions
+            // H = m/dt^2 * I - we know Hessian is symmetric, because f_{xy} = f_{yx} for twice-continuously-differentiable functions
             float h00 = massInvDt2, h01 = 0f, h02 = 0f;
             float h11 = massInvDt2, h12 = 0f;
             float h22 = massInvDt2;
 
-            // Spring contributions from all incident springs. Per-incidence
-            // storage means diff is always (pos[i] - pos[other]), so the force
-            // sign is unconditional.
+            // Spring contributions from all incident springs
             int start = springListStart[i];
             int end = springListStart[i + 1];
             for (int s = start; s < end; s++)
@@ -186,7 +206,7 @@ public class VBDSolver
                 float ratio = l0 * invL;
 
                 // h_spring = k * ((1 - l0/l) I + (l0/l) d d^T) = coeff1 * I + coeff2 * d d^T
-                float coeff1 = k * Mathf.Max(0f, 1f - ratio); // TODO:Max only needed if big dt + few substeps
+                float coeff1 = k * Mathf.Max(0f, 1f - ratio); // Max only needed if big dt + few substeps
                 float coeff2 = k * ratio;
 
                 h00 += coeff1 + coeff2 * dir.x * dir.x;
@@ -205,7 +225,6 @@ public class VBDSolver
             if (handleSelfCollisions && selfCollisionStiffness > 0f)
             {
                 float kc = selfCollisionStiffness;
-                float thickness2 = thickness * thickness;
                 int cStart = spatialHash.firstAdjId[i];
                 int cEnd = spatialHash.firstAdjId[i + 1];
 
@@ -216,14 +235,10 @@ public class VBDSolver
                     float dist2 = diff.sqrMagnitude;
                     if (dist2 < 1e-20f) continue;
 
-                    // Effective contact distance: capped at the rest distance so
-                    // adjacent grid neighbors aren't pushed apart to `thickness`.
-                    float restDist2 = (restPositions[i] - restPositions[idJ]).sqrMagnitude;
-                    float minDist2 = restDist2 < thickness2 ? restDist2 : thickness2;
-                    if (dist2 >= minDist2) continue;
+                    float minDist = cachedSelfCollisionMinDist[c];
+                    if (dist2 >= minDist * minDist) continue;
 
                     float dist = Mathf.Sqrt(dist2);
-                    float minDist = Mathf.Sqrt(minDist2);
                     Vector3 n = diff * (1f / dist);
 
                     f += (kc * (minDist - dist)) * n;

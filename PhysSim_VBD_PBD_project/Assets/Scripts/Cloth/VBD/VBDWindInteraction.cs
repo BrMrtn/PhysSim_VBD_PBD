@@ -34,17 +34,13 @@ public class VBDWindInteraction : MonoBehaviour
         vertexForces = new Vector3[solver.numVerts];
         clothSize = Mathf.Max(0.01f, MeasureClothSize());
 
-        solver.OnPreSubstep += CacheWind;         // recompute (at most) once per frame
-        solver.OnVertexSolve += AddWindToVertex;  // inject cached force into solver residual
+        solver.OnPreSubstep += ApplyWind; // recompute (at most) once per frame, push into externalForces each substep
     }
 
     void OnDestroy()
     {
         if (solver != null)
-        {
-            solver.OnPreSubstep -= CacheWind;
-            solver.OnVertexSolve -= AddWindToVertex;
-        }
+            solver.OnPreSubstep -= ApplyWind;
     }
 
     /// <summary>Regular triangulation of the simulation grid.</summary>
@@ -85,7 +81,7 @@ public class VBDWindInteraction : MonoBehaviour
         return (max - min).magnitude;
     }
 
-    private void CacheWind()
+    private void ApplyWind()
     {
         if (!isActiveAndEnabled || windZone == null || triangles == null)
             return;
@@ -95,16 +91,13 @@ public class VBDWindInteraction : MonoBehaviour
             ComputeWindForces();
             lastComputedFrame = Time.frameCount;
         }
-    }
 
-    private void AddWindToVertex(int i, Vector3 pos, ref Vector3 f,
-                                 ref float h00, ref float h11, ref float h22,
-                                 ref float h01, ref float h02, ref float h12)
-    {
-        if (vertexForces == null) return;
-        // Wind contributes -F·x to the variational energy, so its contribution
-        // to f = -gradient is +F. No Hessian terms (linear in x).
-        f += vertexForces[i];
+        // Wind is linear in x, so it has no Hessian contribution — just an
+        // additive constant on f for this substep. Accumulate per-vertex into
+        // externalForces (cleared by the solver at the start of every substep).
+        Vector3[] external = solver.externalForces;
+        for (int i = 0; i < external.Length; i++)
+            external[i] += vertexForces[i];
     }
 
     private void ComputeWindForces()

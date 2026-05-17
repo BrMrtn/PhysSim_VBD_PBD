@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.ProBuilder;
 
 public class XPBDSolver
 {
@@ -20,6 +19,7 @@ public class XPBDSolver
     public Vector3[] externalForces;
 
     private SpatialHash spatialHash;
+    private float[] cachedSelfCollisionMinDist;
 
     public event Action OnPreSubstep;
     public event Action OnSubstep;
@@ -53,6 +53,7 @@ public class XPBDSolver
             spatialHash.Create(positions);
             float maxTravelDistance = thickness + maxVelocity * dt;
             spatialHash.QueryAll(positions, maxTravelDistance);
+            CacheSelfCollisionMinDist();
         }
 
         for (int step = 0; step < numSubsteps; step++)
@@ -126,8 +127,6 @@ public class XPBDSolver
 
     private void SolveSelfCollisions()
     {
-        float thickness2 = thickness * thickness;
-
         for (int id0 = 0; id0 < numVerts; id0++)
         {
             float w0 = invMasses[id0];
@@ -143,16 +142,10 @@ public class XPBDSolver
                 float w = w0 + w1;
                 if (w == 0f) continue;
 
+                float minDist = cachedSelfCollisionMinDist[j];
                 Vector3 delta = positions[id0] - positions[id1];
                 float dist2 = delta.sqrMagnitude;
-                if (dist2 == 0f || dist2 > thickness2) continue;
-
-                float restDist2 = (restPositions[id0] - restPositions[id1]).sqrMagnitude;
-                if (dist2 > restDist2) continue;
-
-                float minDist = thickness;
-                if (restDist2 < thickness2)
-                    minDist = Mathf.Sqrt(restDist2);
+                if (dist2 == 0f || dist2 >= minDist * minDist) continue;
 
                 float dist = Mathf.Sqrt(dist2);
                 Vector3 normal = delta / dist;
@@ -168,6 +161,27 @@ public class XPBDSolver
 
                 positions[id0] -= dispTangent * (selfCollisionFriction * w0 / w);
                 positions[id1] += dispTangent * (selfCollisionFriction * w1 / w);
+            }
+        }
+    }
+
+    private void CacheSelfCollisionMinDist()
+    {
+        int total = spatialHash.adjIds.Count;
+        if (cachedSelfCollisionMinDist == null || cachedSelfCollisionMinDist.Length < total)
+            cachedSelfCollisionMinDist = new float[total];
+
+        float thickness2 = thickness * thickness;
+        for (int id0 = 0; id0 < numVerts; id0++)
+        {
+            int first = spatialHash.firstAdjId[id0];
+            int last = spatialHash.firstAdjId[id0 + 1];
+            for (int j = first; j < last; j++)
+            {
+                int id1 = spatialHash.adjIds[j];
+                float restDist2 = (restPositions[id0] - restPositions[id1]).sqrMagnitude;
+                float minDist2 = restDist2 < thickness2 ? restDist2 : thickness2;
+                cachedSelfCollisionMinDist[j] = Mathf.Sqrt(minDist2);
             }
         }
     }
