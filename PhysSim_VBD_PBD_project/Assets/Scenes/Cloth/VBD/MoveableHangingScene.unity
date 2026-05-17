@@ -150,12 +150,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d3632ab0ebbf2147806eb5cd05a9e9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VBDCloth
-  numSubsteps: 1
-  numIterations: 10
+  numSubsteps: 2
+  numIterations: 5
   stretchingStiffness: 100000
   shearStiffness: 10000
   bendingStiffness: 1000
-  handleSelfCollisions: 0
+  handleSelfCollisions: 1
   selfCollisionFriction: 0
   logMsPerFrame: 1
   addInitNoise: 0

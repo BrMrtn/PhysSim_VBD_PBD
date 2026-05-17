@@ -78,7 +78,7 @@ public class VBDSolver
         if (handleSelfCollisions)
         {
             spatialHash.Create(positions);
-            float maxTravelDistance = maxVelocity * dt;
+            float maxTravelDistance = thickness + maxVelocity * dt;
             spatialHash.QueryAll(positions, maxTravelDistance);
         }
 
@@ -118,9 +118,12 @@ public class VBDSolver
         {
             if (invMasses[i] == 0f) continue;
 
-            float v = velocities[i].magnitude;
-            if (v > maxVelocity)
-                velocities[i] *= maxVelocity / v;
+            if (handleSelfCollisions)
+            {
+                float v = velocities[i].magnitude;
+                if (v > maxVelocity)
+                    velocities[i] *= maxVelocity / v;
+            }
 
             inertia[i] = previousPosition[i] + dt * velocities[i] + dt2 * gravity;
             float alpha = 1f;

@@ -51,7 +51,7 @@ public class XPBDSolver
         if (handleSelfCollisions)
         {
             spatialHash.Create(positions);
-            float maxTravelDistance = maxVelocity * dt;
+            float maxTravelDistance = thickness + maxVelocity * dt;
             spatialHash.QueryAll(positions, maxTravelDistance);
         }
 
@@ -78,9 +78,12 @@ public class XPBDSolver
             velocities[i] += gravity * sdtInvMass;
             velocities[i] += externalForce * sdtInvMass;
 
-            float v = velocities[i].magnitude;
-            if (v > maxVelocity)
-                velocities[i] *= maxVelocity / v;
+            if (handleSelfCollisions)
+            {
+                float v = velocities[i].magnitude;
+                if (v > maxVelocity)
+                    velocities[i] *= maxVelocity / v;
+            }
 
             previousPositions[i] = positions[i];
             positions[i] += velocities[i] * sdt;

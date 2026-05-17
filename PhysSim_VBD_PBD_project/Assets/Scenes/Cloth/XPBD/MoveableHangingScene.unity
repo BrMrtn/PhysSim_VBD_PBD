@@ -140,7 +140,7 @@ MonoBehaviour:
   stretchingCompliance: 0
   shearCompliance: 0.0001
   bendingCompliance: 0.001
-  handleSelfCollisions: 0
+  handleSelfCollisions: 1
   selfCollisionFriction: 0
   logMsPerFrame: 1
   addInitNoise: 1
