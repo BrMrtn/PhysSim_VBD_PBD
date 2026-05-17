@@ -74,9 +74,8 @@ public class XPBDSolver
             externalForces[i] = Vector3.zero;
 
             if (invMasses[i] == 0f) continue;
-            float sdtInvMass = sdt * invMasses[i];
-            velocities[i] += gravity * sdtInvMass;
-            velocities[i] += externalForce * sdtInvMass;
+            velocities[i] += gravity * sdt;
+            velocities[i] += externalForce * sdt * invMasses[i];
 
             if (handleSelfCollisions)
             {
