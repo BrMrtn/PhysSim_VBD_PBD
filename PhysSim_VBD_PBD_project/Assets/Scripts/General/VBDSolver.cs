@@ -12,7 +12,7 @@ public class VBDSolver
     public float accelerationRho = 0.5f;
 
     public bool handleSelfCollisions = false;
-    public float selfCollisionFriction = 0f;
+    public float selfCollisionStiffness = 1e4f;
     public float thickness;
 
     bool hasPrevVelocities = false;
@@ -72,28 +72,29 @@ public class VBDSolver
     public void Step(float dt)
     {
         float sdt = dt / numSubsteps;
-        float maxVelocity = thickness > 0f ? 0.2f * thickness / sdt : float.PositiveInfinity;
-        Array.Clear(isColliding, 0, numVerts);
 
         if (handleSelfCollisions)
         {
             spatialHash.Create(positions);
-            float maxTravelDistance = thickness + maxVelocity * dt;
-            spatialHash.QueryAll(positions, maxTravelDistance);
+            // Search radius = collision distance + max per-frame motion. No
+            // velocity clamping is applied; the contact energy itself resists
+            // interpenetration during the implicit solve.
+            float maxTravelDistance = thickness + MaxVelocityMagnitude() * dt;
+            spatialHash.QueryAllSymmetric(positions, maxTravelDistance);
         }
 
         for (int step = 0; step < numSubsteps; step++)
         {
             OnPreSubstep?.Invoke(); // cache values for faster access in OnVertexSolve
-            AdaptiveInitialization(sdt, maxVelocity);
+            AdaptiveInitialization(sdt);
 
             float omega = 1f;
             for (int iter = 0; iter < numIterations; iter++)
             {
                 Array.Copy(positions, prevIterPos, numVerts);
+                Array.Clear(isColliding, 0, numVerts);
 
                 Solve(sdt);
-                if (handleSelfCollisions) SolveSelfCollisions();
 
                 if (useAcceleration)
                 {
@@ -107,7 +108,19 @@ public class VBDSolver
         }
     }
 
-    private void AdaptiveInitialization(float dt, float maxVelocity)
+    private float MaxVelocityMagnitude()
+    {
+        float vMaxSq = 0f;
+        for (int i = 0; i < numVerts; i++)
+        {
+            if (invMasses[i] == 0f) continue;
+            float vSq = velocities[i].sqrMagnitude;
+            if (vSq > vMaxSq) vMaxSq = vSq;
+        }
+        return Mathf.Sqrt(vMaxSq);
+    }
+
+    private void AdaptiveInitialization(float dt)
     {
         Vector3 gravDir = gravity.normalized;
         float gravMag = gravity.magnitude;
@@ -117,13 +130,6 @@ public class VBDSolver
         for (int i = 0; i < numVerts; i++)
         {
             if (invMasses[i] == 0f) continue;
-
-            if (handleSelfCollisions)
-            {
-                float v = velocities[i].magnitude;
-                if (v > maxVelocity)
-                    velocities[i] *= maxVelocity / v;
-            }
 
             inertia[i] = previousPosition[i] + dt * velocities[i] + dt2 * gravity;
             float alpha = 1f;
@@ -197,6 +203,48 @@ public class VBDSolver
                 else f -= k * (l0 - len) * invL * diff;
             }
 
+            // Self-collision as a contact energy E = 1/2 kc (minDist - d)^2.
+            // Gradient/Hessian fold into the local Newton step the same way
+            // springs do; no out-of-band position projection or velocity cap.
+            if (handleSelfCollisions && selfCollisionStiffness > 0f)
+            {
+                float kc = selfCollisionStiffness;
+                float thickness2 = thickness * thickness;
+                int cStart = spatialHash.firstAdjId[i];
+                int cEnd = spatialHash.firstAdjId[i + 1];
+
+                for (int c = cStart; c < cEnd; c++)
+                {
+                    int idJ = spatialHash.adjIdsSym[c];
+                    Vector3 diff = positions[i] - positions[idJ];
+                    float dist2 = diff.sqrMagnitude;
+                    if (dist2 < 1e-20f) continue;
+
+                    // Effective contact distance: capped at the rest distance so
+                    // adjacent grid neighbors aren't pushed apart to `thickness`.
+                    float restDist2 = (restPositions[i] - restPositions[idJ]).sqrMagnitude;
+                    float minDist2 = restDist2 < thickness2 ? restDist2 : thickness2;
+                    if (dist2 >= minDist2) continue;
+
+                    float dist = Mathf.Sqrt(dist2);
+                    float minDist = Mathf.Sqrt(minDist2);
+                    Vector3 n = diff * (1f / dist);
+
+                    f += (kc * (minDist - dist)) * n;
+
+                    // PSD rank-1 Hessian: kc * n n^T (full Hessian's -kc(r/d)(I-nn^T)
+                    // term can go indefinite, so drop it for VBD's local solve).
+                    h00 += kc * n.x * n.x;
+                    h11 += kc * n.y * n.y;
+                    h22 += kc * n.z * n.z;
+                    h01 += kc * n.x * n.y;
+                    h02 += kc * n.x * n.z;
+                    h12 += kc * n.y * n.z;
+
+                    isColliding[i] = true;
+                }
+            }
+
             OnVertexSolve?.Invoke(i, positions[i], ref f, ref h00, ref h11, ref h22, ref h01, ref h02, ref h12);
 
             Vector3 dx = SolveSymmetric3x3(h00, h11, h22, h01, h02, h12, f);
@@ -267,51 +315,4 @@ public class VBDSolver
         }
     }
 
-    private void SolveSelfCollisions()
-    {
-        float thickness2 = thickness * thickness;
-
-        for (int id0 = 0; id0 < numVerts; id0++)
-        {
-            if (invMasses[id0] == 0f) continue;
-            int first = spatialHash.firstAdjId[id0];
-            int last = spatialHash.firstAdjId[id0 + 1];
-
-            for (int j = first; j < last; j++)
-            {
-                int id1 = spatialHash.adjIds[j];
-                if (invMasses[id1] == 0f) continue;
-
-                Vector3 delta = positions[id0] - positions[id1];
-                float dist2 = delta.sqrMagnitude;
-                if (dist2 == 0f || dist2 > thickness2) continue;
-
-                float restDist2 = (restPositions[id0] - restPositions[id1]).sqrMagnitude;
-                if (dist2 > restDist2) continue;
-
-                float minDist = thickness;
-                if (restDist2 < thickness2)
-                    minDist = Mathf.Sqrt(restDist2);
-
-                float dist = Mathf.Sqrt(dist2);
-                Vector3 normal = delta / dist;
-                Vector3 correction = normal * (minDist - dist);
-                positions[id0] += 0.5f * correction;
-                positions[id1] -= 0.5f * correction;
-
-                // Friction: tangential relative displacement over the substep
-                Vector3 relDisp = (positions[id0] - previousPosition[id0]) -
-                                  (positions[id1] - previousPosition[id1]);
-                Vector3 dispNormal = Vector3.Dot(relDisp, normal) * normal;
-                Vector3 dispTangent = relDisp - dispNormal;
-
-                positions[id0] -= 0.5f * dispTangent * selfCollisionFriction;
-                positions[id1] += 0.5f * dispTangent * selfCollisionFriction;
-
-                // Skip Chebyshev acceleration for vertices just projected
-                isColliding[id0] = true;
-                isColliding[id1] = true;
-            }
-        }
-    }
 }

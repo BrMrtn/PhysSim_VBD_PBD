@@ -150,13 +150,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d3632ab0ebbf2147806eb5cd05a9e9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VBDCloth
-  numSubsteps: 2
-  numIterations: 5
-  stretchingStiffness: 100000
-  shearStiffness: 10000
-  bendingStiffness: 1000
+  numSubsteps: 1
+  numIterations: 10
+  stretchingStiffness: 10000
+  shearStiffness: 1000
+  bendingStiffness: 100
   handleSelfCollisions: 1
-  selfCollisionFriction: 0
+  selfCollisionStiffness: 10000
   logMsPerFrame: 1
   addInitNoise: 0
   useAcceleration: 0
@@ -623,7 +623,7 @@ PrefabInstance:
     - target: {fileID: -5754084199372789682, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: -462981019419857548, guid: 786fc3002689a86499d0ccd2c8957c4c, type: 3}
+      objectReference: {fileID: -462981019419857548, guid: 67c1b8d6403919a4fbf96369e578730d, type: 3}
     - target: {fileID: 919132149155446097, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
       propertyPath: m_Name
       value: Plane64x64_XY

@@ -14,6 +14,10 @@ public class SpatialHash
     public int maxNumObjects;
     public readonly int[] firstAdjId;
     public readonly List<int> adjIds;
+    // Symmetric adjacency CSR used by QueryAllSymmetric. firstAdjId is shared
+    // with QueryAll, so callers may use one query method or the other on a
+    // given instance — not both.
+    public int[] adjIdsSym;
 
     public SpatialHash(float spacing, int maxNumObjects)
     {
@@ -26,6 +30,7 @@ public class SpatialHash
         this.maxNumObjects = maxNumObjects;
         firstAdjId = new int[maxNumObjects + 1];
         adjIds = new List<int>(10 * maxNumObjects);
+        adjIdsSym = new int[10 * maxNumObjects];
     }
 
     private int HashCoords(int xi, int yi, int zi)
@@ -122,5 +127,40 @@ public class SpatialHash
         }
 
         firstAdjId[maxNumObjects] = adjIds.Count;
+    }
+
+    // Symmetric variant: each particle's neighbor list contains every other
+    // particle within maxDist, regardless of id ordering. Writes directly into
+    // a preallocated int[] (grown on overflow) instead of List<int>.Add, so
+    // the inner loop has no bounds-check or capacity-check overhead. Intended
+    // for solvers that descend per-vertex (e.g. VBD) and need to see all
+    // partners when updating vertex i.
+    public void QueryAllSymmetric(Vector3[] pos, float maxDist)
+    {
+        float maxDist2 = maxDist * maxDist;
+        int writeIdx = 0;
+
+        for (int i = 0; i < maxNumObjects; i++)
+        {
+            firstAdjId[i] = writeIdx;
+            Query(pos[i], maxDist);
+
+            for (int j = 0; j < querySize; j++)
+            {
+                int id1 = queryIds[j];
+                if (id1 == i)
+                    continue;
+
+                if ((pos[i] - pos[id1]).sqrMagnitude > maxDist2)
+                    continue;
+
+                if (writeIdx >= adjIdsSym.Length)
+                    Array.Resize(ref adjIdsSym, adjIdsSym.Length * 2);
+
+                adjIdsSym[writeIdx++] = id1;
+            }
+        }
+
+        firstAdjId[maxNumObjects] = writeIdx;
     }
 }
