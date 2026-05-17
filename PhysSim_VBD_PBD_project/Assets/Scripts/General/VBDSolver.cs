@@ -142,8 +142,6 @@ public class VBDSolver
 
     private void AdaptiveInitialization(float dt)
     {
-        Vector3 gravDir = gravity.normalized;
-        float gravMag = gravity.magnitude;
         float dt2 = dt * dt;
         Array.Copy(positions, previousPosition, numVerts);
 
@@ -151,21 +149,21 @@ public class VBDSolver
         {
             if (invMasses[i] == 0f) continue;
 
-            inertia[i] = previousPosition[i] + dt * velocities[i] + dt2 * gravity;
+            Vector3 aExt = gravity + externalForces[i] * invMasses[i];
+            inertia[i] = previousPosition[i] + dt * velocities[i] + dt2 * aExt;
+
             float alpha = 1f;
-
-            if (hasPrevVelocities && gravMag > 1e-10f)
+            if (hasPrevVelocities)
             {
-                Vector3 prevAcc = (velocities[i] - previousVelocities[i]) / dt;
-                float extAcc = Vector3.Dot(prevAcc, gravDir);
-                alpha = Mathf.Clamp01(extAcc / gravMag);
+                float aMag2 = aExt.sqrMagnitude;
+                if (aMag2 > 1e-20f)
+                {
+                    Vector3 prevAcc = (velocities[i] - previousVelocities[i]) / dt;
+                    alpha = Mathf.Clamp01(Vector3.Dot(prevAcc, aExt) / aMag2);
+                }
+            }
 
-                positions[i] = previousPosition[i] + dt * velocities[i] + alpha * dt2 * gravity;
-            }
-            else
-            {
-                positions[i] = inertia[i];
-            }
+            positions[i] = previousPosition[i] + dt * velocities[i] + alpha * dt2 * aExt;
         }
     }
 
@@ -180,8 +178,8 @@ public class VBDSolver
 
             float massInvDt2 = masses[i] * invDt2;
 
-            // f = m/dt^2 * (inertia - x) + F_ext
-            Vector3 f = (inertia[i] - positions[i]) * massInvDt2 + externalForces[i];
+            // f = m/dt^2 * (inertia - x). F_ext already included in inertia[i]
+            Vector3 f = (inertia[i] - positions[i]) * massInvDt2;
 
             // H = m/dt^2 * I - we know Hessian is symmetric, because f_{xy} = f_{yx} for twice-continuously-differentiable functions
             float h00 = massInvDt2, h01 = 0f, h02 = 0f;
