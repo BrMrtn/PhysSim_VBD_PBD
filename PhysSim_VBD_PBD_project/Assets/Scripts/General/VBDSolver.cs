@@ -76,7 +76,10 @@ public class VBDSolver
         if (handleSelfCollisions)
         {
             spatialHash.Create(positions);
-            float maxTravelDistance = thickness + MaxVelocityMagnitude() * dt;
+            float velCap = 3f * thickness / dt;
+            float maxVel = MaxVelocityMagnitude();
+            if (maxVel > velCap) maxVel = velCap;
+            float maxTravelDistance = thickness + maxVel * dt;
             spatialHash.QueryAllSymmetric(positions, maxTravelDistance);
             CacheSelfCollisionMinDist();
         }
@@ -84,7 +87,7 @@ public class VBDSolver
         for (int step = 0; step < numSubsteps; step++)
         {
             Array.Clear(externalForces, 0, numVerts);
-            OnPreSubstep?.Invoke(); // accumulate into externalForces / cache values for OnVertexSolve
+            OnPreSubstep?.Invoke();
             AdaptiveInitialization(sdt);
 
             float omega = 1f;
@@ -297,10 +300,23 @@ public class VBDSolver
         Array.Copy(velocities, previousVelocities, numVerts);
 
         float invDt = 1f / dt;
+
+        float dtFrame = dt * numSubsteps;
+        bool doCap = thickness > 0f && dtFrame > 0f;
+        float velCap = doCap ? 3f * thickness / dtFrame : float.PositiveInfinity;
+        float velCap2 = velCap * velCap;
+
         for (int i = 0; i < numVerts; i++)
         {
             if (invMasses[i] == 0f) { velocities[i] = Vector3.zero; continue; }
-            velocities[i] = (positions[i] - previousPosition[i]) * invDt;
+            Vector3 v = (positions[i] - previousPosition[i]) * invDt;
+            if (doCap)
+            {
+                float vSq = v.sqrMagnitude;
+                if (vSq > velCap2)
+                    v *= velCap / Mathf.Sqrt(vSq);
+            }
+            velocities[i] = v;
         }
 
         hasPrevVelocities = true;

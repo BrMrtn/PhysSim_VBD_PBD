@@ -39,7 +39,7 @@ public class XPBDWindInteraction : MonoBehaviour
         vertexForces = new Vector3[solver.numVerts];
         clothSize = Mathf.Max(0.01f, MeasureClothSize());
 
-        solver.OnPreSubstep += ApplyWind; // run before integration
+        solver.OnPreSubstep += ApplyWind;
     }
 
     void OnDestroy()

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SpatialHash
@@ -13,11 +12,8 @@ public class SpatialHash
 
     public int maxNumObjects;
     public readonly int[] firstAdjId;
-    public readonly List<int> adjIds;
-    // Symmetric adjacency CSR used by QueryAllSymmetric. firstAdjId is shared
-    // with QueryAll, so callers may use one query method or the other on a
-    // given instance — not both.
-    public int[] adjIdsSym;
+    public int[] adjIds;
+    public int[] adjIdsSym; // Symmetric adjacency CSR for VBD
 
     public SpatialHash(float spacing, int maxNumObjects)
     {
@@ -29,7 +25,7 @@ public class SpatialHash
 
         this.maxNumObjects = maxNumObjects;
         firstAdjId = new int[maxNumObjects + 1];
-        adjIds = new List<int>(10 * maxNumObjects);
+        adjIds = new int[10 * maxNumObjects];
         adjIdsSym = new int[10 * maxNumObjects];
     }
 
@@ -105,12 +101,12 @@ public class SpatialHash
 
     public void QueryAll(Vector3[] pos, float maxDist)
     {
-        adjIds.Clear();
         float maxDist2 = maxDist * maxDist;
+        int num = 0;
 
         for (int i = 0; i < maxNumObjects; i++)
         {
-            firstAdjId[i] = adjIds.Count; // store where i's neighbors will start in adjIds
+            firstAdjId[i] = num; // store where i's neighbors will start in adjIds
             Query(pos[i], maxDist);
 
             for (int j = 0; j < querySize; j++)
@@ -122,19 +118,18 @@ public class SpatialHash
                 if ((pos[i] - pos[id1]).sqrMagnitude > maxDist2)
                     continue;
 
-                adjIds.Add(id1);
+                if (num >= adjIds.Length)
+                    Array.Resize(ref adjIds, adjIds.Length * 2);
+
+                adjIds[num++] = id1;
             }
         }
 
-        firstAdjId[maxNumObjects] = adjIds.Count;
+        firstAdjId[maxNumObjects] = num;
     }
 
     // Symmetric variant: each particle's neighbor list contains every other
-    // particle within maxDist, regardless of id ordering. Writes directly into
-    // a preallocated int[] (grown on overflow) instead of List<int>.Add, so
-    // the inner loop has no bounds-check or capacity-check overhead. Intended
-    // for solvers that descend per-vertex (e.g. VBD) and need to see all
-    // partners when updating vertex i.
+    // particle within maxDist, regardless of id ordering.
     public void QueryAllSymmetric(Vector3[] pos, float maxDist)
     {
         float maxDist2 = maxDist * maxDist;
