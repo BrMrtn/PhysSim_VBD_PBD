@@ -453,7 +453,7 @@ PrefabInstance:
     - target: {fileID: -5754084199372789682, guid: 786fc3002689a86499d0ccd2c8957c4c, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: -462981019419857548, guid: 786fc3002689a86499d0ccd2c8957c4c, type: 3}
+      objectReference: {fileID: -462981019419857548, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
     - target: {fileID: 919132149155446097, guid: 786fc3002689a86499d0ccd2c8957c4c, type: 3}
       propertyPath: m_Name
       value: Plane32x32_XY
@@ -503,9 +503,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::VBDClothSim
   numSubsteps: 1
   numIterations: 15
-  stretchingStiffness: 100000
+  stretchingStiffness: 1000000
   shearStiffness: 10000
   bendingStiffness: 1000
+  handleSelfCollisions: 0
+  selfCollisionStiffness: 10000
   logMsPerFrame: 1
   addInitNoise: 0
   useAcceleration: 0

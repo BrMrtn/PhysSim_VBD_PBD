@@ -14,6 +14,7 @@ public class XPBDCloth : MonoBehaviour
 
     public bool handleSelfCollisions = false;
     public float selfCollisionFriction = 0f;
+    public float velCapPerFrame = 3f;
 
     public bool logMsPerFrame = true;
     public bool addInitNoise = false;
@@ -65,7 +66,8 @@ public class XPBDCloth : MonoBehaviour
             numSubsteps = numSubsteps,
             handleSelfCollisions = handleSelfCollisions,
             selfCollisionFriction = selfCollisionFriction,
-            thickness = thickness
+            thickness = thickness,
+            velCapPerFrame = velCapPerFrame
         };
 
         BuildSimulationGrid(xCoords, yCoords);

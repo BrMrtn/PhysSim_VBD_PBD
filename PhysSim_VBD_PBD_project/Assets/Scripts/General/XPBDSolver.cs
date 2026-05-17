@@ -9,6 +9,8 @@ public class XPBDSolver
     public float thickness;
     public Vector3 gravity = new Vector3(0, -9.81f, 0);
 
+    public float velCapPerFrame = 3f; // Max per-frame travel, in multiples of `thickness`
+
     public int numVerts;
     public Vector3[] positions;
     public Vector3[] velocities;
@@ -46,7 +48,7 @@ public class XPBDSolver
     {
         float sdt = dt / numSubsteps;
         float invSdt2 = 1.0f / (sdt * sdt);
-        float maxVelocity = thickness > 0f ? 0.2f * thickness / sdt : float.PositiveInfinity;
+        float maxVelocity = thickness > 0f ? velCapPerFrame * thickness / dt : float.PositiveInfinity;
 
         if (handleSelfCollisions)
         {

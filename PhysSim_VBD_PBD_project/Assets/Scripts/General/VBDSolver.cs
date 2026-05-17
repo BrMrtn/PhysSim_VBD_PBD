@@ -12,8 +12,10 @@ public class VBDSolver
     public float accelerationRho = 0.5f;
 
     public bool handleSelfCollisions = false;
-    public float selfCollisionStiffness = 1e4f;
+    public float selfCollisionStiffness = 1e7f;
     public float thickness;
+
+    public float velCapPerFrame = 3f; // Max per-frame travel, in multiples of `thickness`
 
     bool hasPrevVelocities = false;
 
@@ -76,7 +78,7 @@ public class VBDSolver
         if (handleSelfCollisions)
         {
             spatialHash.Create(positions);
-            float velCap = 3f * thickness / dt;
+            float velCap = velCapPerFrame * thickness / dt;
             float maxVel = MaxVelocityMagnitude();
             if (maxVel > velCap) maxVel = velCap;
             float maxTravelDistance = thickness + maxVel * dt;
@@ -299,7 +301,7 @@ public class VBDSolver
         float invDt = 1f / dt;
 
         float dtFrame = dt * numSubsteps;
-        float velCap = handleSelfCollisions ? 3f * thickness / dtFrame : float.PositiveInfinity;
+        float velCap = handleSelfCollisions ? velCapPerFrame * thickness / dtFrame : float.PositiveInfinity;
         float velCap2 = velCap * velCap;
 
         for (int i = 0; i < numVerts; i++)

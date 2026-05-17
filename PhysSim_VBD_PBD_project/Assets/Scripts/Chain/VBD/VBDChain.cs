@@ -51,8 +51,6 @@ public class VBDChain : MonoBehaviour
         for (int i = 0; i < numParticles; i++)
             Solver.positions[i] = start + step * i;
 
-        System.Array.Copy(Solver.positions, Solver.restPositions, numParticles);
-
         // Build per-incidence edge lists (each spring stored once per endpoint).
         var perVertEdges = new List<VertexSpringEdge>[numParticles];
         for (int i = 0; i < numParticles; i++) perVertEdges[i] = new List<VertexSpringEdge>();

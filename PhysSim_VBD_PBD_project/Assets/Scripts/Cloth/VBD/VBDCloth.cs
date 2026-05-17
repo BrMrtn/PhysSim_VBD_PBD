@@ -14,7 +14,8 @@ public class VBDCloth : MonoBehaviour
     public float bendingStiffness = 1e3f;
 
     public bool handleSelfCollisions = false;
-    public float selfCollisionStiffness = 1e6f;
+    public float selfCollisionStiffness = 1e7f;
+    public float velCapPerFrame = 3f;
 
     public bool logMsPerFrame = true;
     public bool addInitNoise = false;
@@ -80,7 +81,8 @@ public class VBDCloth : MonoBehaviour
             accelerationRho = accelerationRho,
             handleSelfCollisions = handleSelfCollisions,
             selfCollisionStiffness = selfCollisionStiffness,
-            thickness = thickness
+            thickness = thickness,
+            velCapPerFrame = velCapPerFrame
         };
 
         BuildSimulationGrid(xCoords, yCoords);
