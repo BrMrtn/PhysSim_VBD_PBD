@@ -4,6 +4,7 @@ using UnityEngine;
 public class XPBDChain : MonoBehaviour
 {
     public int numSubsteps = 15;
+    public int numIterations = 1;
     public int numParticles = 20;
     public float restLength = 1f;
     public float stretchingCompliance = 1e-6f;
@@ -32,6 +33,7 @@ public class XPBDChain : MonoBehaviour
         Solver = new XPBDSolver(numParticles)
         {
             numSubsteps = numSubsteps,
+            numIterations = numIterations,
             handleSelfCollisions = false,
             thickness = restLength
         };
@@ -111,6 +113,7 @@ public class XPBDChain : MonoBehaviour
         double simStartTime = shouldLogPerformance ? Time.realtimeSinceStartupAsDouble : 0;
 
         Solver.numSubsteps = numSubsteps;
+        Solver.numIterations = numIterations;
 
         float dt = 1 / 24f;
         Solver.Step(dt);

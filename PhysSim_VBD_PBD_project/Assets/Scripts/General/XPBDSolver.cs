@@ -4,6 +4,7 @@ using UnityEngine;
 public class XPBDSolver
 {
     public int numSubsteps = 15;
+    public int numIterations = 1;
     public bool handleSelfCollisions = false;
     public float selfCollisionFriction = 0f;
     public float thickness;
@@ -18,6 +19,7 @@ public class XPBDSolver
     public Vector3[] restPositions;
     public float[] invMasses;
     public DistanceConstraint[] constraints;
+    public float[] lambdas;
     public Vector3[] externalForces;
 
     private SpatialHash spatialHash;
@@ -50,6 +52,9 @@ public class XPBDSolver
         float invSdt2 = 1.0f / (sdt * sdt);
         float maxVelocity = thickness > 0f ? velCapPerFrame * thickness / dt : float.PositiveInfinity;
 
+        if (lambdas == null || lambdas.Length < constraints.Length)
+            lambdas = new float[constraints.Length];
+
         if (handleSelfCollisions)
         {
             spatialHash.Create(positions);
@@ -63,8 +68,14 @@ public class XPBDSolver
             Array.Clear(externalForces, 0, numVerts);
             OnPreSubstep?.Invoke();
             Integrate(sdt, maxVelocity);
-            SolveDistanceConstraints(invSdt2);
-            if (handleSelfCollisions) SolveSelfCollisions();
+
+            Array.Clear(lambdas, 0, constraints.Length);
+            for (int iter = 0; iter < numIterations; iter++)
+            {
+                SolveDistanceConstraints(invSdt2);
+                if (handleSelfCollisions) SolveSelfCollisions();
+            }
+
             OnSubstep?.Invoke();
             UpdateVelocities(sdt);
         }
@@ -109,10 +120,11 @@ public class XPBDSolver
             grad /= len;
             float C = len - constraint.restLength;
             float alpha = constraint.compliance * invSdt2;
-            float s = -C / (w + alpha);
+            float deltaLambda = (-C - alpha * lambdas[i]) / (w + alpha);
+            lambdas[i] += deltaLambda;
 
-            positions[id0] += grad * (s * w0);
-            positions[id1] -= grad * (s * w1);
+            positions[id0] += grad * (deltaLambda * w0);
+            positions[id1] -= grad * (deltaLambda * w1);
         }
     }
 

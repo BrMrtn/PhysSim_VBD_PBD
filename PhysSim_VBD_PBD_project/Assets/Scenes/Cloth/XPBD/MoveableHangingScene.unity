@@ -136,12 +136,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3459a7f377aba1469c7038a87637547, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::XPBDClothSim
-  numSubsteps: 10
+  numSubsteps: 15
+  numIterations: 1
   stretchingCompliance: 0
   shearCompliance: 0.0001
   bendingCompliance: 0.001
-  handleSelfCollisions: 1
+  handleSelfCollisions: 0
   selfCollisionFriction: 0
+  velCapPerFrame: 3
   logMsPerFrame: 1
   addInitNoise: 1
   numVerts: 0

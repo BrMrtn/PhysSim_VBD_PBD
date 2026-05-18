@@ -7,6 +7,7 @@ using UnityEngine.Rendering;
 public class XPBDCloth : MonoBehaviour
 {
     public int numSubsteps = 15;
+    public int numIterations = 1;
 
     public float stretchingCompliance = 1e-6f;
     public float shearCompliance = 0.0001f;
@@ -64,6 +65,7 @@ public class XPBDCloth : MonoBehaviour
         Solver = new XPBDSolver(numVerts)
         {
             numSubsteps = numSubsteps,
+            numIterations = numIterations,
             handleSelfCollisions = handleSelfCollisions,
             selfCollisionFriction = selfCollisionFriction,
             thickness = thickness,
