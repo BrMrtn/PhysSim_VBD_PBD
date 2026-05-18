@@ -12,6 +12,11 @@ public class XPBDSolver
 
     public float velCapPerFrame = 3f; // Max per-frame travel, in multiples of `thickness`
 
+    // Rayleigh damping C = alpha*M + beta*K. Mass term implicit at the velocity update,
+    // stiffness term applied per-constraint via the XPBD gamma formulation (Macklin et al. 2016).
+    public float rayleighMassDamping = 0f;
+    public float rayleighStiffnessDamping = 0f;
+
     public int numVerts;
     public Vector3[] positions;
     public Vector3[] velocities;
@@ -72,7 +77,7 @@ public class XPBDSolver
             Array.Clear(lambdas, 0, constraints.Length);
             for (int iter = 0; iter < numIterations; iter++)
             {
-                SolveDistanceConstraints(invSdt2);
+                SolveDistanceConstraints(sdt, invSdt2);
                 if (handleSelfCollisions) SolveSelfCollisions();
             }
 
@@ -83,11 +88,15 @@ public class XPBDSolver
 
     private void Integrate(float sdt, float maxVelocity)
     {
+        // Implicit mass-proportional Rayleigh damping: v_new = (v_old + sdt*a) / (1 + alpha*sdt).
+        float invMassDampFactor = 1f / (1f + rayleighMassDamping * sdt);
+
         for (int i = 0; i < numVerts; i++)
         {
             if (invMasses[i] == 0f) continue;
             velocities[i] += gravity * sdt;
             velocities[i] += externalForces[i] * sdt * invMasses[i];
+            velocities[i] *= invMassDampFactor;
 
             if (handleSelfCollisions)
             {
@@ -101,8 +110,11 @@ public class XPBDSolver
         }
     }
 
-    private void SolveDistanceConstraints(float invSdt2)
+    private void SolveDistanceConstraints(float sdt, float invSdt2)
     {
+        bool hasStiffDamping = rayleighStiffnessDamping > 0f;
+        float betaOverSdt = rayleighStiffnessDamping / sdt;
+
         for (int i = 0; i < constraints.Length; i++)
         {
             ref var constraint = ref constraints[i];
@@ -120,7 +132,19 @@ public class XPBDSolver
             grad /= len;
             float C = len - constraint.restLength;
             float alpha = constraint.compliance * invSdt2;
-            float deltaLambda = (-C - alpha * lambdas[i]) / (w + alpha);
+
+            // XPBD stiffness damping (Macklin 2016 Eq. 26):
+            // gamma = alpha_tilde * beta_tilde / h = (alpha/h^2)(beta*h^2)/h = alpha*beta/h.
+            float gamma = 0f;
+            float gradDotDx = 0f;
+            if (hasStiffDamping)
+            {
+                gamma = constraint.compliance * betaOverSdt;
+                Vector3 dx = (positions[id0] - previousPositions[id0]) - (positions[id1] - previousPositions[id1]);
+                gradDotDx = Vector3.Dot(grad, dx);
+            }
+
+            float deltaLambda = (-C - alpha * lambdas[i] - gamma * gradDotDx) / ((1f + gamma) * w + alpha);
             lambdas[i] += deltaLambda;
 
             positions[id0] += grad * (deltaLambda * w0);

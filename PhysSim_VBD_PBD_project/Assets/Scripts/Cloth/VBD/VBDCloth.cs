@@ -17,6 +17,9 @@ public class VBDCloth : MonoBehaviour
     public float selfCollisionStiffness = 1e7f;
     public float velCapPerFrame = 3f;
 
+    public float rayleighMassDamping = 0f;
+    public float rayleighStiffnessDamping = 0f;
+
     public bool logMsPerFrame = true;
     public bool addInitNoise = false;
 
@@ -82,7 +85,9 @@ public class VBDCloth : MonoBehaviour
             handleSelfCollisions = handleSelfCollisions,
             selfCollisionStiffness = selfCollisionStiffness,
             thickness = thickness,
-            velCapPerFrame = velCapPerFrame
+            velCapPerFrame = velCapPerFrame,
+            rayleighMassDamping = rayleighMassDamping,
+            rayleighStiffnessDamping = rayleighStiffnessDamping
         };
 
         BuildSimulationGrid(xCoords, yCoords);

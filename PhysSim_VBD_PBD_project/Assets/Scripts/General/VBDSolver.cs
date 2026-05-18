@@ -17,6 +17,10 @@ public class VBDSolver
 
     public float velCapPerFrame = 3f; // Max per-frame travel, in multiples of `thickness`
 
+    // Rayleigh damping C = alpha*M + beta*K, treated implicitly in the local Newton solve.
+    public float rayleighMassDamping = 0f;
+    public float rayleighStiffnessDamping = 0f;
+
     bool hasPrevVelocities = false;
 
     private SpatialHash spatialHash;
@@ -92,11 +96,12 @@ public class VBDSolver
             OnPreSubstep?.Invoke();
             AdaptiveInitialization(sdt);
 
+            Array.Clear(isColliding, 0, numVerts);
+
             float omega = 1f;
             for (int iter = 0; iter < numIterations; iter++)
             {
                 if (useAcceleration) Array.Copy(positions, prevIterPos, numVerts);
-                Array.Clear(isColliding, 0, numVerts);
 
                 Solve(sdt);
 
@@ -176,6 +181,11 @@ public class VBDSolver
     private void Solve(float dt)
     {
         float invDt2 = 1f / (dt * dt);
+        float invDt = 1f / dt;
+        bool hasMassDamping = rayleighMassDamping > 0f;
+        bool hasStiffDamping = rayleighStiffnessDamping > 0f;
+        float alphaOverDt = rayleighMassDamping * invDt;
+        float betaOverDt = rayleighStiffnessDamping * invDt;
 
         for (int i = 0; i < numVerts; i++)
         {
@@ -190,6 +200,18 @@ public class VBDSolver
             float h00 = massInvDt2, h01 = 0f, h02 = 0f;
             float h11 = massInvDt2, h12 = 0f;
             float h22 = massInvDt2;
+
+            // Mass-proportional Rayleigh damping (implicit): adds (alpha*m/dt) I to H
+            // and -(alpha*m/dt)(x_i - x_old_i) to f, equivalent to -alpha*m*v_i.
+            if (hasMassDamping)
+            {
+                float cMass = alphaOverDt * masses[i];
+                Vector3 dxi = positions[i] - previousPosition[i];
+                f -= cMass * dxi;
+                h00 += cMass;
+                h11 += cMass;
+                h22 += cMass;
+            }
 
             // Spring contributions from all incident springs
             int start = springListStart[i];
@@ -211,6 +233,22 @@ public class VBDSolver
                 // h_spring = k * ((1 - l0/l) I + (l0/l) d d^T) = coeff1 * I + coeff2 * d d^T
                 float coeff1 = k * Mathf.Max(0f, 1f - ratio); // Max only needed if big dt + few substeps
                 float coeff2 = k * ratio;
+
+                // Stiffness-proportional Rayleigh damping (implicit): for spring (i,j),
+                // local K_ii = coeff1 I + coeff2 d d^T, K_ij = -K_ii. Adds
+                // -(beta/dt) K_ii ((x_i - x_old_i) - (x_j - x_old_j)) to f, and
+                // (beta/dt) K_ii to the (i,i) Hessian block.
+                if (hasStiffDamping)
+                {
+                    Vector3 dxi = positions[i] - previousPosition[i];
+                    Vector3 dxj = positions[edge.otherIdx] - previousPosition[edge.otherIdx];
+                    Vector3 dv = dxi - dxj;
+                    float dDotDv = dir.x * dv.x + dir.y * dv.y + dir.z * dv.z;
+                    f -= betaOverDt * (coeff1 * dv + (coeff2 * dDotDv) * dir);
+                    float scale = 1f + betaOverDt;
+                    coeff1 *= scale;
+                    coeff2 *= scale;
+                }
 
                 h00 += coeff1 + coeff2 * dir.x * dir.x;
                 h11 += coeff1 + coeff2 * dir.y * dir.y;

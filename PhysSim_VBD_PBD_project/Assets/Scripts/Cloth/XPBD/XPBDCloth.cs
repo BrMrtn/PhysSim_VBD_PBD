@@ -17,6 +17,9 @@ public class XPBDCloth : MonoBehaviour
     public float selfCollisionFriction = 0f;
     public float velCapPerFrame = 3f;
 
+    public float rayleighMassDamping = 0f;
+    public float rayleighStiffnessDamping = 0f;
+
     public bool logMsPerFrame = true;
     public bool addInitNoise = false;
 
@@ -69,7 +72,9 @@ public class XPBDCloth : MonoBehaviour
             handleSelfCollisions = handleSelfCollisions,
             selfCollisionFriction = selfCollisionFriction,
             thickness = thickness,
-            velCapPerFrame = velCapPerFrame
+            velCapPerFrame = velCapPerFrame,
+            rayleighMassDamping = rayleighMassDamping,
+            rayleighStiffnessDamping = rayleighStiffnessDamping
         };
 
         BuildSimulationGrid(xCoords, yCoords);

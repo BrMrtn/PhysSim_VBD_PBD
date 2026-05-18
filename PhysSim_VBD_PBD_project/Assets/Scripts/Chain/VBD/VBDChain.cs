@@ -19,6 +19,9 @@ public class VBDChain : MonoBehaviour
     public bool useAcceleration = false;
     [Range(0f, 1f)] public float accelerationRho = 0.5f;
 
+    public float rayleighMassDamping = 0f;
+    public float rayleighStiffnessDamping = 0f;
+
     public VBDSolver Solver { get; private set; }
 
     private LineRenderer lineRenderer;
@@ -42,7 +45,9 @@ public class VBDChain : MonoBehaviour
             numIterations = numIterations,
             useAcceleration = useAcceleration,
             accelerationRho = accelerationRho,
-            thickness = restLength
+            thickness = restLength,
+            rayleighMassDamping = rayleighMassDamping,
+            rayleighStiffnessDamping = rayleighStiffnessDamping
         };
 
         // Initialize particles in a straight line extending to the left
@@ -137,6 +142,8 @@ public class VBDChain : MonoBehaviour
         Solver.numIterations = numIterations;
         Solver.useAcceleration = useAcceleration;
         Solver.accelerationRho = accelerationRho;
+        Solver.rayleighMassDamping = rayleighMassDamping;
+        Solver.rayleighStiffnessDamping = rayleighStiffnessDamping;
 
         float dt = 1f / 24f;
         Solver.Step(dt);

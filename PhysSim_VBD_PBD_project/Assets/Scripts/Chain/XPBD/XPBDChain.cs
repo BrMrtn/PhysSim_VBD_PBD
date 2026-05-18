@@ -10,6 +10,8 @@ public class XPBDChain : MonoBehaviour
     public float stretchingCompliance = 1e-6f;
     public bool hasBendingConstraints = false;
     public float bendingCompliance = 1e-5f;
+    public float rayleighMassDamping = 0f;
+    public float rayleighStiffnessDamping = 0f;
     public bool logMsPerFrame = true;
     public Material sphereMaterial;
 
@@ -35,7 +37,9 @@ public class XPBDChain : MonoBehaviour
             numSubsteps = numSubsteps,
             numIterations = numIterations,
             handleSelfCollisions = false,
-            thickness = restLength
+            thickness = restLength,
+            rayleighMassDamping = rayleighMassDamping,
+            rayleighStiffnessDamping = rayleighStiffnessDamping
         };
 
         // Initialize particles in a straight line extending to the left
@@ -114,6 +118,8 @@ public class XPBDChain : MonoBehaviour
 
         Solver.numSubsteps = numSubsteps;
         Solver.numIterations = numIterations;
+        Solver.rayleighMassDamping = rayleighMassDamping;
+        Solver.rayleighStiffnessDamping = rayleighStiffnessDamping;
 
         float dt = 1 / 24f;
         Solver.Step(dt);
