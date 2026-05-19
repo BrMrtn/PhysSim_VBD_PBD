@@ -278,6 +278,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::XPBDClothFollowSphere
   sphereColliderLeft: {fileID: 710404838}
   sphereColliderRight: {fileID: 1846345024}
+--- !u!114 &150870329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 150870319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36542afaae7c3034d819f0d49a1e0c7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::XPBDGroundCollision
+  ground: {fileID: 124310501}
+  friction: 0.3
 --- !u!1 &569257114
 GameObject:
   m_ObjectHideFlags: 0
@@ -752,6 +766,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
       insertIndex: -1
       addedObject: {fileID: 150870325}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 150870329}
   m_SourcePrefab: {fileID: 100100000, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
 --- !u!1 &1846345023
 GameObject:

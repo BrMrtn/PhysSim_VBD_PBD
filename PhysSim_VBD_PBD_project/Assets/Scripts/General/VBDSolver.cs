@@ -213,21 +213,37 @@ public class VBDSolver
                 h22 += cMass;
             }
 
-            // Spring contributions from all incident springs
+            // Spring contributions from all incident springs.
+            Vector3 pi = positions[i];
+            float pix = pi.x, piy = pi.y, piz = pi.z;
+            float ppix = 0f, ppiy = 0f, ppiz = 0f;
+            if (hasStiffDamping)
+            {
+                Vector3 ppi = previousPosition[i];
+                ppix = ppi.x; ppiy = ppi.y; ppiz = ppi.z;
+            }
+
             int start = springListStart[i];
             int end = springListStart[i + 1];
             for (int s = start; s < end; s++)
             {
                 VertexSpringEdge edge = springEdges[s];
+                int j = edge.otherIdx;
+                Vector3 pj = positions[j];
 
-                Vector3 diff = positions[i] - positions[edge.otherIdx];
-                float len = diff.magnitude;
-                if (len < 1e-10f) continue;
+                float diffx = pix - pj.x;
+                float diffy = piy - pj.y;
+                float diffz = piz - pj.z;
+                float len2 = diffx * diffx + diffy * diffy + diffz * diffz;
+                if (len2 < 1e-20f) continue;
+                float len = Mathf.Sqrt(len2);
 
                 float l0 = edge.restLength;
                 float k = edge.stiffness;
                 float invL = 1f / len;
-                Vector3 dir = diff * invL;
+                float dirx = diffx * invL;
+                float diry = diffy * invL;
+                float dirz = diffz * invL;
                 float ratio = l0 * invL;
 
                 // h_spring = k * ((1 - l0/l) I + (l0/l) d d^T) = coeff1 * I + coeff2 * d d^T
@@ -240,24 +256,31 @@ public class VBDSolver
                 // (beta/dt) K_ii to the (i,i) Hessian block.
                 if (hasStiffDamping)
                 {
-                    Vector3 dxi = positions[i] - previousPosition[i];
-                    Vector3 dxj = positions[edge.otherIdx] - previousPosition[edge.otherIdx];
-                    Vector3 dv = dxi - dxj;
-                    float dDotDv = dir.x * dv.x + dir.y * dv.y + dir.z * dv.z;
-                    f -= betaOverDt * (coeff1 * dv + (coeff2 * dDotDv) * dir);
+                    Vector3 ppj = previousPosition[j];
+                    float dvx = (pix - ppix) - (pj.x - ppj.x);
+                    float dvy = (piy - ppiy) - (pj.y - ppj.y);
+                    float dvz = (piz - ppiz) - (pj.z - ppj.z);
+                    float dDotDv = dirx * dvx + diry * dvy + dirz * dvz;
+                    float c2dot = coeff2 * dDotDv;
+                    f.x -= betaOverDt * (coeff1 * dvx + c2dot * dirx);
+                    f.y -= betaOverDt * (coeff1 * dvy + c2dot * diry);
+                    f.z -= betaOverDt * (coeff1 * dvz + c2dot * dirz);
                     float scale = 1f + betaOverDt;
                     coeff1 *= scale;
                     coeff2 *= scale;
                 }
 
-                h00 += coeff1 + coeff2 * dir.x * dir.x;
-                h11 += coeff1 + coeff2 * dir.y * dir.y;
-                h22 += coeff1 + coeff2 * dir.z * dir.z;
-                h01 += coeff2 * dir.x * dir.y;
-                h02 += coeff2 * dir.x * dir.z;
-                h12 += coeff2 * dir.y * dir.z;
+                h00 += coeff1 + coeff2 * dirx * dirx;
+                h11 += coeff1 + coeff2 * diry * diry;
+                h22 += coeff1 + coeff2 * dirz * dirz;
+                h01 += coeff2 * dirx * diry;
+                h02 += coeff2 * dirx * dirz;
+                h12 += coeff2 * diry * dirz;
 
-                f += (k * (l0 - len) * invL) * diff;
+                float fScale = k * (l0 - len) * invL;
+                f.x += fScale * diffx;
+                f.y += fScale * diffy;
+                f.z += fScale * diffz;
             }
 
             if (handleSelfCollisions && selfCollisionStiffness > 0f)
