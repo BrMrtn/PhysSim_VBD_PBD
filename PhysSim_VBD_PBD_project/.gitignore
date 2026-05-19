@@ -12,6 +12,11 @@
 /[Uu]ser[Ss]ettings/
 *.log
 
+# Ignore all Unity packages except dependency definitions
+/[Pp]ackages/*
+!/Packages/manifest.json
+!/Packages/packages-lock.json
+
 # By default unity supports Blender asset imports, *.blend1 blender files do not need to be commited to version control.
 *.blend1
 *.blend1.meta

@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Path to your CSV file
-csv_path = r"..\Logs\EnergyLogs\VBDCloth_20260519_210247.csv"
+csv_path = r"..\Logs\EnergyLogs\VBDCloth_20260519_220609.csv"
 
 # Load CSV data
 data = np.genfromtxt(csv_path, delimiter=';', skip_header=1)

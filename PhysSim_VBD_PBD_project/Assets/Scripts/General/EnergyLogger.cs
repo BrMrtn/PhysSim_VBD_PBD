@@ -3,9 +3,6 @@ using System.Globalization;
 using System.IO;
 using UnityEngine;
 
-// Per-frame energy logger. Host script sets Sampler in Awake and calls Log(dt)
-// once per Update (after Solver.Step). Writes a CSV to Application.persistentDataPath
-// and optionally draws an on-screen readout.
 public class EnergyLogger : MonoBehaviour
 {
     public bool writeCsv = true;
