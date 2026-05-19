@@ -21,6 +21,7 @@ public class VBDCloth : MonoBehaviour
     public float rayleighStiffnessDamping = 0f;
 
     public bool logMsPerFrame = true;
+    public bool logEnergy = false;
     public bool addInitNoise = false;
 
     // Chebyshev semi-iterative acceleration
@@ -28,6 +29,7 @@ public class VBDCloth : MonoBehaviour
     [Range(0f, 1f)] public float accelerationRho = 0.5f;
 
     public VBDSolver Solver { get; private set; }
+    private EnergyLogger energyLogger;
 
     private float spacing;
     private float thickness;
@@ -102,6 +104,14 @@ public class VBDCloth : MonoBehaviour
                     Solver.positions[i] += UnityEngine.Random.insideUnitSphere * 0.001f;
 
         if (handleSelfCollisions) Solver.CreateSpatialHash(spacing);
+
+        if (logEnergy)
+        {
+            energyLogger = gameObject.AddComponent<EnergyLogger>();
+            energyLogger.label = "VBDCloth";
+            energyLogger.overlayY = 30f;
+            energyLogger.Sampler = () => EnergySampler.Sample(Solver);
+        }
     }
 
     void Update()
@@ -111,6 +121,7 @@ public class VBDCloth : MonoBehaviour
 
         float dt = 1f / 24f;
         Solver.Step(dt);
+        if (logEnergy) energyLogger.Log(dt);
 
         Matrix4x4 worldToLocal = tr.worldToLocalMatrix;
         for (int i = 0; i < numVerts; i++)

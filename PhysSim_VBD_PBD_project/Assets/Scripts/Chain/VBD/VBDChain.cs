@@ -12,6 +12,7 @@ public class VBDChain : MonoBehaviour
     public bool hasBendingConstraints = false;
     public float bendingStiffness = 1e5f;
     public bool logMsPerFrame = true;
+    public bool logEnergy = false;
     public bool addInitNoise = false;
     public Material sphereMaterial;
 
@@ -23,6 +24,7 @@ public class VBDChain : MonoBehaviour
     public float rayleighStiffnessDamping = 0f;
 
     public VBDSolver Solver { get; private set; }
+    private EnergyLogger energyLogger;
 
     private LineRenderer lineRenderer;
     private Transform tr;
@@ -131,6 +133,14 @@ public class VBDChain : MonoBehaviour
 
             vertexSpheres[i] = sphere;
         }
+
+        if (logEnergy)
+        {
+            energyLogger = gameObject.AddComponent<EnergyLogger>();
+            energyLogger.label = "VBDChain";
+            energyLogger.overlayY = 50f;
+            energyLogger.Sampler = () => EnergySampler.Sample(Solver);
+        }
     }
 
     void Update()
@@ -147,6 +157,7 @@ public class VBDChain : MonoBehaviour
 
         float dt = 1f / 24f;
         Solver.Step(dt);
+        if (logEnergy) energyLogger.Log(dt);
 
         for (int i = 0; i < numParticles; i++)
         {

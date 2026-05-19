@@ -13,9 +13,11 @@ public class XPBDChain : MonoBehaviour
     public float rayleighMassDamping = 0f;
     public float rayleighStiffnessDamping = 0f;
     public bool logMsPerFrame = true;
+    public bool logEnergy = false;
     public Material sphereMaterial;
 
     public XPBDSolver Solver { get; private set; }
+    private EnergyLogger energyLogger;
 
     private LineRenderer lineRenderer;
     private Transform tr;
@@ -109,6 +111,14 @@ public class XPBDChain : MonoBehaviour
 
             vertexSpheres[i] = sphere;
         }
+
+        if (logEnergy)
+        {
+            energyLogger = gameObject.AddComponent<EnergyLogger>();
+            energyLogger.label = "XPBDChain";
+            energyLogger.overlayY = 50f;
+            energyLogger.Sampler = () => EnergySampler.Sample(Solver);
+        }
     }
 
     void Update()
@@ -123,6 +133,7 @@ public class XPBDChain : MonoBehaviour
 
         float dt = 1 / 24f;
         Solver.Step(dt);
+        if (logEnergy) energyLogger.Log(dt);
 
         for (int i = 0; i < numParticles; i++)
         {
