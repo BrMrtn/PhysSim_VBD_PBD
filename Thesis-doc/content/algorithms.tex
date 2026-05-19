@@ -1,0 +1,155 @@
+%----------------------------------------------------------------------------
+\chapter{The two algorithms}
+\label{chap:Algorithms}
+%----------------------------------------------------------------------------
+
+This chapter states XPBD and VBD in the form actually implemented in
+\autoref{chap:Methodology}. Both target the same variational problem
+\eqref{eq:G}, but they reach it through opposite descent directions; the
+contrast made explicit here is what drives the experimental design in
+\autoref{chap:Experiments}.
+
+%----------------------------------------------------------------------------
+\section{XPBD: dual-variable position projection}
+\label{sec:XPBDAlgo}
+%----------------------------------------------------------------------------
+
+\subsection{Derivation}
+\label{ssec:XPBDDeriv}
+For each elastic spring we associate a constraint $C(\mathbf{x}) = 0$ at
+zero deformation and a compliance $\alpha = 1/k$. The augmented Lagrangian
+of \eqref{eq:G} with a single substep $h$ has stationarity conditions
+\begin{align}
+    \mathbf{M}(\mathbf{x} - \mathbf{y}) &= h^{2}\,\nabla C(\mathbf{x})^{\!\top}\,\boldsymbol{\lambda}, \\
+    C(\mathbf{x}) + \tilde{\alpha}\,\boldsymbol{\lambda} &= \mathbf{0},
+\end{align}
+where $\tilde{\alpha} = \alpha / h^{2}$ is the time-step-scaled compliance.
+XPBD solves this coupled system by a Gauss--Seidel sweep over constraints:
+for each constraint $j$, the multiplier increment is
+\begin{equation}
+    \label{eq:XPBDLambda}
+    \Delta \lambda_{j} \;=\; \frac{-C_{j}(\mathbf{x}) - \tilde{\alpha}_{j}\, \lambda_{j}}
+                                {\nabla C_{j}^{\!\top}\,\mathbf{M}^{-1}\nabla C_{j}
+                                 + \tilde{\alpha}_{j}},
+\end{equation}
+and the corresponding position correction is
+$\Delta \mathbf{x} = \mathbf{M}^{-1}\nabla C_{j}^{\!\top}\,\Delta \lambda_{j}$.
+Velocities are recovered at the end of the substep by
+$\mathbf{v}_{t+h} = (\mathbf{x}_{t+h} - \mathbf{x}_{t}) / h$.
+
+\subsection{Algorithm}
+\label{ssec:XPBDPseudo}
+\begin{lstlisting}[language=Python,caption={XPBD substep with $n_{\mathrm{iter}}$ Gauss--Seidel iterations.},label=lst:XPBDPseudo]
+def xpbd_substep(x, v, h, constraints):
+    y = x + h * v + h**2 * M_inv @ f_ext
+    x_new = y.copy()
+    lambdas = zeros(len(constraints))
+    for it in range(n_iter):
+        for j, C_j in enumerate(constraints):
+            dlam = (-C_j.value(x_new) - alpha_tilde[j] * lambdas[j]) / \
+                   (C_j.grad(x_new) @ M_inv @ C_j.grad(x_new).T
+                    + alpha_tilde[j])
+            x_new += M_inv @ C_j.grad(x_new).T * dlam
+            lambdas[j] += dlam
+    v_new = (x_new - x) / h
+    return x_new, v_new
+\end{lstlisting}
+
+\subsection{Characteristics}
+\label{ssec:XPBDChar}
+\begin{itemize}
+    \item \emph{Dual-variable.} The state of an iteration is encoded in the
+    multipliers $\boldsymbol{\lambda}$; positions are derived.
+    \item \emph{Stiffness-by-compliance.} Material stiffness enters only
+    through $\tilde{\alpha} = 1/(k h^{2})$, so very stiff constraints
+    naturally degenerate to projection ($\tilde\alpha \to 0$).
+    \item \emph{First-order gradient information only.} Each constraint
+    contributes its gradient $\nabla C_j$; no Hessian of $E$ is built.
+    \item \emph{Substeps preferred over iterations.} Following the small-
+    steps result, we use many short substeps with one inner iteration.
+\end{itemize}
+
+%----------------------------------------------------------------------------
+\section{VBD: primal block-coordinate descent}
+\label{sec:VBDAlgo}
+%----------------------------------------------------------------------------
+
+\subsection{Derivation}
+\label{ssec:VBDDeriv}
+VBD performs block-coordinate descent on $G$ in
+\eqref{eq:G} with one block per vertex. Holding all other vertices fixed,
+the update for vertex $i$ is the Newton step on the local 3-vector problem:
+\begin{equation}
+    \mathbf{x}_{i} \;\leftarrow\; \mathbf{x}_{i} - \mathbf{H}_{i}^{-1}\,\mathbf{g}_{i},
+\end{equation}
+where
+\begin{align}
+    \mathbf{g}_{i} &= \frac{m_{i}}{h^{2}}\,(\mathbf{x}_{i} - \mathbf{y}_{i})
+                      + \sum_{e \in \mathcal{N}(i)} \nabla_{i} E_{e}(\mathbf{x}), \\
+    \mathbf{H}_{i} &= \frac{m_{i}}{h^{2}}\,\mathbf{I}_{3}
+                      + \sum_{e \in \mathcal{N}(i)} \nabla_{ii}^{2}\, E_{e}(\mathbf{x}).
+\end{align}
+For a distance-spring energy
+$E_{e} = \tfrac{1}{2} k\,(\|\mathbf{x}_{i} - \mathbf{x}_{j}\| - \ell_{0})^{2}$
+the per-vertex gradient and Hessian are closed-form and inexpensive.
+
+\subsection{Algorithm}
+\label{ssec:VBDPseudo}
+\begin{lstlisting}[language=Python,caption={VBD step with $n_{\mathrm{iter}}$ block iterations.},label=lst:VBDPseudo]
+def vbd_step(x, v, h):
+    y = x + h * v + h**2 * M_inv @ f_ext
+    x_new = y.copy()  # inertial initialisation
+    for it in range(n_iter):
+        for i in vertex_order:
+            g_i = (m[i] / h**2) * (x_new[i] - y[i])
+            H_i = (m[i] / h**2) * I3
+            for e in incident_edges(i):
+                g_i += spring_grad_i(x_new, e)
+                H_i += spring_hess_ii(x_new, e)
+            x_new[i] -= solve_3x3(H_i, g_i)
+    v_new = (x_new - x) / h
+    return x_new, v_new
+\end{lstlisting}
+
+\subsection{Characteristics}
+\label{ssec:VBDChar}
+\begin{itemize}
+    \item \emph{Primal.} The state of an iteration is positions
+    $\mathbf{x}$; no auxiliary multipliers.
+    \item \emph{Second-order locally.} Each block update is a Newton step on
+    the true elastic Hessian restricted to one vertex.
+    \item \emph{Iterations over substeps.} VBD is normally used with one
+    long step subdivided by many block iterations; the implicit Hessian
+    handles stiffness without needing tiny $h$.
+    \item \emph{Parallel-friendly.} Vertices sharing no constraint can be
+    updated independently (graph colouring). We disable parallelism for
+    the core comparison; see \autoref{ssec:Parallelisation}.
+\end{itemize}
+
+%----------------------------------------------------------------------------
+\section{Side-by-side: where the algorithms differ}
+\label{sec:Sidebyside}
+%----------------------------------------------------------------------------
+
+\begin{table}[!ht]
+    \footnotesize
+    \centering
+    \begin{tabular}{l l l}
+        \toprule
+                                  & XPBD                          & VBD \\
+        \midrule
+        Variable updated          & multipliers $\boldsymbol{\lambda}$ & positions $\mathbf{x}$ \\
+        Order of information      & gradient $\nabla C$           & gradient + Hessian of $E$ \\
+        Block size                & per-constraint                & per-vertex \\
+        Stiffness handled by      & compliance $\tilde{\alpha}$   & implicit Hessian \\
+        Typical configuration     & many substeps, $1$ iteration  & one step, many iterations \\
+        Parallelism strategy      & constraint colouring (harder) & vertex colouring (easier) \\
+        \bottomrule
+    \end{tabular}
+    \caption{Algorithmic contrast between XPBD and VBD.}
+    \label{tab:XPBDvsVBD}
+\end{table}
+
+The single row of \autoref{tab:XPBDvsVBD} that drives the rest of this
+thesis is the first: XPBD lives in the dual, VBD lives in the primal. Every
+hypothesis in \autoref{sec:Hypotheses} ultimately traces back to that row.

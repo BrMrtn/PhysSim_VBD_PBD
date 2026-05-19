@@ -1,0 +1,63 @@
+\begin{thebibliography}{6}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Chen et~al.(2024)Chen, Liu, Yang, and Yuksel]{Chen2024}
+Anka~He Chen, Ziheng Liu, Yin Yang, and Cem Yuksel.
+\newblock Vertex block descent.
+\newblock \emph{ACM Transactions on Graphics (Proceedings of SIGGRAPH 2024)},
+  43\penalty0 (4):\penalty0 116:1--116:16, 07 2024.
+\newblock ISSN 0730-0301.
+\newblock \doi{10.1145/3658179}.
+\newblock URL \url{https://doi.org/10.1145/3658179}.
+
+\bibitem[Li et~al.(2026)Li, Jiang, Luo, Du, Yu, Kova{\v{c}}i{\v{c}}, and
+  Xie]{li2026physics}
+Minchen Li, Chenfanfu Jiang, Zhaofeng Luo, Wenxin Du, Chang Yu, {\v{Z}}iga
+  Kova{\v{c}}i{\v{c}}, and Tianyi Xie.
+\newblock \emph{Physics-Based Simulation}.
+\newblock March 2026.
+\newblock URL \url{https://phys-sim-book.github.io/}.
+
+\bibitem[Ma et~al.(2024)Ma, Sung, Choi, and Hong]{app142311072}
+Jun Ma, Nak-Jun Sung, Min-Hyung Choi, and Min Hong.
+\newblock Performance comparison of vertex block descent and position based
+  dynamics algorithms using cloth simulation in unity.
+\newblock \emph{Applied Sciences}, 14\penalty0 (23), 2024.
+\newblock ISSN 2076-3417.
+\newblock \doi{10.3390/app142311072}.
+\newblock URL \url{https://www.mdpi.com/2076-3417/14/23/11072}.
+
+\bibitem[Macklin et~al.(2016)Macklin, M\"{u}ller, and
+  Chentanez]{10.1145/2994258.2994272}
+Miles Macklin, Matthias M\"{u}ller, and Nuttapong Chentanez.
+\newblock Xpbd: position-based simulation of compliant constrained dynamics.
+\newblock In \emph{Proceedings of the 9th International Conference on Motion in
+  Games}, MIG '16, page 49–54, New York, NY, USA, 2016. Association for
+  Computing Machinery.
+\newblock ISBN 9781450345927.
+\newblock \doi{10.1145/2994258.2994272}.
+\newblock URL \url{https://doi.org/10.1145/2994258.2994272}.
+
+\bibitem[M\"uller(2022)]{tenMinutePhysics}
+Matthias M\"uller.
+\newblock Ten minute physics.
+\newblock
+  \url{https://matthias-research.github.io/pages/tenMinutePhysics/index.html},
+  2022.
+
+\bibitem[Müller et~al.(2007)Müller, Heidelberger, Hennix, and
+  Ratcliff]{MULLER2007109}
+Matthias Müller, Bruno Heidelberger, Marcus Hennix, and John Ratcliff.
+\newblock Position based dynamics.
+\newblock \emph{Journal of Visual Communication and Image Representation},
+  18\penalty0 (2):\penalty0 109--118, 2007.
+\newblock ISSN 1047-3203.
+\newblock \doi{https://doi.org/10.1016/j.jvcir.2007.01.005}.
+\newblock URL
+  \url{https://www.sciencedirect.com/science/article/pii/S1047320307000065}.
+
+\end{thebibliography}

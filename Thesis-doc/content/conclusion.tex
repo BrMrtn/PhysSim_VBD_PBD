@@ -1,0 +1,57 @@
+%----------------------------------------------------------------------------
+\chapter{Conclusion and future work}
+\label{chap:Conclusion}
+%----------------------------------------------------------------------------
+
+%----------------------------------------------------------------------------
+\section{Summary}
+\label{sec:Summary}
+%----------------------------------------------------------------------------
+This thesis presented a controlled comparison of XPBD and VBD, the two
+dominant solvers for real-time deformable simulation. The contribution is
+threefold: a shared Unity codebase implementing both solvers under matched
+material parameters and compute budget; a Newton ground-truth reference
+that lets us report solution error rather than only relative performance;
+and an experimental design driven by the primal/dual theory of
+\cite{Chen2024}, organised around three falsifiable hypotheses
+(H1--H3).
+
+\emph{TODO: once results are finalised, a single paragraph summary of
+\autoref{sec:Verdicts} goes here: which hypotheses hold, what the
+equal-wall-clock frontier looks like, and the regime-based recommendation
+for practitioners.}
+
+%----------------------------------------------------------------------------
+\section{Future work}
+\label{sec:FutureWork}
+%----------------------------------------------------------------------------
+
+\subsection{Multithreaded and GPU comparison}
+\label{ssec:FWParallel}
+The most consequential extension is to repeat the experiments on a
+multithreaded CPU and on the GPU. Both solvers admit parallelisation via
+graph colouring, but the structures differ in granularity
+(\autoref{sec:Parallelisation}). The expected outcome is that VBD's
+per-vertex blocks colour more cleanly than XPBD's per-constraint blocks,
+amplifying its production advantage; quantifying this gap is the natural
+next study.
+
+\subsection{Extend research to other dynamic types}
+\label{ssec:FWOtherDynamics}
+Beside mass-spring systems, in theory, both solver could also handle other chloth representations,
+soft bodies and rigid bodies as well. It would be interesting to see how the two solvers perform on these other types of dynamics, and whether the same conclusions hold.
+
+\subsection{FEM constraints}
+\label{ssec:FWFEM}
+Replacing mass-spring with FEM-based stretch and bending energies would
+both lift the realism ceiling and test whether the H1--H3 effects observed
+here survive the change of discretisation. The primal/dual framing
+predicts they should, but only experiments can confirm.
+
+\subsection{AVBD and post-2024 variants}
+\label{ssec:FWAVBD}
+Augmented VBD~\cite{Chen2024} reportedly handles wide stiffness ratios
+substantially better than canonical VBD. Re-running the H2 and stiffness-
+ratio experiments with AVBD would clarify whether the gap we observe is
+intrinsic to the primal approach or to the canonical 2024 implementation
+specifically.

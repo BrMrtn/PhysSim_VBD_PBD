@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  18 MAY 2026 20:56
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  19 MAY 2026 13:28
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -599,7 +599,7 @@ Package hyperref Info: Option `colorlinks' set `true' on input line 39.
 \c@currtheoremctr=\count347
 \c@endtheoremctr=\count348
 \c@theorem=\count349
-) (./thesis.aux (./include/titlepage.aux) (./include/declaration_EN.aux) (./content/abstract.aux) (./content/introduction.aux) (./content/latex-tools.aux) (./content/thesis-format.aux) (./content/template-usage.aux) (./content/acknowledgement.aux) (./content/appendices.aux))
+) (./thesis.aux (./include/titlepage.aux) (./include/declaration_EN.aux) (./content/abstract.aux) (./content/introduction.aux) (./content/background.aux) (./content/related-work.aux) (./content/algorithms.aux) (./content/methodology.aux) (./content/experiments.aux) (./content/discussion.aux) (./content/conclusion.aux) (./content/acknowledgement.aux) (./content/appendices.aux))
 \openout1 = `thesis.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 31.
@@ -726,11 +726,11 @@ Package hyperref Info: Option `pageanchor' set `false' on input line 30.
 
 
 
-])
+] [2])
 \tf@toc=\write4
 \openout4 = `thesis.toc'.
 
- [2]
+ [3]
 \openout2 = `include/declaration_EN.aux'.
 
  (./include/declaration_EN.tex [1
@@ -753,164 +753,162 @@ Package hyperref Info: Option `pageanchor' set `false' on input line 30.
 
  (./content/introduction.tex
 Chapter 1.
-) [1
+[1
 
 
 
 
-]
-\openout2 = `content/latex-tools.aux'.
+]) [2] [3]
+\openout2 = `content/background.aux'.
 
- (./content/latex-tools.tex
+ (./content/background.tex
 Chapter 2.
-File: figures/TeXstudio.png Graphic file (type bmp)
-<figures/TeXstudio.png>
-[2
+[4
 
 
 
 
-] (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2025/11/14 1.11b listings language file
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2025/11/14 1.11b listings language file
-)
-Underfull \hbox (badness 1033) in paragraph at lines 33--34
-\TU/lmr/m/n/10.95 kell állítani a szerkesztőprogramban, például TeXstudio esetén legegyszerűbben az
- []
+] [5]) [6]
+\openout2 = `content/related-work.aux'.
 
-[3]
-LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <8> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 43.
-) [4]
-\openout2 = `content/thesis-format.aux'.
-
- (./content/thesis-format.tex
+ (./content/related-work.tex
 Chapter 3.
-
-Underfull \hbox (badness 2486) in paragraph at lines 4--5
-\TU/lmr/m/n/10.95 Az itt található információk egy része a BME VIK Hallgatói Képviselet által
- []
-
-
-Underfull \hbox (badness 3058) in paragraph at lines 4--5
-\TU/lmr/m/n/10.95 készített „Utolsó félév a villanykaron” c. munkából lett kis változtatásokkal
- []
-
-
-Package natbib Warning: Citation `Jeney' on page 5 undefined on input line 24.
-
-) [5
-
-
-
-
-] [6]
-\openout2 = `content/template-usage.aux'.
-
- (./content/template-usage.tex
-Chapter 4.
 [7
 
 
 
 
-]
-File: figures/TeXstudio.png Graphic file (type bmp)
-<figures/TeXstudio.png>
-File: figures/TeXstudio.png Graphic file (type bmp)
-<figures/TeXstudio.png>
-File: figures/TeXstudio.png Graphic file (type bmp)
-<figures/TeXstudio.png>
-File: figures/TeXstudio.png Graphic file (type bmp)
-<figures/TeXstudio.png>
- [8] [9] (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstlang1.sty
+]) [8]
+\openout2 = `content/algorithms.aux'.
+
+ (./content/algorithms.tex
+Chapter 4.
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2025/11/14 1.11b listings language file
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstlang2.sty
-File: lstlang2.sty 2025/11/14 1.11b listings language file
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstlang3.sty
-File: lstlang3.sty 2025/11/14 1.11b listings language file
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2025/11/14 1.11b listings language file
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstlang2.sty
-File: lstlang2.sty 2025/11/14 1.11b listings language file
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstlang3.sty
-File: lstlang3.sty 2025/11/14 1.11b listings language file
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2025/11/14 1.11b listings language file
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstlang2.sty
-File: lstlang2.sty 2025/11/14 1.11b listings language file
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstlang3.sty
-File: lstlang3.sty 2025/11/14 1.11b listings language file
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstmisc.sty
-File: lstmisc.sty 2025/11/14 1.11b (Carsten Heinz)
 )
-Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 98.
- [10] [11] [12]
-Underfull \hbox (badness 1496) in paragraph at lines 238--240
-[][]\TU/lmtt/m/n/10.95 \cite{Lee87}[]\TU/lmr/m/n/10.95 , [][]\TU/lmtt/m/n/10.95 \cite{KissPhD}[]\TU/lmr/m/n/10.95 , [][]\TU/lmtt/m/n/10.95 \cite{Schreirer00}[]\TU/lmr/m/n/10.95 , [][]\TU/lmtt/m/n/10.95 \cite{Mkrtychev:1997} []\TU/lmr/m/n/10.95 és
- []
+Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 42.
+LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <8> not available
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 43.
+ [9
 
 
-Package natbib Warning: Citation `Wettl04' on page 13 undefined on input line 245.
 
 
-Package natbib Warning: Citation `Candy86' on page 13 undefined on input line 245.
+] [10]) [11]
+\openout2 = `content/methodology.aux'.
+
+ (./content/methodology.tex
+Chapter 5.
+[12
 
 
-Package natbib Warning: Citation `Lee87' on page 13 undefined on input line 245.
 
 
-Package natbib Warning: Citation `KissPhD' on page 13 undefined on input line 245.
+]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 59.
 
 
-Package natbib Warning: Citation `Schreier00' on page 13 undefined on input line 245.
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\leftrightarrow' on input line 59.
 
 
-Package natbib Warning: Citation `Mkrtychev:1997' on page 13 undefined on input line 245.
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 59.
 
 
-Package natbib Warning: Citation `DipPortal' on page 13 undefined on input line 245.
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 86.
 
 
-Underfull \hbox (badness 4967) in paragraph at lines 247--248
-[]\TU/lmr/m/n/10.95 Megjegyzendő, hogy az ékezetes magyar betűket is tartalmazó [][]\TU/lmtt/m/n/10.95 .bib []\TU/lmr/m/n/10.95 fájl az
- []
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 86.
+
+[13]) [14]
+\openout2 = `content/experiments.aux'.
+
+ (./content/experiments.tex
+Chapter 6.
+[15
 
 
-Underfull \hbox (badness 1902) in paragraph at lines 247--248
-[][]\TU/lmtt/m/n/10.95 inputenc []\TU/lmr/m/n/10.95 csomaggal betöltött [][]\TU/lmtt/m/n/10.95 latin2 []\TU/lmr/m/n/10.95 betűkészlet miatt fordítható. Ugyanez a
- []
-
-[13]
-Underfull \hbox (badness 10000) in paragraph at lines 258--259
-[]\TU/lmr/m/n/10.95 1 oldalas \TU/lmr/m/it/10.95 tájékoztató \TU/lmr/m/n/10.95 a szakdolgozat/diplomaterv szerkezetéről
- []
 
 
-Underfull \hbox (badness 4108) in paragraph at lines 265--266
-[]\TU/lmr/m/n/10.95 sorszámmal ellátott \TU/lmr/m/it/10.95 fejezetek\TU/lmr/m/n/10.95 : a feladatkiírás pontosítása és részletes el-
- []
+]
 
-[14] [15]
-Package hyperref Info: bookmark level for unknown definition defaults to 0 on input line 306.
-Package hyperref Info: bookmark level for unknown example defaults to 0 on input line 311.
-Package hyperref Info: bookmark level for unknown theorem defaults to 0 on input line 314.
-) [16]
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 88.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 88.
+
+[16] [17] [18]) [19]
+\openout2 = `content/discussion.aux'.
+
+ (./content/discussion.tex
+Chapter 7.
+[20
+
+
+
+
+]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 98.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 98.
+
+[21]) [22]
+\openout2 = `content/conclusion.aux'.
+
+ (./content/conclusion.tex
+Chapter 8.
+) [23
+
+
+
+
+] [24]
 \openout2 = `content/acknowledgement.aux'.
 
- (./content/acknowledgement.tex) [17
+ (./content/acknowledgement.tex) [25
 
+
+
+
+] (./thesis.bbl
+Underfull \hbox (badness 10000) in paragraph at lines 54--62
+[]\TU/lmr/m/n/10.95 Matthias Müller, Bruno Heidelberger, Marcus Hennix, and John Rat-
+ []
+
+
+Underfull \hbox (badness 3780) in paragraph at lines 54--62
+\TU/lmr/m/n/10.95 cliff.  Position based dynamics.  \TU/lmr/m/it/10.95 Journal of Visual Communication and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 54--62
+\TU/lmr/m/it/10.95 Image Representation\TU/lmr/m/n/10.95 , 18(2):109–118, 2007.  ISSN 1047-3203.  DOI:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 54--62
+[][]\TU/lmtt/m/n/10.95 https://doi.org/10.1016/j.jvcir.2007.01.005[][]\TU/lmr/m/n/10.95 .  URL [][]$[][][][][] [] [] [] [][][] []
+ []
+
+) [26
 
 
 
 ]
-No file thesis.bbl.
 \openout2 = `content/appendices.aux'.
 
-(./content/appendices.tex (./include/AI_nyilatkozat_tablazat_EN.tex [18
-
-
+ (./content/appendices.tex (./include/AI_nyilatkozat_tablazat_EN.tex [27
 
 
 ]
@@ -926,38 +924,34 @@ Underfull \hbox (badness 10000) in paragraph at lines 13--63
 )
 File: figures/TeXstudio.png Graphic file (type bmp)
 <figures/TeXstudio.png>
- [19
+ [28
 
-] [20]
+] [29]
 Underfull \hbox (badness 1577) in paragraph at lines 28--28
 []\TU/lmr/bx/n/14.4 Válasz az „Élet, a világmindenség, meg minden”
  []
 
-) [21
+) [30
 
 ]
 \tf@thm=\write5
 \openout5 = `thesis.thm'.
 
-
-
-Package natbib Warning: There were undefined citations.
-
-(./thesis.aux (./include/titlepage.aux) (./include/declaration_EN.aux) (./content/abstract.aux) (./content/introduction.aux) (./content/latex-tools.aux) (./content/thesis-format.aux) (./content/template-usage.aux) (./content/acknowledgement.aux) (./content/appendices.aux))
+ (./thesis.aux (./include/titlepage.aux) (./include/declaration_EN.aux) (./content/abstract.aux) (./content/introduction.aux) (./content/background.aux) (./content/related-work.aux) (./content/algorithms.aux) (./content/methodology.aux) (./content/experiments.aux) (./content/discussion.aux) (./content/conclusion.aux) (./content/acknowledgement.aux) (./content/appendices.aux))
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 71A682A5FFAE7AB62EBC857B9B8EE57F;4806.
+(rerunfilecheck)             Checksum: AA75A281A15881AEF4BD2188C401B270;17734.
  ) 
 Here is how much of TeX's memory you used:
- 19617 strings out of 469581
- 364824 string characters out of 5461843
- 1445382 words of memory out of 5000000
- 47895 multiletter control sequences out of 15000+600000
- 642428 words of font info for 131 fonts, out of 8000000 for 9000
+ 18563 strings out of 469581
+ 352206 string characters out of 5461843
+ 1151804 words of memory out of 5000000
+ 46822 multiletter control sequences out of 15000+600000
+ 642389 words of font info for 127 fonts, out of 8000000 for 9000
  376 hyphenation exceptions out of 8191
- 78i,16n,82p,1534b,1934s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 78i,14n,82p,913b,1249s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on thesis.pdf (27 pages).
+Output written on thesis.pdf (37 pages).

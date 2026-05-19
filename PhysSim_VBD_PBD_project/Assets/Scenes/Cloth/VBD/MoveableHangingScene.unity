@@ -158,8 +158,8 @@ MonoBehaviour:
   handleSelfCollisions: 0
   selfCollisionStiffness: 10000
   velCapPerFrame: 3
-  rayleighMassDamping: 0
-  rayleighStiffnessDamping: 1
+  rayleighMassDamping: 0.5
+  rayleighStiffnessDamping: 0.01
   logMsPerFrame: 1
   addInitNoise: 0
   useAcceleration: 0

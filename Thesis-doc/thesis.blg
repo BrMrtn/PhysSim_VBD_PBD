@@ -1,0 +1,61 @@
+This is BibTeX, Version 0.99e (TeX Live 2026)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: thesis.aux
+The style file: plainnat.bst
+A level-1 auxiliary file: include/titlepage.aux
+A level-1 auxiliary file: include/declaration_EN.aux
+A level-1 auxiliary file: content/abstract.aux
+A level-1 auxiliary file: content/introduction.aux
+A level-1 auxiliary file: content/background.aux
+A level-1 auxiliary file: content/related-work.aux
+A level-1 auxiliary file: content/algorithms.aux
+A level-1 auxiliary file: content/methodology.aux
+A level-1 auxiliary file: content/experiments.aux
+A level-1 auxiliary file: content/discussion.aux
+A level-1 auxiliary file: content/conclusion.aux
+A level-1 auxiliary file: content/acknowledgement.aux
+A level-1 auxiliary file: content/appendices.aux
+Database file #1: bib/mybib.bib
+Warning--empty publisher in li2026physics
+You've used 6 entries,
+            2773 wiz_defined-function locations,
+            660 strings with 6640 characters,
+and the built_in function-call counts, 3356 in all, are:
+= -- 307
+> -- 223
+< -- 2
++ -- 75
+- -- 69
+* -- 298
+:= -- 530
+add.period$ -- 32
+call.type$ -- 6
+change.case$ -- 40
+chr.to.int$ -- 6
+cite$ -- 13
+duplicate$ -- 137
+empty$ -- 232
+format.name$ -- 75
+if$ -- 700
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 6
+newline$ -- 51
+num.names$ -- 24
+pop$ -- 72
+preamble$ -- 1
+purify$ -- 35
+quote$ -- 0
+skip$ -- 114
+stack$ -- 0
+substring$ -- 87
+swap$ -- 23
+text.length$ -- 1
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 61
+warning$ -- 1
+while$ -- 22
+width$ -- 0
+write$ -- 111
+(There was 1 warning)

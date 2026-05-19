@@ -1,7 +1,163 @@
 %----------------------------------------------------------------------------
 \chapter{\bevezetes}
+\label{chap:Introduction}
 %----------------------------------------------------------------------------
 
-A bevezető tartalmazza a diplomaterv-kiírás elemzését, történelmi előzményeit, a feladat indokoltságát (a motiváció leírását), az eddigi megoldásokat, és ennek tükrében a hallgató megoldásának összefoglalását.
+%----------------------------------------------------------------------------
+\section{Motivation}
+\label{sec:Motivation}
+%----------------------------------------------------------------------------
+Real-time simulation of deformable objects --- cloth, soft bodies, hair --- has
+become a baseline expectation in interactive applications such as games,
+virtual reality and augmented reality. In these domains the simulator must
+deliver believable dynamics inside an extremely tight frame budget: at
+60~fps the entire physics, rendering and gameplay logic for a frame must
+complete in roughly 16~ms, with physics typically receiving only a
+fraction of that.
 
-A bevezető szokás szerint a diplomaterv felépítésével záródik, azaz annak rövid leírásával, hogy melyik fejezet mivel foglalkozik.
+We focus on deformable bodies rather than rigid bodies for two reasons.
+First, the two algorithms studied here differ most visibly on deformable
+material: rigid-body simulation hides the per-constraint convergence
+behaviour that we want to measure. Second, deformable simulation is the
+strictly harder case --- many more degrees of freedom and many more
+constraints per frame --- so it stresses both solvers in ways that make
+their failure modes legible.
+
+\paragraph{The accuracy/efficiency trade-off.}
+Every physics-based simulator sits somewhere on a line between
+\emph{physical accuracy} and \emph{computational efficiency}: gaining one
+costs the other. \autoref{tab:accuracy-efficiency} sketches this spectrum
+for the methods relevant to this thesis, ordered from most accurate to
+most efficient. XPBD and VBD both sit near the efficient end --- which is
+where real-time applications live --- and the rest of the thesis asks
+which of the two makes the better trade-off, and under what conditions.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{l l l}
+\toprule
+\textbf{Method} & \textbf{Accuracy} & \textbf{Cost} \\
+\midrule
+Newton's method (implicit Euler)   & reference            & offline only \\
+Projective Dynamics                & high                 & expensive    \\
+Vertex Block Descent (VBD)         & moderate--high       & real-time    \\
+Extended Position-Based Dynamics (XPBD) & moderate         & real-time    \\
+Position-Based Dynamics (PBD)      & low (stiffness-dep.) & cheap        \\
+Explicit Euler                     & poor (unstable)      & cheapest     \\
+\bottomrule
+\end{tabular}
+\caption{Deformable-simulation methods ordered from most accurate to most
+efficient. XPBD and VBD --- the subject of this thesis --- both target the
+real-time regime.}
+\label{tab:accuracy-efficiency}
+\end{table}
+
+Designing such a simulator is hard for three reasons that recur throughout
+this thesis:
+\begin{itemize}
+    \item \emph{Stiffness.} Cloth and soft tissue exhibit very stiff
+    constraints (almost-inextensible fabric, near-rigid bones). Stiff systems
+    drive explicit integrators unstable unless time steps are made
+    impractically small.
+    \item \emph{Stability.} Even implicit integrators can blow up when
+    constraints are poorly conditioned, when mass ratios between connected
+    particles are large, or when contact events introduce sudden velocity
+    discontinuities.
+    \item \emph{Strict time constraints.} Methods that converge well in offline
+    animation (Newton's method, projective dynamics) are typically too
+    expensive per frame; methods cheap enough for real-time often trade
+    convergence quality for predictable cost.
+\end{itemize}
+
+Within the real-time band, Extended Position-Based Dynamics
+(XPBD)~\cite{10.1145/2994258.2994272} has been a workhorse for years, while
+Vertex Block Descent (VBD)~\cite{Chen2024} is a recent and promising
+addition that has yet to be evaluated head-to-head against it. The two
+methods occupy opposite sides of the \emph{primal/dual} duality identified
+by Macklin et~al.~\cite{Chen2024}: XPBD solves for Lagrange multipliers
+(the dual variables associated with constraints), while VBD solves
+directly for vertex positions (the primal variables). No controlled
+comparison between them currently exists.
+
+%----------------------------------------------------------------------------
+\section{Contribution}
+\label{sec:Contribution}
+%----------------------------------------------------------------------------
+The central contribution of this thesis is, to the best of our knowledge, the
+\emph{first faithful XPBD-vs-VBD comparison}: the two algorithms are
+implemented in the same Unity-based codebase, applied to the same mass-spring
+material model, run under a matched compute budget, and evaluated against a
+high-iteration Newton solve that serves as a numerical ground-truth reference.
+
+This sharpens previous work. The closest prior comparison, Ma
+et~al.~\cite{app142311072}, contrasts \emph{plain} PBD (not XPBD) with a
+non-canonical VBD implementation, and reports only frame-rate scaling. We
+distinguish ourselves by:
+\begin{enumerate}
+    \item using XPBD, the constraint-stiffness-independent variant that any
+    practitioner would actually deploy today;
+    \item implementing the canonical VBD formulation, including its
+    block-coordinate-descent interpretation;
+    \item matching compute budgets and material parameters rather than
+    iteration counts, since one XPBD substep is not directly comparable to
+    one VBD iteration;
+    \item adding a Newton ground truth, which lets us report
+    \emph{solution error} rather than only relative performance.
+\end{enumerate}
+
+%----------------------------------------------------------------------------
+\section{Hypotheses}
+\label{sec:Hypotheses}
+%----------------------------------------------------------------------------
+The primal/dual theory in \autoref{chap:Background} predicts that XPBD and
+VBD should fail in characteristically different regimes. We state three
+testable hypotheses up front; the experiments in \autoref{chap:Experiments}
+are designed to confirm or refute them:
+\begin{description}
+    \item[H1.] \emph{XPBD degrades under high mass ratios.} Because XPBD
+    solves dual variables one constraint at a time, large mass disparities
+    along a constraint chain amplify the local update error and propagate
+    slowly through the system.
+    \item[H2.] \emph{VBD degrades under high stiffness ratios.} VBD's primal
+    block-coordinate update relies on a locally well-conditioned Hessian; a
+    wide range of stiffnesses meeting at a single vertex produces an
+    ill-conditioned block and slows convergence.
+    \item[H3.] \emph{VBD's per-iteration convergence is more
+    stiffness-robust.} Because the primal update sees the true elastic
+    Hessian rather than a linearised constraint, raising material stiffness
+    should not slow VBD as much as it slows XPBD.
+\end{description}
+
+%----------------------------------------------------------------------------
+\section{Evaluation axes}
+\label{sec:EvalAxes}
+%----------------------------------------------------------------------------
+We evaluate both solvers along four axes that, together, capture the
+trade-offs a practitioner cares about:
+\begin{description}
+    \item[Efficiency.] Wall-clock cost per frame as a function of mesh size,
+    substep/iteration count, and target quality.
+    \item[Robustness.] Behaviour under stress: large time steps, single
+    iterations, extreme mass ratios, extreme stiffness ratios, self-contact.
+    \item[Physical realism.] Distance from a Newton reference, energy
+    behaviour, damping behaviour, and agreement with analytic solutions on
+    a harmonic oscillator and a draped cloth.
+    \item[Flexibility.] Ease of changing material stiffness, adding new
+    constraint types, and reasoning about parameters.
+\end{description}
+
+%----------------------------------------------------------------------------
+\section{Thesis structure}
+\label{sec:Structure}
+%----------------------------------------------------------------------------
+\autoref{chap:Background} develops the theoretical foundation: the variational
+form of implicit Euler, mass-spring energies, and the primal/dual lens that
+makes XPBD and VBD comparable. \autoref{chap:RelatedWork} reviews the PBD,
+XPBD, and VBD literature and positions this work against Ma
+et~al.~\cite{app142311072}. \autoref{chap:Algorithms} states the two
+algorithms in their canonical form. \autoref{chap:Methodology} describes the
+Unity implementation and, importantly, the design decisions that keep the
+comparison fair. \autoref{chap:Experiments} reports results along the four
+axes. \autoref{chap:Discussion} synthesises across axes, judges H1--H3, and
+lists threats to validity. \autoref{chap:Conclusion} closes with directions
+for future work.

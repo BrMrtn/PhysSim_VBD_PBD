@@ -1,0 +1,118 @@
+%----------------------------------------------------------------------------
+\chapter{Discussion}
+\label{chap:Discussion}
+%----------------------------------------------------------------------------
+
+This chapter synthesises results across the four evaluation axes, judges
+the hypotheses stated in \autoref{sec:Hypotheses}, and enumerates the
+threats to validity that bound the conclusions.
+
+%----------------------------------------------------------------------------
+\section{Synthesis across axes}
+\label{sec:Synthesis}
+%----------------------------------------------------------------------------
+\emph{TODO: once experimental results are in, write a paragraph per axis
+that explains how the result on that axis is consistent (or not) with the
+primal/dual framing of \autoref{sec:PrimalDual}.}
+\begin{itemize}
+    \item Efficiency: which solver dominates the equal-wall-clock frontier
+    and at what regime?
+    \item Robustness: where do the stability envelopes diverge, and does
+    the divergence match the primal/dual prediction?
+    \item Realism: which solver's converged state is closer to Newton at
+    matched compute?
+    \item Flexibility: how does the ease-of-extension cost compare against
+    the per-frame cost benefit?
+\end{itemize}
+
+%----------------------------------------------------------------------------
+\section{Verdicts on H1--H3}
+\label{sec:Verdicts}
+%----------------------------------------------------------------------------
+
+\paragraph{H1 (XPBD degrades under high mass ratios) ---
+\emph{TODO: confirmed / refuted}.}
+Tied to \autoref{ssec:MassRatioPendulum} and \autoref{ssec:MassRatioChain}.
+Mechanism (if confirmed): dual updates propagate slowly through chains of
+strongly mismatched masses because each Gauss--Seidel sweep only changes
+one constraint's multiplier, and the change couples to the next constraint
+only through the position update on the shared particle.
+
+\paragraph{H2 (VBD degrades under high stiffness ratios) ---
+\emph{TODO: confirmed / refuted}.}
+Tied to \autoref{ssec:StiffnessRatioChain} and \autoref{ssec:StiffRatioTest}.
+Mechanism (if confirmed): the local Hessian block $\mathbf{H}_{i}$ at a
+vertex sums contributions from every incident spring, so when the
+stiffnesses vary widely the block's condition number explodes, slowing the
+Newton step.
+
+\paragraph{H3 (VBD's per-iteration convergence is more stiffness-robust)
+--- \emph{TODO: confirmed / refuted}.}
+Tied to \autoref{ssec:ResidualConvergence} and \autoref{ssec:IterIndepStiff}.
+Mechanism (if confirmed): VBD uses second-order information about $E$
+locally, so increasing $k$ does not change the number of Newton steps to
+convergence very much; XPBD discards this information.
+
+\paragraph{Joint reading.}
+If H1, H2, H3 all hold, the framing is consistent: each solver is robust
+in exactly the regime where its update direction sees the right
+information, and brittle in the regime where the other side of the dual
+would have. The practical recommendation in such a case is regime-based,
+not absolute --- which is itself a useful contribution if the experiments
+support it.
+
+%----------------------------------------------------------------------------
+\section{Threats to validity}
+\label{sec:ThreatsValidity}
+%----------------------------------------------------------------------------
+
+\subsection{Single-threaded execution}
+\label{ssec:ThreatSingleThread}
+All measurements run single-threaded on CPU. VBD is known to parallelise
+better than XPBD (\autoref{sec:Parallelisation}), so ms/frame results
+underestimate VBD's likely production advantage. This affects external
+validity of any quantitative efficiency claim but does not invalidate
+qualitative claims about convergence quality or stability envelopes.
+
+\subsection{Mass-spring discretisation only}
+\label{ssec:ThreatMassSpring}
+We use distance-spring energies throughout, including for bending. Real
+cloth simulators use FEM-based stretch energies and dihedral bending. The
+primal/dual framing carries over (both XPBD and VBD admit arbitrary elastic
+energies), but the specific stiffness ratios encountered, and therefore
+the magnitude of the H2/H3 effects, may differ.
+
+\subsection{Gauss--Seidel order dependence}
+\label{ssec:ThreatOrder}
+Both solvers are order-sensitive (\autoref{sec:GSJacobi}). We fix a single
+deterministic order; an adversarial reordering could in principle shift
+results. We do not investigate this, and it is a real threat to
+reproducibility on other implementations.
+
+\subsection{Mismatched collision models}
+\label{ssec:ThreatCollision}
+XPBD uses projection-based self-collision; VBD uses penalty-based
+self-collision (\autoref{sec:SelfCollision}). Any difference in the
+self-collision experiments mixes algorithmic and contact-model effects.
+
+\subsection{Fixed $dt = 1/24$~s}
+\label{ssec:ThreatDt}
+The choice $dt = 1/24$~s is generous for Unity but stresses both solvers.
+A different fixed $dt$, or an adaptive step, could shift the equal-wall-
+clock frontier. The stability map in \autoref{ssec:StabilityMap} mitigates
+this by characterising both solvers over a $dt$ range, but the headline
+results in \autoref{sec:EffResults} are tied to a single $dt$.
+
+%----------------------------------------------------------------------------
+\section{Limitations}
+\label{sec:Limitations}
+%----------------------------------------------------------------------------
+Beyond the threats above, three further limitations are worth naming
+explicitly:
+\begin{itemize}
+    \item We do not implement AVBD or any post-2024 VBD extension.
+    \item Self-collision uses a simple model; production simulators often
+    use continuous collision detection (CCD), which both solvers can be
+    augmented with at additional cost.
+    \item Friction is not modelled; the experiments are friction-free.
+\end{itemize}
