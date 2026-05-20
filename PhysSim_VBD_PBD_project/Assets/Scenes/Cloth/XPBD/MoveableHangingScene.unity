@@ -262,7 +262,7 @@ MonoBehaviour:
   rayleighStiffnessDamping: 0
   addInitNoise: 1
   logMsPerFrame: 1
-  logEnergy: 0
+  logEnergy: 1
   numVerts: 0
   numX: 0
   numY: 0

@@ -17,14 +17,15 @@ data = np.genfromtxt(csv_path, delimiter=';', skip_header=1)
 
 time = data[:, 1]
 total_energy = data[:, 5]
+running_avg_total = np.cumsum(total_energy) / np.arange(1, len(total_energy) + 1)
 
 # Draw graph
 plt.figure(figsize=(10, 5))
-plt.plot(time, total_energy, linewidth=2)
+plt.plot(time, running_avg_total, linewidth=2)
 
 plt.xlabel("Time")
-plt.ylabel("Total Energy")
-plt.title("Total Energy Over Time")
+plt.ylabel("Running Average of Total Energy")
+plt.title("Running Average of Total Energy Over Time")
 plt.grid(True)
 
 plt.tight_layout()
