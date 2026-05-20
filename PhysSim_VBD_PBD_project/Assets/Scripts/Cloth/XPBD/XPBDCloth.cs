@@ -13,6 +13,8 @@ public class XPBDCloth : MonoBehaviour
     public float shearCompliance = 0.0001f;
     public float bendingCompliance = 0.001f;
 
+    public float totalMass = 1f;
+
     public bool handleSelfCollisions = false;
     public float selfCollisionFriction = 0f;
     public float velCapPerFrame = 3f;
@@ -80,6 +82,7 @@ public class XPBDCloth : MonoBehaviour
         };
 
         BuildSimulationGrid(xCoords, yCoords);
+        AssignMasses();
         Array.Copy(Solver.positions, Solver.restPositions, numVerts);
 
         BuildMeshToGrid(localVerts, xCoords, yCoords, eps);
@@ -165,6 +168,41 @@ public class XPBDCloth : MonoBehaviour
             }
     }
 
+    private void AssignMasses()
+    {
+        var tributaryArea = new float[numVerts];
+        Vector3[] pos = Solver.positions;
+
+        for (int iy = 0; iy < numY - 1; iy++)
+            for (int ix = 0; ix < numX - 1; ix++)
+            {
+                int a = iy * numX + ix;
+                int b = iy * numX + (ix + 1);
+                int c = (iy + 1) * numX + ix;
+                int d = (iy + 1) * numX + (ix + 1);
+
+                float quarter = 0.25f * (TriangleArea(pos[a], pos[b], pos[d]) + TriangleArea(pos[a], pos[d], pos[c]));
+                tributaryArea[a] += quarter;
+                tributaryArea[b] += quarter;
+                tributaryArea[c] += quarter;
+                tributaryArea[d] += quarter;
+            }
+
+        float totalArea = 0f;
+        for (int i = 0; i < numVerts; i++) totalArea += tributaryArea[i];
+        if (totalArea <= 0f) return;
+
+        float density = totalMass / totalArea;
+        for (int i = 0; i < numVerts; i++)
+        {
+            float m = density * tributaryArea[i];
+            Solver.invMasses[i] = m > 0f ? 1f / m : 0f;
+        }
+    }
+
+    private static float TriangleArea(Vector3 p0, Vector3 p1, Vector3 p2)
+        => 0.5f * Vector3.Cross(p1 - p0, p2 - p0).magnitude;
+
     private void BuildMeshToGrid(Vector3[] localVerts, List<float> xCoords, List<float> yCoords, float eps)
     {
         meshToGrid = new int[numVerts];
@@ -205,12 +243,14 @@ public class XPBDCloth : MonoBehaviour
                     int p1 = j0 * numX + i0;
                     int p2 = j1 * numX + i1;
 
+                    float restLength = Vector3.Distance(Solver.positions[p1], Solver.positions[p2]);
+
                     constraintsList.Add(new DistanceConstraint
                     {
                         p1Idx = p1,
                         p2Idx = p2,
-                        restLength = Vector3.Distance(Solver.positions[p1], Solver.positions[p2]),
-                        compliance = compliance
+                        restLength = restLength,
+                        compliance = compliance * restLength
                     });
                 }
             }

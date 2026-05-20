@@ -254,13 +254,15 @@ MonoBehaviour:
   stretchingCompliance: 0
   shearCompliance: 0.0001
   bendingCompliance: 0.001
+  totalMass: 1
   handleSelfCollisions: 0
   selfCollisionFriction: 0
   velCapPerFrame: 3
   rayleighMassDamping: 0
   rayleighStiffnessDamping: 0
-  logMsPerFrame: 1
   addInitNoise: 1
+  logMsPerFrame: 1
+  logEnergy: 0
   numVerts: 0
   numX: 0
   numY: 0
