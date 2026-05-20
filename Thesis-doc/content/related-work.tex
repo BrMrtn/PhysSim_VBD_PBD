@@ -4,7 +4,7 @@
 %----------------------------------------------------------------------------
 
 This chapter surveys the position-based and primal-descent lineages whose
-endpoints --- XPBD and VBD --- this thesis compares, and positions our work
+endpoints --- XPBD and VBD --- this thesis compares, and positions my work
 relative to the closest prior comparison.
 
 %----------------------------------------------------------------------------
@@ -32,7 +32,7 @@ Macklin et~al.~\cite{Chen2024} (the ``Small Steps'' note) later argued that
 XPBD converges most reliably when used with \emph{many short substeps and a
 single iteration per substep}, rather than a single long step with many
 iterations. This is now a standard XPBD configuration, and it is the
-default we adopt in \autoref{chap:Methodology}: it both follows the
+default I adopt in \autoref{chap:Methodology}: it both follows the
 recommendation and exposes XPBD's per-substep cost as the primary
 performance lever.
 
@@ -70,8 +70,8 @@ include:
 
 A follow-up line, Augmented VBD (AVBD)~\cite{Chen2024} and 2025
 extensions, has improved stiffness-ratio handling and convergence behaviour.
-We restrict the present comparison to the canonical 2024 VBD since AVBD
-post-dates our implementation window; we cite AVBD in
+I restrict the present comparison to the canonical 2024 VBD since AVBD
+post-dates my implementation window; I cite AVBD in
 \autoref{sec:FlexResults} as the most relevant counter-evidence on the
 stiffness-ratio axis.
 
@@ -84,7 +84,7 @@ who compare cloth simulation under PBD and VBD in Unity. Their study
 established that VBD scales better than PBD with node count and identified
 maximum sustainable node counts at 30~fps.
 
-Our work differs in three substantial ways:
+My work differs in three substantial ways:
 \begin{enumerate}
     \item \textbf{XPBD, not PBD.} Plain PBD has the stiffness-coupling flaw
     that XPBD was designed to fix, so a PBD-vs-VBD comparison conflates
@@ -92,11 +92,11 @@ Our work differs in three substantial ways:
     primal/dual distinction.
     \item \textbf{Canonical VBD.} Ma et~al.'s pseudocode departs in details
     (initialisation, Chebyshev handling) from the formulation in
-    \cite{Chen2024}. We follow the canonical VBD and disable Chebyshev /
-    adaptive init for the core comparison so that we are reading off
+    \cite{Chen2024}. I follow the canonical VBD and disable Chebyshev /
+    adaptive init for the core comparison so that I am reading off
     algorithm properties, not acceleration tricks.
     \item \textbf{Beyond frame rate.} Ma et~al.\ report fps and node counts.
-    We add a Newton ground truth, an equal-wall-clock quality frontier, and
+    I add a Newton ground truth, an equal-wall-clock quality frontier, and
     targeted stress tests (mass ratio, stiffness ratio, large $dt$) keyed to
     the primal/dual hypotheses.
 \end{enumerate}
@@ -109,7 +109,7 @@ quality} rather than only at matched node counts?
 \section{Reference materials}
 \label{sec:RefMaterials}
 %----------------------------------------------------------------------------
-Throughout the implementation we drew on the Physics-Based Simulation book
+Throughout the implementation I drew on the Physics-Based Simulation book
 of Li et~al.~\cite{li2026physics} for canonical derivations and pedagogical
 notes; their treatment of implicit Euler as variational minimisation
 directly informs the framing in \autoref{sec:Variational}. The

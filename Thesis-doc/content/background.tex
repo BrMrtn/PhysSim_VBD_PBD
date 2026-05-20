@@ -22,7 +22,7 @@ Forces $\mathbf{f}(\mathbf{x}, \mathbf{v}, t)$ produce accelerations via
 $\ddot{\mathbf{x}} = \mathbf{M}^{-1} \mathbf{f}$, integrated by some scheme.
 
 \paragraph{Impulse-based.} Velocities are manipulated directly via collision
-or constraint impulses, popular for rigid bodies. We will not pursue impulse
+or constraint impulses, popular for rigid bodies. I will not pursue impulse
 methods further: they are awkward for distributed deformation, and the
 primal/dual framework of \autoref{sec:PrimalDual} is the right lens for
 comparing XPBD and VBD.
@@ -85,7 +85,7 @@ unambiguous ground truth in \autoref{chap:Experiments}.
 \section{Mass-spring systems}
 \label{sec:MassSpring}
 %----------------------------------------------------------------------------
-Throughout this work we use a mass-spring discretisation of cloth: vertices
+Throughout this work I use a mass-spring discretisation of cloth: vertices
 carry lumped masses, edges of the cloth mesh carry springs. For a spring
 between particles $i$ and $j$ with rest length $\ell_0$ and stiffness $k$,
 the constraint function and energy are
@@ -96,7 +96,7 @@ the constraint function and energy are
 
 \subsection{Distance, stretch, and bending springs}
 \label{ssec:SpringTypes}
-We use two spring types, both expressed through the distance-spring energy
+I use two spring types, both expressed through the distance-spring energy
 above:
 \begin{itemize}
     \item \emph{Stretch springs} between mesh-adjacent vertices oppose
@@ -104,7 +104,7 @@ above:
     \item \emph{Bending springs} are modelled as long-range distance springs
     between vertices opposite across an edge (the ``diagonal'' of the
     two-triangle quad). Note this is \emph{not} a dihedral-angle constraint:
-    we deliberately stay within a single constraint form, since the goal is
+    I deliberately stay within a single constraint form, since the goal is
     a controlled comparison rather than a state-of-the-art cloth model.
 \end{itemize}
 
@@ -114,7 +114,7 @@ Mass-spring is cheap and easy to differentiate but is well known to be
 \emph{mesh-dependent}: the effective macroscopic stiffness depends on the
 discretisation. Conclusions about absolute material parameters are therefore
 not transferable to FEM-based models; conclusions about \emph{relative}
-solver behaviour --- our subject --- are.
+solver behaviour --- my subject --- are.
 
 %----------------------------------------------------------------------------
 \section{Solver structure: Gauss--Seidel vs.\ Jacobi}
@@ -127,11 +127,11 @@ A Jacobi variant of either solver would update all blocks from the start-of-
 iteration state in parallel; in serial it converges more slowly, in parallel
 it maps better to the GPU.
 
-This has an important consequence we flag now and revisit in
+This has an important consequence I flag now and revisit in
 \autoref{sec:ThreatsValidity}: both solvers are \textbf{order-dependent}.
 The constraint-traversal order in XPBD and the vertex-traversal order in VBD
 both affect convergence rate and, in pathological cases, the converged
-solution. Our experiments fix a deterministic order for reproducibility.
+solution. My experiments fix a deterministic order for reproducibility.
 
 %----------------------------------------------------------------------------
 \section{The primal/dual distinction}

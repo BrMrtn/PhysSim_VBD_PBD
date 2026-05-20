@@ -16,7 +16,7 @@ contrast made explicit here is what drives the experimental design in
 
 \subsection{Derivation}
 \label{ssec:XPBDDeriv}
-For each elastic spring we associate a constraint $C(\mathbf{x}) = 0$ at
+For each elastic spring I associate a constraint $C(\mathbf{x}) = 0$ at
 zero deformation and a compliance $\alpha = 1/k$. The augmented Lagrangian
 of \eqref{eq:G} with a single substep $h$ has stationarity conditions
 \begin{align}
@@ -66,7 +66,7 @@ def xpbd_substep(x, v, h, constraints):
     \item \emph{First-order gradient information only.} Each constraint
     contributes its gradient $\nabla C_j$; no Hessian of $E$ is built.
     \item \emph{Substeps preferred over iterations.} Following the small-
-    steps result, we use many short substeps with one inner iteration.
+    steps result, I use many short substeps with one inner iteration.
 \end{itemize}
 
 %----------------------------------------------------------------------------
@@ -122,7 +122,7 @@ def vbd_step(x, v, h):
     long step subdivided by many block iterations; the implicit Hessian
     handles stiffness without needing tiny $h$.
     \item \emph{Parallel-friendly.} Vertices sharing no constraint can be
-    updated independently (graph colouring). We disable parallelism for
+    updated independently (graph colouring). I disable parallelism for
     the core comparison; see \autoref{ssec:Parallelisation}.
 \end{itemize}
 

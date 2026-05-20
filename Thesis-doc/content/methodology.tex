@@ -43,7 +43,7 @@ scaffolding handles:
 \paragraph{Overhead of the shared scaffolding.}
 The scaffolding adds a small constant overhead per frame for buffer
 swapping, Unity message dispatch, and rendering; both solvers pay this
-overhead identically, so it does not bias the comparison. We report the
+overhead identically, so it does not bias the comparison. I report the
 isolated solver time (excluding render and dispatch) separately from
 end-to-end frame time in \autoref{sec:EffResults}.
 
@@ -53,13 +53,13 @@ end-to-end frame time in \autoref{sec:EffResults}.
 %----------------------------------------------------------------------------
 A common pitfall in comparing position-based and primal solvers is to set
 some parameter ``the same'' that is not actually the same physical quantity
-on the two sides. We adopt four explicit fairness controls.
+on the two sides. I adopt four explicit fairness controls.
 
 \subsection{Stiffness $\leftrightarrow$ compliance mapping}
 \label{ssec:StiffCompl}
 VBD takes a stiffness $k$ directly. XPBD takes a compliance $\alpha = 1/k$
 and scales it by the time step to $\tilde\alpha = \alpha/h^{2}$. To match
-materials we set
+materials I set
 \begin{equation}
     \alpha_{\mathrm{XPBD}} \;=\; 1/k_{\mathrm{VBD}},
 \end{equation}
@@ -76,7 +76,7 @@ iteration.} An XPBD substep recomputes the inertial target $\mathbf{y}$ and
 solves a fresh constraint system; a VBD iteration refines the same step.
 
 Because of this asymmetry, \emph{wall-clock} is the primary axis of
-comparison throughout \autoref{chap:Experiments}. We sweep substep counts
+comparison throughout \autoref{chap:Experiments}. I sweep substep counts
 for XPBD and iteration counts for VBD independently, plot quality vs.\
 ms/frame, and read the \emph{equal-wall-clock frontier} from the resulting
 curves. Iteration-count comparisons are reported only as secondary
@@ -102,8 +102,8 @@ genuinely part of VBD, but they confound an apples-to-apples comparison: an
 XPBD with Chebyshev-style acceleration would be an entirely different
 solver (essentially Anderson-accelerated XPBD).
 
-For the core comparison we therefore \textbf{disable Chebyshev acceleration
-and adaptive initialisation in VBD}, using only inertial initialisation. We
+For the core comparison I therefore \textbf{disable Chebyshev acceleration
+and adaptive initialisation in VBD}, using only inertial initialisation. I
 report results \emph{with} the accelerations separately in
 \autoref{ssec:VBDChebyshev}, framed as ``what VBD looks like in production''
 rather than ``what VBD looks like in this controlled comparison''.
@@ -115,7 +115,7 @@ rather than ``what VBD looks like in this controlled comparison''.
 Both solvers implement Rayleigh damping, but through different mechanisms.
 
 \paragraph{XPBD damping ($\gamma$-formulation).}
-We use the multiplier-update extension of \cite{10.1145/2994258.2994272}:
+I use the multiplier-update extension of \cite{10.1145/2994258.2994272}:
 \begin{equation}
     \Delta \lambda_{j} \;=\;
         \frac{-C_{j} - \tilde\alpha_{j}\lambda_{j}
@@ -152,7 +152,7 @@ The two solvers implement self-collision differently, by necessity:
 \end{itemize}
 This is a model difference, not a solver difference: a penalty model
 \emph{could} be implemented in XPBD and a projection model \emph{could} be
-implemented in VBD, but the natural form differs. We flag the difference
+implemented in VBD, but the natural form differs. I flag the difference
 here so the self-collision result in \autoref{ssec:SelfCollResults} is read
 correctly: differences there are partly attributable to the contact model,
 not solely to XPBD vs.\ VBD.
@@ -162,7 +162,7 @@ not solely to XPBD vs.\ VBD.
 \label{sec:Parallelisation}
 \label{ssec:Parallelisation}
 %----------------------------------------------------------------------------
-All measurements in this thesis are single-threaded on CPU. We note here,
+All measurements in this thesis are single-threaded on CPU. I note here,
 and revisit in \autoref{sec:ThreatsValidity}, that the two solvers have
 different parallelisation profiles:
 \begin{itemize}
@@ -175,5 +175,5 @@ different parallelisation profiles:
     the dependency structure is less regular.
 \end{itemize}
 The expected result --- that parallelisation favours VBD more than XPBD ---
-is plausible but unverified by our experiments and stands as a threat to
+is plausible but unverified by my experiments and stands as a threat to
 external validity for any claim about which solver is ``faster overall''.

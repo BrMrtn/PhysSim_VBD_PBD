@@ -15,10 +15,10 @@ deliver believable dynamics inside an extremely tight frame budget: at
 complete in roughly 16~ms, with physics typically receiving only a
 fraction of that.
 
-We focus on deformable bodies rather than rigid bodies for two reasons.
+I focus on deformable bodies rather than rigid bodies for two reasons.
 First, the two algorithms studied here differ most visibly on deformable
 material: rigid-body simulation hides the per-constraint convergence
-behaviour that we want to measure. Second, deformable simulation is the
+behaviour that I want to measure. Second, deformable simulation is the
 strictly harder case --- many more degrees of freedom and many more
 constraints per frame --- so it stresses both solvers in ways that make
 their failure modes legible.
@@ -83,7 +83,7 @@ comparison between them currently exists.
 \section{Contribution}
 \label{sec:Contribution}
 %----------------------------------------------------------------------------
-The central contribution of this thesis is, to the best of our knowledge, the
+The central contribution of this thesis is, to the best of my knowledge, the
 \emph{first faithful XPBD-vs-VBD comparison}: the two algorithms are
 implemented in the same Unity-based codebase, applied to the same mass-spring
 material model, run under a matched compute budget, and evaluated against a
@@ -91,8 +91,8 @@ high-iteration Newton solve that serves as a numerical ground-truth reference.
 
 This sharpens previous work. The closest prior comparison, Ma
 et~al.~\cite{app142311072}, contrasts \emph{plain} PBD (not XPBD) with a
-non-canonical VBD implementation, and reports only frame-rate scaling. We
-distinguish ourselves by:
+non-canonical VBD implementation, and reports only frame-rate scaling. I
+distinguish this work by:
 \begin{enumerate}
     \item using XPBD, the constraint-stiffness-independent variant that any
     practitioner would actually deploy today;
@@ -101,7 +101,7 @@ distinguish ourselves by:
     \item matching compute budgets and material parameters rather than
     iteration counts, since one XPBD substep is not directly comparable to
     one VBD iteration;
-    \item adding a Newton ground truth, which lets us report
+    \item adding a Newton ground truth, which lets me report
     \emph{solution error} rather than only relative performance.
 \end{enumerate}
 
@@ -110,7 +110,7 @@ distinguish ourselves by:
 \label{sec:Hypotheses}
 %----------------------------------------------------------------------------
 The primal/dual theory in \autoref{chap:Background} predicts that XPBD and
-VBD should fail in characteristically different regimes. We state three
+VBD should fail in characteristically different regimes. I state three
 testable hypotheses up front; the experiments in \autoref{chap:Experiments}
 are designed to confirm or refute them:
 \begin{description}
@@ -132,7 +132,7 @@ are designed to confirm or refute them:
 \section{Evaluation axes}
 \label{sec:EvalAxes}
 %----------------------------------------------------------------------------
-We evaluate both solvers along four axes that, together, capture the
+I evaluate both solvers along four axes that, together, capture the
 trade-offs a practitioner cares about:
 \begin{description}
     \item[Efficiency.] Wall-clock cost per frame as a function of mesh size,

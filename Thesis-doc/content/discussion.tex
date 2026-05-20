@@ -76,7 +76,7 @@ qualitative claims about convergence quality or stability envelopes.
 
 \subsection{Mass-spring discretisation only}
 \label{ssec:ThreatMassSpring}
-We use distance-spring energies throughout, including for bending. Real
+I use distance-spring energies throughout, including for bending. Real
 cloth simulators use FEM-based stretch energies and dihedral bending. The
 primal/dual framing carries over (both XPBD and VBD admit arbitrary elastic
 energies), but the specific stiffness ratios encountered, and therefore
@@ -84,9 +84,9 @@ the magnitude of the H2/H3 effects, may differ.
 
 \subsection{Gauss--Seidel order dependence}
 \label{ssec:ThreatOrder}
-Both solvers are order-sensitive (\autoref{sec:GSJacobi}). We fix a single
+Both solvers are order-sensitive (\autoref{sec:GSJacobi}). I fix a single
 deterministic order; an adversarial reordering could in principle shift
-results. We do not investigate this, and it is a real threat to
+results. I do not investigate this, and it is a real threat to
 reproducibility on other implementations.
 
 \subsection{Mismatched collision models}
@@ -110,7 +110,7 @@ results in \autoref{sec:EffResults} are tied to a single $dt$.
 Beyond the threats above, three further limitations are worth naming
 explicitly:
 \begin{itemize}
-    \item We do not implement AVBD or any post-2024 VBD extension.
+    \item I do not implement AVBD or any post-2024 VBD extension.
     \item Self-collision uses a simple model; production simulators often
     use continuous collision detection (CCD), which both solvers can be
     augmented with at additional cost.
