@@ -47,12 +47,15 @@ public class NewtonSolver
     //                      and VBD substep differently and do NOT approximate the same
     //                      single implicit-Euler step.
     public int numSubsteps = 1;
-
     public int maxIterations = 100;        // Newton iteration cap per substep
+
     public double absTolerance = 1e-9;     // converged when ||grad||_inf <= absTolerance ...
     public double relTolerance = 1e-10;    // ... or <= relTolerance * ||grad_0||_inf
     public bool useLineSearch = true;
     public bool projectHessianToPSD = true;
+
+    public event Action OnPreSubstep;
+    public event Action OnSubstep;
 
     // ---- internal double-precision state (authoritative), flattened to 3 * numVerts ----
     private int numDofs;
@@ -108,6 +111,19 @@ public class NewtonSolver
         }
     }
 
+    private void ImportExternalChanges()
+    {
+        for (int i = 0; i < numVerts; i++)
+        {
+            for (int c = 0; c < 3; c++)
+            {
+                int r = 3 * i + c;
+                if (positions[i][c] != (float)positionsFlat[r]) positionsFlat[r] = positions[i][c];
+                if (velocities[i][c] != (float)velocitiesFlat[r]) velocitiesFlat[r] = velocities[i][c];
+            }
+        }
+    }
+
     public void Step(float dt)
     {
         if (!initialized) { ConvertToDouble(); initialized = true; }
@@ -116,6 +132,10 @@ public class NewtonSolver
 
         for (int s = 0; s < numSubsteps; s++)
         {
+            Array.Clear(externalForces, 0, numVerts);
+            OnPreSubstep?.Invoke();
+            ImportExternalChanges();
+
             // Inertial prediction (inertia), and warm-start the Newton solve there.
             for (int i = 0; i < numVerts; i++)
             {
@@ -142,6 +162,13 @@ public class NewtonSolver
             }
 
             SolveImplicitEulerStep(h);
+
+            // Expose the solved positions so post-substep callbacks (e.g. collision response)
+            // can read and correct them, then import their corrections so the velocity update
+            // below reflects the final, corrected positions -- as in VBD / XPBD.
+            ConvertToFloat();
+            OnSubstep?.Invoke();
+            ImportExternalChanges();
 
             // Backward-Euler velocity update: v = (x - x_prev) / h
             for (int i = 0; i < numVerts; i++)
@@ -181,7 +208,10 @@ public class NewtonSolver
             // Converged when ||grad||_inf is below the absolute floor or has shrunk by
             // the relative factor versus the initial residual.
             if (gInf <= absTolerance || gInf <= relTolerance * grad0Inf)
+            {
+                Debug.Log($"NewtonSolver: converged in {iter} iterations (|grad|_inf = {gInf:E2})");
                 break;
+            }
 
             // Solve hessian * deltaX = -grad. hessian is SPD when projectHessianToPSD is true.
             FactorizeLDLt();

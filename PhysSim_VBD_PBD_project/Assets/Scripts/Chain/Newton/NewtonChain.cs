@@ -14,6 +14,10 @@ public class NewtonChain : MonoBehaviour
     public int numParticles = 20;
     public float restLength = 1f;
 
+    // World-space position of the chain's end (the bob). The fixed start is at
+    // this transform's position; all particles are spaced equally between them.
+    public Vector3 bobStartPosition = new Vector3(-19f, 0f, 0f);
+
     public float stretchingStiffness = 1e6f;
     public bool hasBendingConstraints = false;
     public float bendingStiffness = 1e5f;
@@ -50,9 +54,10 @@ public class NewtonChain : MonoBehaviour
             relTolerance = relTolerance
         };
 
-        // Initialize particles in a straight line extending to the left.
+        // Initialize particles equally spaced on the line from the fixed start
+        // (this transform's position) to the bob's start position.
         Vector3 start = tr.position;
-        Vector3 step = -tr.right * restLength;
+        Vector3 step = (bobStartPosition - start) / Mathf.Max(1, numParticles - 1);
         for (int i = 0; i < numParticles; i++)
             Solver.positions[i] = start + step * i;
 
@@ -61,22 +66,21 @@ public class NewtonChain : MonoBehaviour
         var perVertEdges = new List<VertexSpringEdge>[numParticles];
         for (int i = 0; i < numParticles; i++) perVertEdges[i] = new List<VertexSpringEdge>();
 
-        // Stretching springs between consecutive particles.
+        // Stretching springs between consecutive particles. Rest length is the
+        // configured restLength, so the initial spacing may stretch/compress them.
         for (int i = 0; i < numParticles - 1; i++)
         {
-            float restLen = Vector3.Distance(Solver.positions[i], Solver.positions[i + 1]);
-            perVertEdges[i].Add(new VertexSpringEdge { otherIdx = i + 1, restLength = restLen, stiffness = stretchingStiffness });
-            perVertEdges[i + 1].Add(new VertexSpringEdge { otherIdx = i, restLength = restLen, stiffness = stretchingStiffness });
+            perVertEdges[i].Add(new VertexSpringEdge { otherIdx = i + 1, restLength = restLength, stiffness = stretchingStiffness });
+            perVertEdges[i + 1].Add(new VertexSpringEdge { otherIdx = i, restLength = restLength, stiffness = stretchingStiffness });
         }
 
-        // Bending springs connecting every second vertex.
+        // Bending springs connecting every second vertex (rest length = 2 * restLength).
         if (hasBendingConstraints)
         {
             for (int i = 0; i < numParticles - 2; i++)
             {
-                float restLen = Vector3.Distance(Solver.positions[i], Solver.positions[i + 2]);
-                perVertEdges[i].Add(new VertexSpringEdge { otherIdx = i + 2, restLength = restLen, stiffness = bendingStiffness });
-                perVertEdges[i + 2].Add(new VertexSpringEdge { otherIdx = i, restLength = restLen, stiffness = bendingStiffness });
+                perVertEdges[i].Add(new VertexSpringEdge { otherIdx = i + 2, restLength = 2f * restLength, stiffness = bendingStiffness });
+                perVertEdges[i + 2].Add(new VertexSpringEdge { otherIdx = i, restLength = 2f * restLength, stiffness = bendingStiffness });
             }
         }
 

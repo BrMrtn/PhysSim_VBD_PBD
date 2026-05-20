@@ -553,19 +553,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75adc058518c8494a9c786feafe91834, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NewtonChain
-  numParticles: 20
-  restLength: 1
-  stretchingStiffness: 1000000
-  hasBendingConstraints: 0
-  bendingStiffness: 100000
   numSubsteps: 10
   maxIterations: 50
   projectHessianToPSD: 1
   absTolerance: 0.000000001
   relTolerance: 0.0000000001
+  numParticles: 20
+  restLength: 1
+  bobStartPosition: {x: -19, y: 8, z: 8}
+  stretchingStiffness: 1000000
+  hasBendingConstraints: 0
+  bendingStiffness: 100000
   logMsPerFrame: 1
   logEnergy: 0
-  logConvergence: 1
   sphereMaterial: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

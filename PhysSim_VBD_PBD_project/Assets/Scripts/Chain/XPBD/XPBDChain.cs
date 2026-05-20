@@ -9,6 +9,10 @@ public class XPBDChain : MonoBehaviour
     public int numParticles = 20;
     public float restLength = 1f;
 
+    // World-space position of the chain's end (the bob). The fixed start is at
+    // this transform's position; all particles are spaced equally between them.
+    public Vector3 bobStartPosition = new Vector3(-19f, 0f, 0f);
+
     public float stretchingCompliance = 1e-6f;
     public bool hasBendingConstraints = false;
     public float bendingCompliance = 1e-5f;
@@ -49,9 +53,10 @@ public class XPBDChain : MonoBehaviour
             rayleighStiffnessDamping = rayleighStiffnessDamping
         };
 
-        // Initialize particles in a straight line extending to the left
+        // Initialize particles equally spaced on the line from the fixed start
+        // (this transform's position) to the bob's start position.
         Vector3 start = tr.position;
-        Vector3 step = -tr.right * restLength;
+        Vector3 step = (bobStartPosition - start) / Mathf.Max(1, numParticles - 1);
         for (int i = 0; i < numParticles; i++)
             Solver.positions[i] = start + step * i;
 
@@ -62,17 +67,18 @@ public class XPBDChain : MonoBehaviour
 
         Solver.constraints = new DistanceConstraint[constraintCount];
 
-        // Add stretching constraints between consecutive particles
+        // Add stretching constraints between consecutive particles. Rest length is the
+        // configured restLength, so the initial spacing may stretch/compress them.
         for (int i = 0; i < numParticles - 1; i++)
         {
             Solver.constraints[i] = new DistanceConstraint(
                 i,
                 i + 1,
-                Vector3.Distance(Solver.positions[i], Solver.positions[i + 1]),
+                restLength,
                 stretchingCompliance);
         }
 
-        // Add bending constraints connecting every second vertex
+        // Add bending constraints connecting every second vertex (rest length = 2 * restLength).
         if (hasBendingConstraints)
         {
             int bendingStartIndex = numParticles - 1;
@@ -81,7 +87,7 @@ public class XPBDChain : MonoBehaviour
                 Solver.constraints[bendingStartIndex + i] = new DistanceConstraint(
                     i,
                     i + 2,
-                    Vector3.Distance(Solver.positions[i], Solver.positions[i + 2]),
+                    2f * restLength,
                     bendingCompliance);
             }
         }
@@ -130,11 +136,6 @@ public class XPBDChain : MonoBehaviour
     {
         bool shouldLogPerformance = logMsPerFrame && Time.frameCount % logEveryNFrames == 0;
         double simStartTime = shouldLogPerformance ? Time.realtimeSinceStartupAsDouble : 0;
-
-        Solver.numSubsteps = numSubsteps;
-        Solver.numIterations = numIterations;
-        Solver.rayleighMassDamping = rayleighMassDamping;
-        Solver.rayleighStiffnessDamping = rayleighStiffnessDamping;
 
         float dt = 1 / 24f;
         Solver.Step(dt);
