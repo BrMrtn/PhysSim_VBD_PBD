@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: VBDClothMaterial
+  m_Name: NewtonClothMaterial
   m_Shader: {fileID: -6465566751694194690, guid: 41f56338f725bd944804263068f89a7f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -121,7 +121,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _ColorA: {r: 0.7, g: 0.7, b: 0.7, a: 1}
     - _ColorB: {r: 0.6, g: 0.6, b: 0.6, a: 1}
-    - _Color_A: {r: 0.85, g: 0.1, b: 0.15, a: 0}
+    - _Color_A: {r: 0.15, g: 0.45, b: 0.85, a: 0}
     - _Color_B: {r: 0.9, g: 0.9, b: 0.9, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Frequency: {r: 5, g: 5, b: 0, a: 0}

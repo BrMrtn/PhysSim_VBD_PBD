@@ -566,7 +566,7 @@ MonoBehaviour:
   bendingStiffness: 100000
   logMsPerFrame: 1
   logEnergy: 0
-  sphereMaterial: {fileID: 0}
+  sphereMaterial: {fileID: 2100000, guid: bbcad39595315ce4f97a994c8990f658, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
