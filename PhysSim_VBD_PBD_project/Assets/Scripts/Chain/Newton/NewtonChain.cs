@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
-public class VBDChain : MonoBehaviour
+public class NewtonChain : MonoBehaviour
 {
-    public int numSubsteps = 1;
-    public int numIterations = 15;
+    public int numSubsteps = 1; // 1 = one implicit-Euler step; raise (100+) for physics reference
+    public int maxIterations = 100; // approaches true solution
 
-    // Chebyshev semi-iterative acceleration
-    public bool useAcceleration = false;
-    [Range(0f, 1f)] public float accelerationRho = 0.5f;
+    public bool projectHessianToPSD = true;
+    public double absTolerance = 1e-9;
+    public double relTolerance = 1e-10;
 
     public int numParticles = 20;
     public float restLength = 1f;
@@ -18,16 +18,12 @@ public class VBDChain : MonoBehaviour
     public bool hasBendingConstraints = false;
     public float bendingStiffness = 1e5f;
 
-    public float rayleighMassDamping = 0f;
-    public float rayleighStiffnessDamping = 0f;
-
-    public bool addInitNoise = false;
     public bool logMsPerFrame = true;
     public bool logEnergy = false;
 
     public Material sphereMaterial;
 
-    public VBDSolver Solver { get; private set; }
+    public NewtonSolver Solver { get; private set; }
     private EnergyLogger energyLogger;
 
     private LineRenderer lineRenderer;
@@ -36,7 +32,7 @@ public class VBDChain : MonoBehaviour
     private GameObject[] vertexSpheres;
 
     private const int logEveryNFrames = 10;
-    private string performanceText = "VBD Chain: -- ms/frame";
+    private string performanceText = "Newton Chain: -- ms/frame";
     private GUIStyle performanceStyle;
 
     void Awake()
@@ -45,28 +41,27 @@ public class VBDChain : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = numParticles;
 
-        Solver = new VBDSolver(numParticles)
+        Solver = new NewtonSolver(numParticles)
         {
             numSubsteps = numSubsteps,
-            numIterations = numIterations,
-            useAcceleration = useAcceleration,
-            accelerationRho = accelerationRho,
-            thickness = restLength,
-            rayleighMassDamping = rayleighMassDamping,
-            rayleighStiffnessDamping = rayleighStiffnessDamping
+            maxIterations = maxIterations,
+            projectHessianToPSD = projectHessianToPSD,
+            absTolerance = absTolerance,
+            relTolerance = relTolerance
         };
 
-        // Initialize particles in a straight line extending to the left
+        // Initialize particles in a straight line extending to the left.
         Vector3 start = tr.position;
         Vector3 step = -tr.right * restLength;
         for (int i = 0; i < numParticles; i++)
             Solver.positions[i] = start + step * i;
 
-        // Build per-incidence edge lists (each spring stored once per endpoint).
+        // Build per-incidence edge lists (each spring stored once per endpoint), then
+        // flatten into CSR -- identical layout to VBDChain.
         var perVertEdges = new List<VertexSpringEdge>[numParticles];
         for (int i = 0; i < numParticles; i++) perVertEdges[i] = new List<VertexSpringEdge>();
 
-        // Stretching springs between consecutive particles
+        // Stretching springs between consecutive particles.
         for (int i = 0; i < numParticles - 1; i++)
         {
             float restLen = Vector3.Distance(Solver.positions[i], Solver.positions[i + 1]);
@@ -74,7 +69,7 @@ public class VBDChain : MonoBehaviour
             perVertEdges[i + 1].Add(new VertexSpringEdge { otherIdx = i, restLength = restLen, stiffness = stretchingStiffness });
         }
 
-        // Bending springs connecting every second vertex
+        // Bending springs connecting every second vertex.
         if (hasBendingConstraints)
         {
             for (int i = 0; i < numParticles - 2; i++)
@@ -85,7 +80,6 @@ public class VBDChain : MonoBehaviour
             }
         }
 
-        // Flatten into CSR (springListStart + springEdges).
         Solver.springListStart = new int[numParticles + 1];
         int total = 0;
         for (int i = 0; i < numParticles; i++)
@@ -106,14 +100,9 @@ public class VBDChain : MonoBehaviour
 
         renderPositions = new Vector3[numParticles];
 
-        Solver.invMasses[0] = 0f; // Fix the first particle in place
+        Solver.invMasses[0] = 0f; // Fix the first particle in place.
 
-        if (addInitNoise)
-            for (int i = 0; i < numParticles; i++)
-                if (Solver.invMasses[i] > 0f)
-                    Solver.positions[i] += Random.insideUnitSphere * 0.001f;
-
-        // Create small spheres at each vertex position
+        // Create small spheres at each vertex position.
         float sphereRadius = restLength / 10f;
         vertexSpheres = new GameObject[numParticles];
         for (int i = 0; i < numParticles; i++)
@@ -141,7 +130,7 @@ public class VBDChain : MonoBehaviour
         if (logEnergy)
         {
             energyLogger = gameObject.AddComponent<EnergyLogger>();
-            energyLogger.label = "VBDChain";
+            energyLogger.label = "NewtonChain";
             energyLogger.overlayY = 50f;
             energyLogger.Sampler = () => EnergySampler.Sample(Solver);
         }
@@ -151,13 +140,6 @@ public class VBDChain : MonoBehaviour
     {
         bool shouldLogPerformance = logMsPerFrame && Time.frameCount % logEveryNFrames == 0;
         double simStartTime = shouldLogPerformance ? Time.realtimeSinceStartupAsDouble : 0;
-
-        Solver.numSubsteps = numSubsteps;
-        Solver.numIterations = numIterations;
-        Solver.useAcceleration = useAcceleration;
-        Solver.accelerationRho = accelerationRho;
-        Solver.rayleighMassDamping = rayleighMassDamping;
-        Solver.rayleighStiffnessDamping = rayleighStiffnessDamping;
 
         float dt = 1f / 24f;
         Solver.Step(dt);
@@ -174,7 +156,7 @@ public class VBDChain : MonoBehaviour
         {
             double simEndTime = Time.realtimeSinceStartupAsDouble;
             double msPerFrame = (simEndTime - simStartTime) * 1000.0;
-            performanceText = $"VBD Chain: {msPerFrame:F2} ms/frame";
+            performanceText = $"Newton Chain: {msPerFrame:F2} ms/frame";
         }
     }
 
@@ -189,6 +171,6 @@ public class VBDChain : MonoBehaviour
             performanceStyle.normal.textColor = Color.white;
         }
 
-        GUI.Label(new Rect(10, 30, 420, 30), performanceText, performanceStyle);
+        GUI.Label(new Rect(10, 30, 640, 30), performanceText, performanceStyle);
     }
 }

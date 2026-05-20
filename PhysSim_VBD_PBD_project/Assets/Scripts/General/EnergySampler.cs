@@ -70,4 +70,32 @@ public static class EnergySampler
 
         return r;
     }
+
+    public static EnergySample Sample(NewtonSolver s)
+    {
+        EnergySample r = default;
+        for (int i = 0; i < s.numVerts; i++)
+        {
+            if (s.invMasses[i] == 0f) continue;
+            r.kinetic += 0.5f * s.masses[i] * s.velocities[i].sqrMagnitude;
+            r.gravitational -= s.masses[i] * Vector3.Dot(s.gravity, s.positions[i]);
+        }
+
+        float twiceElastic = 0f;
+        for (int i = 0; i < s.numVerts; i++)
+        {
+            int start = s.springListStart[i];
+            int end = s.springListStart[i + 1];
+            for (int e = start; e < end; e++)
+            {
+                var edge = s.springEdges[e];
+                Vector3 d = s.positions[i] - s.positions[edge.otherIdx];
+                float ext = d.magnitude - edge.restLength;
+                twiceElastic += 0.5f * edge.stiffness * ext * ext;
+            }
+        }
+        r.elastic = 0.5f * twiceElastic;
+
+        return r;
+    }
 }

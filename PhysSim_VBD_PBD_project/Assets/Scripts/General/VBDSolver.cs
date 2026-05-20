@@ -5,7 +5,6 @@ public class VBDSolver
 {
     public int numSubsteps = 1;
     public int numIterations = 15;
-    public Vector3 gravity = new Vector3(0, -9.81f, 0);
 
     // Chebyshev semi-iterative acceleration (VBD paper)
     public bool useAcceleration = false;
@@ -14,6 +13,7 @@ public class VBDSolver
     public bool handleSelfCollisions = false;
     public float selfCollisionStiffness = 1e7f;
     public float thickness;
+    public Vector3 gravity = new Vector3(0, -9.81f, 0);
 
     public float velCapPerFrame = 3f; // Max per-frame travel, in multiples of `thickness`
 
@@ -21,27 +21,25 @@ public class VBDSolver
     public float rayleighMassDamping = 0f;
     public float rayleighStiffnessDamping = 0f;
 
-    bool hasPrevVelocities = false;
-
-    private SpatialHash spatialHash;
-
     public int numVerts;
     public Vector3[] positions;
-    public Vector3[] previousPosition;
     public Vector3[] velocities;
+    public Vector3[] previousPositions;
     public Vector3[] previousVelocities;
-    public Vector3[] inertia;
-    public Vector3[] prevprevPos;
-    public Vector3[] prevIterPos;
     public Vector3[] restPositions;
+    public Vector3[] inertia;
+    public Vector3[] prevIterPositions;
+    public Vector3[] prevPrevIterPositions;
     public float[] masses;
     public float[] invMasses;
-
     public bool[] isColliding;
     public VertexSpringEdge[] springEdges;
     public int[] springListStart;
     public Vector3[] externalForces;
+
+    private SpatialHash spatialHash;
     private float[] cachedSelfCollisionMinDist;
+    private bool hasPrevVelocities;
 
     public event Action OnPreSubstep;
     public event Action OnSubstep;
@@ -53,12 +51,12 @@ public class VBDSolver
     {
         this.numVerts = numVerts;
         positions = new Vector3[numVerts];
-        previousPosition = new Vector3[numVerts];
+        previousPositions = new Vector3[numVerts];
         velocities = new Vector3[numVerts];
         previousVelocities = new Vector3[numVerts];
         inertia = new Vector3[numVerts];
-        prevprevPos = new Vector3[numVerts];
-        prevIterPos = new Vector3[numVerts];
+        prevPrevIterPositions = new Vector3[numVerts];
+        prevIterPositions = new Vector3[numVerts];
         restPositions = new Vector3[numVerts];
         masses = new float[numVerts];
         invMasses = new float[numVerts];
@@ -101,7 +99,7 @@ public class VBDSolver
             float omega = 1f;
             for (int iter = 0; iter < numIterations; iter++)
             {
-                if (useAcceleration) Array.Copy(positions, prevIterPos, numVerts);
+                if (useAcceleration) Array.Copy(positions, prevIterPositions, numVerts);
 
                 Solve(sdt);
 
@@ -109,11 +107,11 @@ public class VBDSolver
                 {
                     omega = GetAcceleratorOmega(iter + 1, accelerationRho, omega);
                     ApplyAccelerator(omega);
-                    Array.Copy(prevIterPos, prevprevPos, numVerts);
+                    Array.Copy(prevIterPositions, prevPrevIterPositions, numVerts);
                 }
             }
             OnSubstep?.Invoke();
-            UpdateVelocity(sdt);
+            UpdateVelocities(sdt);
         }
     }
 
@@ -138,9 +136,9 @@ public class VBDSolver
         float thickness2 = thickness * thickness;
         for (int i = 0; i < numVerts; i++)
         {
-            int s = spatialHash.firstAdjId[i];
-            int e = spatialHash.firstAdjId[i + 1];
-            for (int c = s; c < e; c++)
+            int start = spatialHash.firstAdjId[i];
+            int end = spatialHash.firstAdjId[i + 1];
+            for (int c = start; c < end; c++)
             {
                 int j = spatialHash.adjIdsSym[c];
                 float restDist2 = (restPositions[i] - restPositions[j]).sqrMagnitude;
@@ -153,14 +151,14 @@ public class VBDSolver
     private void AdaptiveInitialization(float dt)
     {
         float dt2 = dt * dt;
-        Array.Copy(positions, previousPosition, numVerts);
+        Array.Copy(positions, previousPositions, numVerts);
 
         for (int i = 0; i < numVerts; i++)
         {
             if (invMasses[i] == 0f) continue;
 
             Vector3 aExt = gravity + externalForces[i] * invMasses[i];
-            inertia[i] = previousPosition[i] + dt * velocities[i] + dt2 * aExt;
+            inertia[i] = previousPositions[i] + dt * velocities[i] + dt2 * aExt;
 
             float alpha = 1f;
             if (hasPrevVelocities)
@@ -173,7 +171,7 @@ public class VBDSolver
                 }
             }
 
-            positions[i] = previousPosition[i] + dt * velocities[i] + alpha * dt2 * aExt;
+            positions[i] = previousPositions[i] + dt * velocities[i] + alpha * dt2 * aExt;
         }
     }
 
@@ -206,7 +204,7 @@ public class VBDSolver
             if (hasMassDamping)
             {
                 float cMass = alphaOverDt * masses[i];
-                Vector3 dxi = positions[i] - previousPosition[i];
+                Vector3 dxi = positions[i] - previousPositions[i];
                 f -= cMass * dxi;
                 h00 += cMass;
                 h11 += cMass;
@@ -219,7 +217,7 @@ public class VBDSolver
             float ppix = 0f, ppiy = 0f, ppiz = 0f;
             if (hasStiffDamping)
             {
-                Vector3 ppi = previousPosition[i];
+                Vector3 ppi = previousPositions[i];
                 ppix = ppi.x; ppiy = ppi.y; ppiz = ppi.z;
             }
 
@@ -256,7 +254,7 @@ public class VBDSolver
                 // (beta/dt) K_ii to the (i,i) Hessian block.
                 if (hasStiffDamping)
                 {
-                    Vector3 ppj = previousPosition[j];
+                    Vector3 ppj = previousPositions[j];
                     float dvx = (pix - ppix) - (pj.x - ppj.x);
                     float dvy = (piy - ppiy) - (pj.y - ppj.y);
                     float dvz = (piz - ppiz) - (pj.z - ppj.z);
@@ -355,7 +353,7 @@ public class VBDSolver
         );
     }
 
-    private void UpdateVelocity(float dt)
+    private void UpdateVelocities(float dt)
     {
         Array.Copy(velocities, previousVelocities, numVerts);
 
@@ -368,7 +366,7 @@ public class VBDSolver
         for (int i = 0; i < numVerts; i++)
         {
             if (invMasses[i] == 0f) { velocities[i] = Vector3.zero; continue; }
-            Vector3 v = (positions[i] - previousPosition[i]) * invDt;
+            Vector3 v = (positions[i] - previousPositions[i]) * invDt;
             if (handleSelfCollisions)
             {
                 float vSq = v.sqrMagnitude;
@@ -395,7 +393,7 @@ public class VBDSolver
         for (int i = 0; i < numVerts; i++)
         {
             if (invMasses[i] == 0f || isColliding[i]) continue;
-            positions[i] = omega * (positions[i] - prevprevPos[i]) + prevprevPos[i];
+            positions[i] = omega * (positions[i] - prevPrevIterPositions[i]) + prevPrevIterPositions[i];
         }
     }
 

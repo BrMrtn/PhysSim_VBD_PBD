@@ -6,7 +6,7 @@ public class XPBDFixedSides : MonoBehaviour
     public Transform topCuboid;
     public Transform bottomCuboid;
 
-    private XPBDCloth clothSim;
+    private XPBDCloth cloth;
     private XPBDSolver solver;
 
     private int[] topIndices;
@@ -18,17 +18,17 @@ public class XPBDFixedSides : MonoBehaviour
 
     void Start()
     {
-        clothSim = GetComponent<XPBDCloth>();
-        if (clothSim == null)
+        cloth = GetComponent<XPBDCloth>();
+        if (cloth == null)
         {
             Debug.LogError($"{nameof(XPBDFixedSides)} requires an {nameof(XPBDCloth)} component on the same GameObject.");
             enabled = false;
             return;
         }
 
-        solver = clothSim.Solver;
-        int numX = clothSim.numX;
-        int numY = clothSim.numY;
+        solver = cloth.Solver;
+        int numX = cloth.numX;
+        int numY = cloth.numY;
 
         // --- Top row: iy = numY - 1 -------------------------------------------
         topIndices = new int[numX];
@@ -62,7 +62,7 @@ public class XPBDFixedSides : MonoBehaviour
 
     void Update()
     {
-        if (clothSim == null) return;
+        if (cloth == null) return;
         SetAnchorPositions();
     }
 

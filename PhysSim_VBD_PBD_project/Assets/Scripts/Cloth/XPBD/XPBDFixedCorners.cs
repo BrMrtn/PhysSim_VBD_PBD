@@ -3,22 +3,22 @@ using UnityEngine;
 [RequireComponent(typeof(XPBDCloth))]
 public class XPBDFixedCorners : MonoBehaviour
 {
-    private XPBDCloth clothSim;
+    private XPBDCloth cloth;
 
     void Start()
     {
-        clothSim = GetComponent<XPBDCloth>();
+        cloth = GetComponent<XPBDCloth>();
 
-        if (clothSim == null)
+        if (cloth == null)
             return;
 
-        int numX = clothSim.numX;
-        int numY = clothSim.numY;
+        int numX = cloth.numX;
+        int numY = cloth.numY;
 
         int topLeftIdx = (numY - 1) * numX;
         int topRightIdx = (numY - 1) * numX + (numX - 1);
 
-        clothSim.Solver.invMasses[topLeftIdx] = 0f;
-        clothSim.Solver.invMasses[topRightIdx] = 0f;
+        cloth.Solver.invMasses[topLeftIdx] = 0f;
+        cloth.Solver.invMasses[topRightIdx] = 0f;
     }
 }

@@ -5,15 +5,20 @@ public class XPBDChain : MonoBehaviour
 {
     public int numSubsteps = 15;
     public int numIterations = 1;
+
     public int numParticles = 20;
     public float restLength = 1f;
+
     public float stretchingCompliance = 1e-6f;
     public bool hasBendingConstraints = false;
     public float bendingCompliance = 1e-5f;
+
     public float rayleighMassDamping = 0f;
     public float rayleighStiffnessDamping = 0f;
+
     public bool logMsPerFrame = true;
     public bool logEnergy = false;
+
     public Material sphereMaterial;
 
     public XPBDSolver Solver { get; private set; }

@@ -3,20 +3,20 @@ using UnityEngine;
 [RequireComponent(typeof(VBDCloth))]
 public class VBDFixedCorners : MonoBehaviour
 {
-    private VBDCloth clothSim;
+    private VBDCloth cloth;
 
     void Start()
     {
-        clothSim = GetComponent<VBDCloth>();
-        if (clothSim == null) return;
+        cloth = GetComponent<VBDCloth>();
+        if (cloth == null) return;
 
-        int numX = clothSim.numX;
-        int numY = clothSim.numY;
+        int numX = cloth.numX;
+        int numY = cloth.numY;
 
         int topLeftIdx = (numY - 1) * numX;
         int topRightIdx = (numY - 1) * numX + (numX - 1);
 
-        clothSim.Solver.invMasses[topLeftIdx] = 0f;
-        clothSim.Solver.invMasses[topRightIdx] = 0f;
+        cloth.Solver.invMasses[topLeftIdx] = 0f;
+        cloth.Solver.invMasses[topRightIdx] = 0f;
     }
 }

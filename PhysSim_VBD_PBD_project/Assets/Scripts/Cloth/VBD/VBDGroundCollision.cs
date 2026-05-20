@@ -24,10 +24,10 @@ public class VBDGroundCollision : MonoBehaviour
 
     void Start()
     {
-        var clothSim = GetComponent<VBDCloth>();
-        if (clothSim != null)
+        var cloth = GetComponent<VBDCloth>();
+        if (cloth != null)
         {
-            solver = clothSim.Solver;
+            solver = cloth.Solver;
             solver.OnVertexSolve += HandleVertexSolve;
             solver.OnSubstep += HandleSubstep;
             solver.OnPreSubstep += CacheGround;
@@ -71,7 +71,7 @@ public class VBDGroundCollision : MonoBehaviour
         // Friction (paper Eq. 14, 15, 16)
         if (friction > 0f && lambda > 0f)
         {
-            Vector3 dx = pos - solver.previousPosition[i];
+            Vector3 dx = pos - solver.previousPositions[i];
             // uT = dx - (dx . n) n  with n=(0,1,0)  ->  (dx.x, 0, dx.z)
             Vector3 uT = new Vector3(dx.x, 0f, dx.z);
             float uMag = uT.magnitude;
@@ -103,7 +103,7 @@ public class VBDGroundCollision : MonoBehaviour
 
         int numVerts = solver.numVerts;
         Vector3[] positions = solver.positions;
-        Vector3[] prevPositions = solver.previousPosition;
+        Vector3[] prevPositions = solver.previousPositions;
         float[] invMasses = solver.invMasses;
 
         for (int i = 0; i < numVerts; i++)

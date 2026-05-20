@@ -10,10 +10,10 @@ public class XPBDSphereCollision : MonoBehaviour
 
     void Start()
     {
-        var clothSim = GetComponent<XPBDCloth>();
-        if (clothSim != null)
+        var cloth = GetComponent<XPBDCloth>();
+        if (cloth != null)
         {
-            solver = clothSim.Solver;
+            solver = cloth.Solver;
             solver.OnSubstep += HandleCollision;
         }
     }

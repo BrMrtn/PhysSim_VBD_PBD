@@ -20,9 +20,9 @@ public class XPBDCloth : MonoBehaviour
     public float rayleighMassDamping = 0f;
     public float rayleighStiffnessDamping = 0f;
 
+    public bool addInitNoise = false;
     public bool logMsPerFrame = true;
     public bool logEnergy = false;
-    public bool addInitNoise = false;
 
     public XPBDSolver Solver { get; private set; }
     private EnergyLogger energyLogger;

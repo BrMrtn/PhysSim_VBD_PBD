@@ -27,13 +27,13 @@ public class VBDSphereCollision : MonoBehaviour
 
     void Start()
     {
-        var clothSim = GetComponent<VBDCloth>();
-        if (clothSim != null)
+        var cloth = GetComponent<VBDCloth>();
+        if (cloth != null)
         {
-            solver = clothSim.Solver;
+            solver = cloth.Solver;
             solver.OnVertexSolve += HandleVertexSolve;
             solver.OnSubstep += HandleSubstep;
-            solver.OnPreSubstep += CacheCphere;
+            solver.OnPreSubstep += CacheSphere;
         }
     }
 
@@ -43,11 +43,11 @@ public class VBDSphereCollision : MonoBehaviour
         {
             solver.OnVertexSolve -= HandleVertexSolve;
             solver.OnSubstep -= HandleSubstep;
-            solver.OnPreSubstep -= CacheCphere;
+            solver.OnPreSubstep -= CacheSphere;
         }
     }
 
-    private void CacheCphere()
+    private void CacheSphere()
     {
         if (sphereCollider == null) return;
         cachedCenter = sphereCollider.transform.TransformPoint(sphereCollider.center);
@@ -84,7 +84,7 @@ public class VBDSphereCollision : MonoBehaviour
         // Friction (paper Eq. 14, 15, 16)
         if (friction > 0f && lambda > 0f)
         {
-            Vector3 dx = pos - solver.previousPosition[i];
+            Vector3 dx = pos - solver.previousPositions[i];
             Vector3 uT = dx - Vector3.Dot(dx, normal) * normal;
             float uMag = uT.magnitude;
 
@@ -119,7 +119,7 @@ public class VBDSphereCollision : MonoBehaviour
 
         int numVerts = solver.numVerts;
         Vector3[] positions = solver.positions;
-        Vector3[] prevPositions = solver.previousPosition;
+        Vector3[] prevPositions = solver.previousPositions;
         float[] invMasses = solver.invMasses;
 
         for (int i = 0; i < numVerts; i++)

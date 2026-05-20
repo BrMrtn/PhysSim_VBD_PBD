@@ -9,6 +9,10 @@ public class VBDCloth : MonoBehaviour
     public int numSubsteps = 1;
     public int numIterations = 15;
 
+    // Chebyshev semi-iterative acceleration
+    public bool useAcceleration = false;
+    [Range(0f, 1f)] public float accelerationRho = 0.5f;
+
     public float stretchingStiffness = 1e6f;
     public float shearStiffness = 1e4f;
     public float bendingStiffness = 1e3f;
@@ -20,13 +24,9 @@ public class VBDCloth : MonoBehaviour
     public float rayleighMassDamping = 0f;
     public float rayleighStiffnessDamping = 0f;
 
+    public bool addInitNoise = false;
     public bool logMsPerFrame = true;
     public bool logEnergy = false;
-    public bool addInitNoise = false;
-
-    // Chebyshev semi-iterative acceleration
-    public bool useAcceleration = false;
-    [Range(0f, 1f)] public float accelerationRho = 0.5f;
 
     public VBDSolver Solver { get; private set; }
     private EnergyLogger energyLogger;

@@ -6,7 +6,7 @@ public class VBDFollowCorners : MonoBehaviour
     public SphereCollider sphereColliderLeft;
     public SphereCollider sphereColliderRight;
 
-    private VBDCloth clothSim;
+    private VBDCloth cloth;
     private VBDSolver solver;
 
     private int topLeftIdx;
@@ -17,15 +17,15 @@ public class VBDFollowCorners : MonoBehaviour
 
     void Start()
     {
-        clothSim = GetComponent<VBDCloth>();
-        if (clothSim != null)
+        cloth = GetComponent<VBDCloth>();
+        if (cloth != null)
         {
-            solver = clothSim.Solver;
+            solver = cloth.Solver;
             leftTransform = sphereColliderLeft.transform;
             rightTransform = sphereColliderRight.transform;
 
-            int numX = clothSim.numX;
-            int numY = clothSim.numY;
+            int numX = cloth.numX;
+            int numY = cloth.numY;
             topLeftIdx = (numY - 1) * numX;
             topRightIdx = (numY - 1) * numX + (numX - 1);
 
@@ -38,7 +38,7 @@ public class VBDFollowCorners : MonoBehaviour
 
     void Update()
     {
-        if (clothSim != null && sphereColliderLeft != null && sphereColliderRight != null)
+        if (cloth != null && sphereColliderLeft != null && sphereColliderRight != null)
             SetAnchorPositions();
     }
 
