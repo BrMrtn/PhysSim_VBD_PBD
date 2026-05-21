@@ -17,18 +17,22 @@ public class NewtonChain : MonoBehaviour
     public Vector3 bobStartPosition = new Vector3(-19f, 0f, 0f);
 
     public float stretchingStiffness = 1e6f;
+    public bool alternatingStiffness = false; // springs alternate soft, stiff, soft, ... (soft = stretchingStiffness)
+    public float stiffnessRatio = 10000f;      // stiff spring = soft * ratio
     public bool hasBendingConstraints = false;
     public float bendingStiffness = 1e5f;
 
     public bool logMsPerFrame = true;
     public bool logEnergy = false;
     public bool logAmplitude = false;
+    public bool logStringLength = false;
 
     public Material sphereMaterial;
 
     public NewtonSolver Solver { get; private set; }
     private EnergyLogger energyLogger;
     private AmplitudeLogger amplitudeLogger;
+    private StringLengthLogger stringLengthLogger;
 
     private float dt;
     private LineRenderer lineRenderer;
@@ -50,6 +54,7 @@ public class NewtonChain : MonoBehaviour
         var cfg = ChainConfig.Default(numParticles);
         cfg.restLength = restLength;
         cfg.stretchingStiffness = stretchingStiffness;
+        if (alternatingStiffness) cfg.SetAlternatingStiffness(stretchingStiffness, stiffnessRatio);
         cfg.hasBendingConstraints = hasBendingConstraints;
         cfg.bendingStiffness = bendingStiffness;
         cfg.start = tr.position;
@@ -105,6 +110,14 @@ public class NewtonChain : MonoBehaviour
             amplitudeLogger.overlayY = 70f;
             amplitudeLogger.Sampler = () => AmplitudeSampler.Sample(Solver);
         }
+
+        if (logStringLength)
+        {
+            stringLengthLogger = gameObject.AddComponent<StringLengthLogger>();
+            stringLengthLogger.label = "NewtonChain";
+            stringLengthLogger.overlayY = 90f;
+            stringLengthLogger.Sampler = () => StringLengthSampler.Sample(Solver);
+        }
     }
 
     void Update()
@@ -115,6 +128,7 @@ public class NewtonChain : MonoBehaviour
         Solver.Step(dt);
         if (logEnergy) energyLogger.Log(dt);
         if (logAmplitude) amplitudeLogger.Log(dt);
+        if (logStringLength) stringLengthLogger.Log(dt);
 
         for (int i = 0; i < numParticles; i++)
         {

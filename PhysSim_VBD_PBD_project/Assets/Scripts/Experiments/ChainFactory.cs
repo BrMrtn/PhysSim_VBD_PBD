@@ -8,6 +8,10 @@ public struct ChainConfig
 
     public float stretchingStiffness;
 
+    // Optional per-spring stretching stiffness (length numParticles-1, spring i connects i and i+1).
+    // When null, every spring uses the uniform stretchingStiffness above.
+    public float[] stretchingStiffnessPerSpring;
+
     public bool hasBendingConstraints;
     public float bendingStiffness;
 
@@ -20,6 +24,14 @@ public struct ChainConfig
 
     public float StretchingCompliance => 1f / stretchingStiffness;
     public float BendingCompliance => 1f / bendingStiffness;
+
+    // Stiffness/compliance of a single stretching spring, honoring the per-spring override if set.
+    public float StretchingStiffnessOf(int spring) =>
+        (stretchingStiffnessPerSpring != null && spring < stretchingStiffnessPerSpring.Length)
+            ? stretchingStiffnessPerSpring[spring]
+            : stretchingStiffness;
+
+    public float StretchingComplianceOf(int spring) => 1f / StretchingStiffnessOf(spring);
 
     public static ChainConfig Default(int numParticles)
     {
@@ -37,6 +49,25 @@ public struct ChainConfig
             bob = new Vector3(-(numParticles - 1) * rest, 0f, 0f),
             gravity = new Vector3(0f, -9.81f, 0f),
         };
+    }
+
+    // Chain whose stretching springs alternate soft, stiff, soft, stiff, ...
+    // Spring 0 (and every even spring) uses softStiffness; every odd spring uses softStiffness * ratio.
+    public static ChainConfig AlternatingStiffness(int numParticles, float softStiffness, float ratio = 10000f)
+    {
+        var cfg = Default(numParticles);
+        cfg.stretchingStiffness = softStiffness;
+        cfg.SetAlternatingStiffness(softStiffness, ratio);
+        return cfg;
+    }
+
+    // Fill stretchingStiffnessPerSpring with the alternating soft/stiff pattern for this chain's size.
+    public void SetAlternatingStiffness(float softStiffness, float ratio = 10000f)
+    {
+        int springs = Mathf.Max(0, numParticles - 1);
+        stretchingStiffnessPerSpring = new float[springs];
+        for (int i = 0; i < springs; i++)
+            stretchingStiffnessPerSpring[i] = (i % 2 == 0) ? softStiffness : softStiffness * ratio;
     }
 }
 
@@ -67,7 +98,7 @@ public static class ChainFactory
         int constraintCount = n - 1 + (cfg.hasBendingConstraints ? n - 2 : 0);
         solver.constraints = new DistanceConstraint[constraintCount];
         for (int i = 0; i < n - 1; i++)
-            solver.constraints[i] = new DistanceConstraint(i, i + 1, cfg.restLength, cfg.StretchingCompliance);
+            solver.constraints[i] = new DistanceConstraint(i, i + 1, cfg.restLength, cfg.StretchingComplianceOf(i));
         if (cfg.hasBendingConstraints)
         {
             int b = n - 1;
@@ -122,8 +153,9 @@ public static class ChainFactory
 
         for (int i = 0; i < n - 1; i++)
         {
-            perVert[i].Add(new VertexSpringEdge { otherIdx = i + 1, restLength = cfg.restLength, stiffness = cfg.stretchingStiffness });
-            perVert[i + 1].Add(new VertexSpringEdge { otherIdx = i, restLength = cfg.restLength, stiffness = cfg.stretchingStiffness });
+            float k = cfg.StretchingStiffnessOf(i);
+            perVert[i].Add(new VertexSpringEdge { otherIdx = i + 1, restLength = cfg.restLength, stiffness = k });
+            perVert[i + 1].Add(new VertexSpringEdge { otherIdx = i, restLength = cfg.restLength, stiffness = k });
         }
         if (cfg.hasBendingConstraints)
         {

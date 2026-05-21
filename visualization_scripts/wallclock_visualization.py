@@ -4,7 +4,7 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 
 # Path to the summary CSV written by WallClockExperiment (per-(S,n) medians).
-csv_path = r"..\Data\WallClock\WallClock_summary_20260521_133116.csv"
+csv_path = r"..\Data\WallClock\WallClock_summary_20260521_135731.csv"
 
 # Columns: method;numParticles;substeps;iterations;medianMsPerStep;rmsError;repeats
 rows = defaultdict(list)
