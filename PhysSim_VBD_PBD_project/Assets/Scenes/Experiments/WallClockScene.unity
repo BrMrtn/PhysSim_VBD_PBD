@@ -165,7 +165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WallClockExperiment
   testXPBD: 1
   testVBD: 1
-  numSteps: 120
+  numSteps: 240
   repeats: 3
   warmupSteps: 10
   frameRate: 30
@@ -177,8 +177,8 @@ MonoBehaviour:
   hasBendingConstraints: 1
   bendingStiffness: 1000
   particleMass: 1
-  endMass: 1
-  referenceNumSubsteps: 50
+  endMass: 10
+  referenceNumSubsteps: 60
   referenceMaxIterations: 100
   referenceAbsTolerance: 0.000000001
   referenceRelTolerance: 0.0000000001

@@ -18,7 +18,7 @@ public class WallClockExperiment : MonoBehaviour
     public bool testXPBD = true;
     public bool testVBD = true;
 
-    public int numSteps = 120;
+    public int numSteps = 240;
     public int repeats = 3;
     public int warmupSteps = 10;
     public float frameRate = 30f;
@@ -35,10 +35,10 @@ public class WallClockExperiment : MonoBehaviour
     public bool hasBendingConstraints = true;
     public float bendingStiffness = 1e3f;
     public float particleMass = 1f;
-    public float endMass = 1f;
+    public float endMass = 10f; // heavy bob: high mass ratio stresses the iterative solvers
 
     [Header("Newton reference (true-physics ground truth)")]
-    public int referenceNumSubsteps = 40; // many substeps approach continuous Newton
+    public int referenceNumSubsteps = 60; // many substeps approach continuous Newton
     public int referenceMaxIterations = 100;
     public double referenceAbsTolerance = 1e-09;
     public double referenceRelTolerance = 1e-10;
@@ -64,7 +64,9 @@ public class WallClockExperiment : MonoBehaviour
         string stamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
 
         using var summary = new StreamWriter(Path.Combine(dir, $"WallClock_summary_{stamp}.csv"));
-        summary.WriteLine("method;substeps;iterations;medianMsPerStep;rmsError;repeats");
+        // totalIterations = substeps * iterations = total inner solver sweeps per Step(); the
+        // x-axis for the iterations-to-accuracy (work-normalized) plot, decoupled from CPU ms.
+        summary.WriteLine("method;substeps;iterations;medianMsPerStep;rmsError;repeats;totalIterations");
 
         if (testXPBD)
             Sweep("XPBD", cfg, reference, summary,
@@ -166,8 +168,8 @@ public class WallClockExperiment : MonoBehaviour
             }
 
             double median = Median(times);
-            summary.WriteLine(string.Format(Inv, "{0};{1};{2};{3:F6};{4:E6};{5}",
-                method, S, n, median, err, repeats));
+            summary.WriteLine(string.Format(Inv, "{0};{1};{2};{3:F6};{4:E6};{5};{6}",
+                method, S, n, median, err, repeats, S * n));
             Debug.Log(string.Format(Inv, "[WallClock] {0} S={1,2} n={2,2}: {3:F4} ms/step, RMS err {4:E3}",
                 method, S, n, median, err));
         }

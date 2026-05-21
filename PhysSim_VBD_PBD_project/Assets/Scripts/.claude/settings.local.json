@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"d:/uni/Szakdoga_teljes/PhysSim_VBD_PBD/PhysSim_VBD_PBD_project/Assets/Scripts\" && echo \"--- General/Loggers ---\" && ls General/Loggers/ 2>/dev/null; echo \"--- grep csproj for stale entries ---\" && grep -n \"StringLength\\\\|AmplitudeLogger\\\\|AmplitudeSampler\\\\|SpringLength\" ../../Assembly-CSharp.csproj | head)",
+      "Read(//d/uni/Szakdoga_teljes/PhysSim_VBD_PBD/PhysSim_VBD_PBD_project/**)"
+    ]
+  }
+}
