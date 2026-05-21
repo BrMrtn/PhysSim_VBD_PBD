@@ -4,7 +4,7 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 
 # Path to the summary CSV written by WallClockExperiment (per-(S,n) medians).
-csv_path = r"..\Data\WallClock\WallClock_summary_20260521_120118.csv"
+csv_path = r"..\Data\WallClock\WallClock_summary_20260521_133116.csv"
 
 # Columns: method;numParticles;substeps;iterations;medianMsPerStep;rmsError;repeats
 rows = defaultdict(list)
@@ -29,7 +29,7 @@ for method, pts in rows.items():
     ys = [p[3] for p in pts]
     plt.plot(xs, ys, "-o", label=method, markersize=5, alpha=0.8)
     for S, n, ms, err in pts:
-        plt.annotate(f"{S}x{n}", (ms, err), fontsize=7,
+        plt.annotate(f"S{S}xI{n}", (ms, err), fontsize=7,
                      textcoords="offset points", xytext=(4, 4))
 
 plt.xscale("log")

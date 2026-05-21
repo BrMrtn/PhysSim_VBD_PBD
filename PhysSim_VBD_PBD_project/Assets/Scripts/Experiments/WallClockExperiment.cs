@@ -23,8 +23,8 @@ public class WallClockExperiment : MonoBehaviour
     public int warmupSteps = 10;
     public float frameRate = 30f;
 
-    public int[] substepsGrid = { 1, 2, 4, 8, 12, 16 };
-    public int[] iterationsGrid = { 1, 2, 4, 8, 12, 16 };
+    public int[] substepsGrid = { 1, 2, 4, 8, 12, 16, 20 };
+    public int[] iterationsGrid = { 1, 2, 4, 8, 12, 16, 20 };
 
     private float dt;
 
@@ -38,15 +38,17 @@ public class WallClockExperiment : MonoBehaviour
     public float endMass = 1f;
 
     [Header("Newton reference (true-physics ground truth)")]
-    public int referenceNumSubsteps = 100; // many substeps approach continuous Newton
-    public int referenceMaxIterations = 1000;
-    public double referenceAbsTolerance = 1e-10;
-    public double referenceRelTolerance = 1e-12;
+    public int referenceNumSubsteps = 40; // many substeps approach continuous Newton
+    public int referenceMaxIterations = 50;
+    public double referenceAbsTolerance = 1e-8;
+    public double referenceRelTolerance = 1e-9;
 
     private static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
 
     void Start()
     {
+        var totalTimer = Stopwatch.StartNew();
+
         dt = 1f / Mathf.Max(1f, frameRate);
         var cfg = BuildConfig();
 
@@ -85,7 +87,8 @@ public class WallClockExperiment : MonoBehaviour
                   });
 
         summary.Flush();
-        Debug.Log($"[WallClock] Done. CSVs written to {dir}");
+        totalTimer.Stop();
+        Debug.Log($"[WallClock] Done in {totalTimer.Elapsed.TotalSeconds:F2} seconds. CSVs written to {dir}");
     }
 
     private ChainConfig BuildConfig()

@@ -26,11 +26,13 @@ public class VBDChain : MonoBehaviour
     public bool addInitNoise = false;
     public bool logMsPerFrame = true;
     public bool logEnergy = false;
+    public bool logAmplitude = false;
 
     public Material sphereMaterial;
 
     public VBDSolver Solver { get; private set; }
     private EnergyLogger energyLogger;
+    private AmplitudeLogger amplitudeLogger;
 
     private float dt;
     private LineRenderer lineRenderer;
@@ -104,6 +106,14 @@ public class VBDChain : MonoBehaviour
             energyLogger.overlayY = 50f;
             energyLogger.Sampler = () => EnergySampler.Sample(Solver);
         }
+
+        if (logAmplitude)
+        {
+            amplitudeLogger = gameObject.AddComponent<AmplitudeLogger>();
+            amplitudeLogger.label = "VBDChain";
+            amplitudeLogger.overlayY = 70f;
+            amplitudeLogger.Sampler = () => AmplitudeSampler.Sample(Solver);
+        }
     }
 
     void Update()
@@ -113,6 +123,7 @@ public class VBDChain : MonoBehaviour
 
         Solver.Step(dt);
         if (logEnergy) energyLogger.Log(dt);
+        if (logAmplitude) amplitudeLogger.Log(dt);
 
         for (int i = 0; i < numParticles; i++)
         {
