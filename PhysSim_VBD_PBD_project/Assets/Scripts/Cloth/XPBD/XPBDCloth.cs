@@ -6,6 +6,7 @@ using UnityEngine.Rendering;
 
 public class XPBDCloth : MonoBehaviour
 {
+    public float frameRate = 30f;
     public int numSubsteps = 15;
     public int numIterations = 1;
 
@@ -29,6 +30,7 @@ public class XPBDCloth : MonoBehaviour
     public XPBDSolver Solver { get; private set; }
     private EnergyLogger energyLogger;
 
+    private float dt;
     private float spacing;
     private float thickness;
 
@@ -52,6 +54,7 @@ public class XPBDCloth : MonoBehaviour
         meshFilter = gameObject.GetComponent<MeshFilter>();
         mesh = meshFilter.mesh;
         tr = transform;
+        dt = 1f / Mathf.Max(1f, frameRate);
         mesh.MarkDynamic();
 
         Destroy(gameObject.GetComponent<MeshCollider>());
@@ -109,7 +112,6 @@ public class XPBDCloth : MonoBehaviour
         bool shouldLogPerformance = logMsPerFrame && Time.frameCount % logEveryNFrames == 0;
         double simStartTime = shouldLogPerformance ? Time.realtimeSinceStartupAsDouble : 0;
 
-        float dt = 1 / 24f;
         Solver.Step(dt);
         if (logEnergy) energyLogger.Log(dt);
 

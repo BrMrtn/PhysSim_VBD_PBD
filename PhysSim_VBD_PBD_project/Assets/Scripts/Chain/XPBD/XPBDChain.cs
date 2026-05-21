@@ -3,14 +3,13 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class XPBDChain : MonoBehaviour
 {
+    public float frameRate = 30f;
     public int numSubsteps = 15;
     public int numIterations = 1;
 
     public int numParticles = 20;
     public float restLength = 1f;
 
-    // World-space position of the chain's end (the bob). The fixed start is at
-    // this transform's position; all particles are spaced equally between them.
     public Vector3 bobStartPosition = new Vector3(-19f, 0f, 0f);
 
     public float stretchingCompliance = 1e-6f;
@@ -28,6 +27,7 @@ public class XPBDChain : MonoBehaviour
     public XPBDSolver Solver { get; private set; }
     private EnergyLogger energyLogger;
 
+    private float dt;
     private LineRenderer lineRenderer;
     private Transform tr;
     private Vector3[] renderPositions;
@@ -40,6 +40,7 @@ public class XPBDChain : MonoBehaviour
     void Awake()
     {
         tr = transform;
+        dt = 1f / Mathf.Max(1f, frameRate);
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = numParticles;
 
@@ -137,7 +138,6 @@ public class XPBDChain : MonoBehaviour
         bool shouldLogPerformance = logMsPerFrame && Time.frameCount % logEveryNFrames == 0;
         double simStartTime = shouldLogPerformance ? Time.realtimeSinceStartupAsDouble : 0;
 
-        float dt = 1 / 24f;
         Solver.Step(dt);
         if (logEnergy) energyLogger.Log(dt);
 

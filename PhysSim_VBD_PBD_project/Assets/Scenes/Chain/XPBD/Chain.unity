@@ -429,12 +429,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::XPBDChain
   numSubsteps: 15
+  numIterations: 1
   numParticles: 20
   restLength: 1
+  bobStartPosition: {x: -19, y: 8, z: 8}
   stretchingCompliance: 0.000001
   hasBendingConstraints: 1
   bendingCompliance: 0.00001
+  rayleighMassDamping: 0
+  rayleighStiffnessDamping: 0
   logMsPerFrame: 1
+  logEnergy: 0
   sphereMaterial: {fileID: 2100000, guid: 93ea19cb492d8914a9a1e2678ec6c8ba, type: 2}
 --- !u!120 &1477842770
 LineRenderer:

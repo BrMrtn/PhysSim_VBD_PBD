@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class NewtonChain : MonoBehaviour
 {
+    public float frameRate = 30f;
     public int numSubsteps = 1; // 1 = one implicit-Euler step; raise (100+) for physics reference
     public int maxIterations = 100; // approaches true solution
 
@@ -14,8 +15,6 @@ public class NewtonChain : MonoBehaviour
     public int numParticles = 20;
     public float restLength = 1f;
 
-    // World-space position of the chain's end (the bob). The fixed start is at
-    // this transform's position; all particles are spaced equally between them.
     public Vector3 bobStartPosition = new Vector3(-19f, 0f, 0f);
 
     public float stretchingStiffness = 1e6f;
@@ -30,6 +29,7 @@ public class NewtonChain : MonoBehaviour
     public NewtonSolver Solver { get; private set; }
     private EnergyLogger energyLogger;
 
+    private float dt;
     private LineRenderer lineRenderer;
     private Transform tr;
     private Vector3[] renderPositions;
@@ -42,6 +42,7 @@ public class NewtonChain : MonoBehaviour
     void Awake()
     {
         tr = transform;
+        dt = 1f / Mathf.Max(1f, frameRate);
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = numParticles;
 
@@ -145,7 +146,6 @@ public class NewtonChain : MonoBehaviour
         bool shouldLogPerformance = logMsPerFrame && Time.frameCount % logEveryNFrames == 0;
         double simStartTime = shouldLogPerformance ? Time.realtimeSinceStartupAsDouble : 0;
 
-        float dt = 1f / 24f;
         Solver.Step(dt);
         if (logEnergy) energyLogger.Log(dt);
 
