@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
@@ -50,68 +49,23 @@ public class VBDChain : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = numParticles;
 
-        Solver = new VBDSolver(numParticles)
-        {
-            numSubsteps = numSubsteps,
-            numIterations = numIterations,
-            useAcceleration = useAcceleration,
-            accelerationRho = accelerationRho,
-            thickness = restLength,
-            rayleighMassDamping = rayleighMassDamping,
-            rayleighStiffnessDamping = rayleighStiffnessDamping
-        };
+        var cfg = ChainConfig.Default(numParticles);
+        cfg.restLength = restLength;
+        cfg.stretchingStiffness = stretchingStiffness;
+        cfg.hasBendingConstraints = hasBendingConstraints;
+        cfg.bendingStiffness = bendingStiffness;
+        cfg.start = tr.position;
+        cfg.bob = bobStartPosition;
 
-        // Initialize particles equally spaced on the line from the fixed start
-        // (this transform's position) to the bob's start position.
-        Vector3 start = tr.position;
-        Vector3 step = (bobStartPosition - start) / Mathf.Max(1, numParticles - 1);
-        for (int i = 0; i < numParticles; i++)
-            Solver.positions[i] = start + step * i;
-
-        // Build per-incidence edge lists (each spring stored once per endpoint).
-        var perVertEdges = new List<VertexSpringEdge>[numParticles];
-        for (int i = 0; i < numParticles; i++) perVertEdges[i] = new List<VertexSpringEdge>();
-
-        // Stretching springs between consecutive particles. Rest length is the
-        // configured restLength, so the initial spacing may stretch/compress them.
-        for (int i = 0; i < numParticles - 1; i++)
-        {
-            perVertEdges[i].Add(new VertexSpringEdge { otherIdx = i + 1, restLength = restLength, stiffness = stretchingStiffness });
-            perVertEdges[i + 1].Add(new VertexSpringEdge { otherIdx = i, restLength = restLength, stiffness = stretchingStiffness });
-        }
-
-        // Bending springs connecting every second vertex (rest length = 2 * restLength).
-        if (hasBendingConstraints)
-        {
-            for (int i = 0; i < numParticles - 2; i++)
-            {
-                perVertEdges[i].Add(new VertexSpringEdge { otherIdx = i + 2, restLength = 2f * restLength, stiffness = bendingStiffness });
-                perVertEdges[i + 2].Add(new VertexSpringEdge { otherIdx = i, restLength = 2f * restLength, stiffness = bendingStiffness });
-            }
-        }
-
-        // Flatten into CSR (springListStart + springEdges).
-        Solver.springListStart = new int[numParticles + 1];
-        int total = 0;
-        for (int i = 0; i < numParticles; i++)
-        {
-            Solver.springListStart[i] = total;
-            total += perVertEdges[i].Count;
-        }
-        Solver.springListStart[numParticles] = total;
-
-        Solver.springEdges = new VertexSpringEdge[total];
-        for (int i = 0; i < numParticles; i++)
-        {
-            int s = Solver.springListStart[i];
-            var list = perVertEdges[i];
-            for (int j = 0; j < list.Count; j++)
-                Solver.springEdges[s + j] = list[j];
-        }
+        Solver = ChainFactory.BuildVBD(cfg);
+        Solver.numSubsteps = numSubsteps;
+        Solver.numIterations = numIterations;
+        Solver.useAcceleration = useAcceleration;
+        Solver.accelerationRho = accelerationRho;
+        Solver.rayleighMassDamping = rayleighMassDamping;
+        Solver.rayleighStiffnessDamping = rayleighStiffnessDamping;
 
         renderPositions = new Vector3[numParticles];
-
-        Solver.invMasses[0] = 0f; // Fix the first particle in place
 
         if (addInitNoise)
             for (int i = 0; i < numParticles; i++)

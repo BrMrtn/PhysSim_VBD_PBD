@@ -44,58 +44,21 @@ public class XPBDChain : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = numParticles;
 
-        Solver = new XPBDSolver(numParticles)
-        {
-            numSubsteps = numSubsteps,
-            numIterations = numIterations,
-            handleSelfCollisions = false,
-            thickness = restLength,
-            rayleighMassDamping = rayleighMassDamping,
-            rayleighStiffnessDamping = rayleighStiffnessDamping
-        };
+        var cfg = ChainConfig.Default(numParticles);
+        cfg.restLength = restLength;
+        cfg.stretchingStiffness = 1f / stretchingCompliance;
+        cfg.hasBendingConstraints = hasBendingConstraints;
+        cfg.bendingStiffness = 1f / bendingCompliance;
+        cfg.start = tr.position;
+        cfg.bob = bobStartPosition;
 
-        // Initialize particles equally spaced on the line from the fixed start
-        // (this transform's position) to the bob's start position.
-        Vector3 start = tr.position;
-        Vector3 step = (bobStartPosition - start) / Mathf.Max(1, numParticles - 1);
-        for (int i = 0; i < numParticles; i++)
-            Solver.positions[i] = start + step * i;
-
-        // Build spring constraints between consecutive particles
-        int constraintCount = numParticles - 1;
-        if (hasBendingConstraints)
-            constraintCount += numParticles - 2;
-
-        Solver.constraints = new DistanceConstraint[constraintCount];
-
-        // Add stretching constraints between consecutive particles. Rest length is the
-        // configured restLength, so the initial spacing may stretch/compress them.
-        for (int i = 0; i < numParticles - 1; i++)
-        {
-            Solver.constraints[i] = new DistanceConstraint(
-                i,
-                i + 1,
-                restLength,
-                stretchingCompliance);
-        }
-
-        // Add bending constraints connecting every second vertex (rest length = 2 * restLength).
-        if (hasBendingConstraints)
-        {
-            int bendingStartIndex = numParticles - 1;
-            for (int i = 0; i < numParticles - 2; i++)
-            {
-                Solver.constraints[bendingStartIndex + i] = new DistanceConstraint(
-                    i,
-                    i + 2,
-                    2f * restLength,
-                    bendingCompliance);
-            }
-        }
+        Solver = ChainFactory.BuildXPBD(cfg);
+        Solver.numSubsteps = numSubsteps;
+        Solver.numIterations = numIterations;
+        Solver.rayleighMassDamping = rayleighMassDamping;
+        Solver.rayleighStiffnessDamping = rayleighStiffnessDamping;
 
         renderPositions = new Vector3[numParticles];
-
-        Solver.invMasses[0] = 0f; // Fix the first particle in place
 
         // Create small spheres at each vertex position
         float sphereRadius = restLength / 10f;

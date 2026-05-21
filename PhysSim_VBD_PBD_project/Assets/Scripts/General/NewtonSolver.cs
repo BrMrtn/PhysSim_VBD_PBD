@@ -54,6 +54,10 @@ public class NewtonSolver
     public bool useLineSearch = true;
     public bool projectHessianToPSD = true;
 
+    // Per-substep "converged in N iterations" Debug.Log. Off by default: a high-substep
+    // reference run (e.g. the wall-clock experiment) would emit tens of thousands of lines.
+    public bool logConvergence = false;
+
     public event Action OnPreSubstep;
     public event Action OnSubstep;
 
@@ -209,7 +213,8 @@ public class NewtonSolver
             // the relative factor versus the initial residual.
             if (gInf <= absTolerance || gInf <= relTolerance * grad0Inf)
             {
-                Debug.Log($"NewtonSolver: converged in {iter} iterations (|grad|_inf = {gInf:E2})");
+                if (logConvergence)
+                    Debug.Log($"NewtonSolver: converged in {iter} iterations (|grad|_inf = {gInf:E2})");
                 break;
             }
 

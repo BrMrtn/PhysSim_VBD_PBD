@@ -58,7 +58,7 @@ public class EnergyLogger : MonoBehaviour
 
     private void OpenCsv()
     {
-        var dir = Path.GetFullPath(Path.Combine(Application.dataPath, "../../Logs/EnergyLogs"));
+        var dir = Path.GetFullPath(Path.Combine(Application.dataPath, "../../Data/EnergyLogs"));
         Directory.CreateDirectory(dir);
         string safe = string.IsNullOrEmpty(label) ? "Sim" : label;
         foreach (char c in Path.GetInvalidFileNameChars()) safe = safe.Replace(c, '_');
