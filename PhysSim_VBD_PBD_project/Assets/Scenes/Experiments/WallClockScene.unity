@@ -169,19 +169,19 @@ MonoBehaviour:
   repeats: 3
   warmupSteps: 10
   frameRate: 30
-  substepsGrid: 010000000200000004000000080000000c00000010000000
-  iterationsGrid: 010000000200000004000000080000000c00000010000000
+  substepsGrid: 010000000200000004000000080000000c000000100000001800000020000000
+  iterationsGrid: 010000000200000004000000080000000c000000100000001800000020000000
   numParticles: 10
   restLength: 1
-  stretchingStiffness: 1000000
-  hasBendingConstraints: 0
-  bendingStiffness: 100000
+  stretchingStiffness: 10000
+  hasBendingConstraints: 1
+  bendingStiffness: 1000
   particleMass: 1
   endMass: 1
-  referenceNumSubsteps: 5
-  referenceMaxIterations: 50
-  referenceAbsTolerance: 0.0000000001
-  referenceRelTolerance: 0.000000000001
+  referenceNumSubsteps: 50
+  referenceMaxIterations: 100
+  referenceAbsTolerance: 0.000000001
+  referenceRelTolerance: 0.0000000001
 --- !u!1 &857413803
 GameObject:
   m_ObjectHideFlags: 0

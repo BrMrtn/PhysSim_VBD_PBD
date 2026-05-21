@@ -1,10 +1,10 @@
 using UnityEngine;
 
-// Per-string snapshot of a chain. String i is the stretching spring between
+// Per-spring snapshot of a chain. Spring i is the stretching spring between
 // vertex i and vertex i+1; currentLengths[i] is its present length and
 // restLengths[i] its rest length, so currentLengths[i] / restLengths[i] is the
-// stretch ratio used to see how far a string expands under high mass ratios.
-public struct StringLengthSample
+// stretch ratio used to see how far a spring expands under high mass ratios.
+public struct SpringLengthSample
 {
     public float[] currentLengths;
     public float[] restLengths;
@@ -12,10 +12,10 @@ public struct StringLengthSample
 }
 
 // Bending constraints are ignored: only the consecutive (i, i+1) stretching
-// springs are "strings" of the chain.
-public static class StringLengthSampler
+// springs are counted.
+public static class SpringLengthSampler
 {
-    public static StringLengthSample Sample(XPBDSolver s)
+    public static SpringLengthSample Sample(XPBDSolver s)
     {
         var r = NewSample(s.numVerts);
         FillCurrentLengths(s.positions, r);
@@ -32,13 +32,13 @@ public static class StringLengthSampler
         return r;
     }
 
-    public static StringLengthSample Sample(VBDSolver s) =>
+    public static SpringLengthSample Sample(VBDSolver s) =>
         SampleCsr(s.positions, s.numVerts, s.springListStart, s.springEdges);
 
-    public static StringLengthSample Sample(NewtonSolver s) =>
+    public static SpringLengthSample Sample(NewtonSolver s) =>
         SampleCsr(s.positions, s.numVerts, s.springListStart, s.springEdges);
 
-    private static StringLengthSample SampleCsr(Vector3[] positions, int numVerts,
+    private static SpringLengthSample SampleCsr(Vector3[] positions, int numVerts,
         int[] springListStart, VertexSpringEdge[] springEdges)
     {
         var r = NewSample(numVerts);
@@ -59,18 +59,18 @@ public static class StringLengthSampler
         return r;
     }
 
-    private static StringLengthSample NewSample(int numVerts)
+    private static SpringLengthSample NewSample(int numVerts)
     {
-        int strings = Mathf.Max(0, numVerts - 1);
-        return new StringLengthSample
+        int springs = Mathf.Max(0, numVerts - 1);
+        return new SpringLengthSample
         {
-            count = strings,
-            currentLengths = new float[strings],
-            restLengths = new float[strings],
+            count = springs,
+            currentLengths = new float[springs],
+            restLengths = new float[springs],
         };
     }
 
-    private static void FillCurrentLengths(Vector3[] positions, StringLengthSample r)
+    private static void FillCurrentLengths(Vector3[] positions, SpringLengthSample r)
     {
         for (int i = 0; i < r.count; i++)
             r.currentLengths[i] = (positions[i + 1] - positions[i]).magnitude;

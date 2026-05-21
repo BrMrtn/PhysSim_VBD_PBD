@@ -23,15 +23,13 @@ public class XPBDChain : MonoBehaviour
 
     public bool logMsPerFrame = true;
     public bool logEnergy = false;
-    public bool logAmplitude = false;
-    public bool logStringLength = false;
+    public bool logSpringLength = false;
 
     public Material sphereMaterial;
 
     public XPBDSolver Solver { get; private set; }
     private EnergyLogger energyLogger;
-    private AmplitudeLogger amplitudeLogger;
-    private StringLengthLogger stringLengthLogger;
+    private SpringLengthLogger springLengthLogger;
 
     private float dt;
     private LineRenderer lineRenderer;
@@ -102,20 +100,12 @@ public class XPBDChain : MonoBehaviour
             energyLogger.Sampler = () => EnergySampler.Sample(Solver);
         }
 
-        if (logAmplitude)
+        if (logSpringLength)
         {
-            amplitudeLogger = gameObject.AddComponent<AmplitudeLogger>();
-            amplitudeLogger.label = "XPBDChain";
-            amplitudeLogger.overlayY = 70f;
-            amplitudeLogger.Sampler = () => AmplitudeSampler.Sample(Solver);
-        }
-
-        if (logStringLength)
-        {
-            stringLengthLogger = gameObject.AddComponent<StringLengthLogger>();
-            stringLengthLogger.label = "XPBDChain";
-            stringLengthLogger.overlayY = 90f;
-            stringLengthLogger.Sampler = () => StringLengthSampler.Sample(Solver);
+            springLengthLogger = gameObject.AddComponent<SpringLengthLogger>();
+            springLengthLogger.label = "XPBDChain";
+            springLengthLogger.overlayY = 70f;
+            springLengthLogger.Sampler = () => SpringLengthSampler.Sample(Solver);
         }
     }
 
@@ -126,8 +116,7 @@ public class XPBDChain : MonoBehaviour
 
         Solver.Step(dt);
         if (logEnergy) energyLogger.Log(dt);
-        if (logAmplitude) amplitudeLogger.Log(dt);
-        if (logStringLength) stringLengthLogger.Log(dt);
+        if (logSpringLength) springLengthLogger.Log(dt);
 
         for (int i = 0; i < numParticles; i++)
         {

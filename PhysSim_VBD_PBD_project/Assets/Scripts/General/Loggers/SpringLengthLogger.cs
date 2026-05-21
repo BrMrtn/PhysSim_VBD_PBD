@@ -4,20 +4,20 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 
-public class StringLengthLogger : MonoBehaviour
+public class SpringLengthLogger : MonoBehaviour
 {
     public bool writeCsv = true;
     public bool showOverlay = true;
     public string label = "Sim";
     public float overlayY = 110f;
 
-    public Func<StringLengthSample> Sampler { get; set; }
+    public Func<SpringLengthSample> Sampler { get; set; }
 
     private StreamWriter csv;
     private string csvPath;
     private float simTime;
     private int frameNumber;
-    private StringLengthSample latest;
+    private SpringLengthSample latest;
     private bool headerWritten;
     private GUIStyle style;
 
@@ -39,8 +39,8 @@ public class StringLengthLogger : MonoBehaviour
 
         if (csv == null) return;
 
-        // Header is deferred until the first sample because the per-string
-        // columns depend on the string count.
+        // Header is deferred until the first sample because the per-spring
+        // columns depend on the spring count.
         if (!headerWritten) WriteHeader();
 
         var sb = new StringBuilder();
@@ -131,13 +131,13 @@ public class StringLengthLogger : MonoBehaviour
 
     private void OpenCsv()
     {
-        var dir = Path.GetFullPath(Path.Combine(Application.dataPath, "../../Data/StringLengthLogs"));
+        var dir = Path.GetFullPath(Path.Combine(Application.dataPath, "../../Data/SpringLengthLogs"));
         Directory.CreateDirectory(dir);
         string safe = string.IsNullOrEmpty(label) ? "Sim" : label;
         foreach (char c in Path.GetInvalidFileNameChars()) safe = safe.Replace(c, '_');
         csvPath = Path.Combine(dir, $"{safe}_{DateTime.Now:yyyyMMdd_HHmmss}.csv");
         csv = new StreamWriter(csvPath, false);
-        Debug.Log($"[StringLengthLogger] {label}: writing string-length log to {csvPath}");
+        Debug.Log($"[SpringLengthLogger] {label}: writing spring-length log to {csvPath}");
     }
 
     private void CloseCsv()

@@ -23,25 +23,25 @@ public class WallClockExperiment : MonoBehaviour
     public int warmupSteps = 10;
     public float frameRate = 30f;
 
-    public int[] substepsGrid = { 1, 2, 4, 8, 12, 16, 20 };
-    public int[] iterationsGrid = { 1, 2, 4, 8, 12, 16, 20 };
+    public int[] substepsGrid = { 1, 2, 4, 8, 12, 16, 24, 32 };
+    public int[] iterationsGrid = { 1, 2, 4, 8, 12, 16, 24, 32 };
 
     private float dt;
 
     [Header("Chain")]
     public int numParticles = 10;
     public float restLength = 1f;
-    public float stretchingStiffness = 1e6f;
-    public bool hasBendingConstraints = false;
-    public float bendingStiffness = 1e5f;
+    public float stretchingStiffness = 1e4f;
+    public bool hasBendingConstraints = true;
+    public float bendingStiffness = 1e3f;
     public float particleMass = 1f;
     public float endMass = 1f;
 
     [Header("Newton reference (true-physics ground truth)")]
     public int referenceNumSubsteps = 40; // many substeps approach continuous Newton
-    public int referenceMaxIterations = 50;
-    public double referenceAbsTolerance = 1e-8;
-    public double referenceRelTolerance = 1e-9;
+    public int referenceMaxIterations = 100;
+    public double referenceAbsTolerance = 1e-09;
+    public double referenceRelTolerance = 1e-10;
 
     private static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
 
@@ -82,7 +82,7 @@ public class WallClockExperiment : MonoBehaviour
                       var s = ChainFactory.BuildVBD(cfg);
                       s.numSubsteps = S; s.numIterations = n;
                       s.useAcceleration = false;
-                      s.accelerationRho = 0f;
+                      s.accelerationRho = 0.5f;
                       return (() => s.Step(dt), s.positions);
                   });
 
