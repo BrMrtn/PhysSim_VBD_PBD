@@ -165,23 +165,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WallClockExperiment
   testXPBD: 1
   testVBD: 1
-  numSteps: 240
+  numSteps: 120
   repeats: 3
-  warmupSteps: 10
+  warmupSteps: 0
   frameRate: 30
-  substepsGrid: 010000000200000004000000080000000c000000100000001800000020000000
-  iterationsGrid: 010000000200000004000000080000000c000000100000001800000020000000
+  substepsGrid: 010000000200000004000000080000001000000020000000
+  iterationsGrid: 010000000200000004000000080000001000000020000000
   numParticles: 10
   restLength: 1
   stretchingStiffness: 10000
-  hasBendingConstraints: 1
+  hasBendingConstraints: 0
   bendingStiffness: 1000
   particleMass: 1
-  endMass: 10
-  referenceNumSubsteps: 60
-  referenceMaxIterations: 100
-  referenceAbsTolerance: 0.000000001
-  referenceRelTolerance: 0.0000000001
+  endMass: 100
+  referenceNumSubsteps: 64
+  referenceMaxIterations: 200
+  referenceAbsTolerance: 0.00000000001
+  referenceRelTolerance: 0.000000000001
 --- !u!1 &857413803
 GameObject:
   m_ObjectHideFlags: 0

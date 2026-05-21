@@ -18,13 +18,13 @@ public class WallClockExperiment : MonoBehaviour
     public bool testXPBD = true;
     public bool testVBD = true;
 
-    public int numSteps = 240;
+    public int numSteps = 120;
     public int repeats = 3;
-    public int warmupSteps = 10;
+    public int warmupSteps = 0;
     public float frameRate = 30f;
 
-    public int[] substepsGrid = { 1, 2, 4, 8, 12, 16, 24, 32 };
-    public int[] iterationsGrid = { 1, 2, 4, 8, 12, 16, 24, 32 };
+    public int[] substepsGrid = { 1, 2, 4, 8, 16, 32 };
+    public int[] iterationsGrid = { 1, 2, 4, 8, 16, 32 };
 
     private float dt;
 
@@ -35,13 +35,13 @@ public class WallClockExperiment : MonoBehaviour
     public bool hasBendingConstraints = true;
     public float bendingStiffness = 1e3f;
     public float particleMass = 1f;
-    public float endMass = 10f; // heavy bob: high mass ratio stresses the iterative solvers
+    public float endMass = 100f;
 
     [Header("Newton reference (true-physics ground truth)")]
     public int referenceNumSubsteps = 60; // many substeps approach continuous Newton
     public int referenceMaxIterations = 100;
-    public double referenceAbsTolerance = 1e-09;
-    public double referenceRelTolerance = 1e-10;
+    public double referenceAbsTolerance = 1e-11;
+    public double referenceRelTolerance = 1e-12;
 
     private static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
 
@@ -102,7 +102,7 @@ public class WallClockExperiment : MonoBehaviour
         cfg.bendingStiffness = bendingStiffness;
         cfg.particleMass = particleMass;
         cfg.endMass = endMass;
-        cfg.bob = new Vector3(-(numParticles - 1) * restLength, 0f, 0f);
+        cfg.bob = new Vector3(-(numParticles - 1) * restLength -1f, 0f, 0f);
         return cfg;
     }
 

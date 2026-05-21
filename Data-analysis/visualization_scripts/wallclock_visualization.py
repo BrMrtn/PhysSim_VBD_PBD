@@ -4,7 +4,7 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 
 # Path to the summary CSV written by WallClockExperiment (per-(S,n) medians).
-csv_path = r"..\Data\WallClock\WallClock_summary_20260521_164820.csv"
+csv_path = r"..\Data\WallClock\WallClock_summary_20260521_181210.csv"
 
 rows = defaultdict(list)
 with open(csv_path, newline="") as f:
@@ -33,7 +33,7 @@ for (method, substeps), pts in sorted(rows.items()):
 
 plt.xscale("log")
 plt.yscale("log")
-plt.xlabel("median wallclock time per step (ms)")
+plt.xlabel("ms/frame")
 plt.ylabel("RMS position error vs converged Newton")
 plt.title("Chain solvers: accuracy vs wallclock time")
 plt.grid(True, which="both", ls=":", alpha=0.5)
