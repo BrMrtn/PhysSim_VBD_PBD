@@ -4,14 +4,14 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 
 # Path to the summary CSV written by WallClockExperiment (per-(S,n) medians).
-csv_path = r"..\Data\WallClock\WallClock_summary_20260521_135731.csv"
+csv_path = r"..\Data\WallClock\WallClock_summary_20260521_164820.csv"
 
-# Columns: method;numParticles;substeps;iterations;medianMsPerStep;rmsError;repeats
 rows = defaultdict(list)
 with open(csv_path, newline="") as f:
     reader = csv.DictReader(f, delimiter=";")
     for r in reader:
-        rows[r["method"]].append(
+        key = (r["method"], int(r["substeps"]))
+        rows[key].append(
             (
                 int(r["substeps"]),
                 int(r["iterations"]),
@@ -20,23 +20,22 @@ with open(csv_path, newline="") as f:
             )
         )
 
-# Error (vs converged Newton) on y, ms/step on x. Both axes log: cost and error span
-# orders of magnitude across the sweep.
 plt.figure(figsize=(9, 6))
-for method, pts in rows.items():
-    pts.sort(key=lambda p: p[2])  # by cost, so the connecting line reads left-to-right
+for (method, substeps), pts in sorted(rows.items()):
+    pts.sort(key=lambda p: p[2])  # by time
     xs = [p[2] for p in pts]
     ys = [p[3] for p in pts]
-    plt.plot(xs, ys, "-o", label=method, markersize=5, alpha=0.8)
+    c = "red" if "VBD" in method else "green" if "XPBD" in method else None
+    plt.plot(xs, ys, "-o", label=f"{method} S{substeps}", markersize=5, alpha=0.8, color=c)
     for S, n, ms, err in pts:
         plt.annotate(f"S{S}xI{n}", (ms, err), fontsize=7,
                      textcoords="offset points", xytext=(4, 4))
 
 plt.xscale("log")
 plt.yscale("log")
-plt.xlabel("ms / step (median)")
+plt.xlabel("median wallclock time per step (ms)")
 plt.ylabel("RMS position error vs converged Newton")
-plt.title("Chain solvers: accuracy vs wall-clock cost")
+plt.title("Chain solvers: accuracy vs wallclock time")
 plt.grid(True, which="both", ls=":", alpha=0.5)
 plt.legend()
 plt.tight_layout()
