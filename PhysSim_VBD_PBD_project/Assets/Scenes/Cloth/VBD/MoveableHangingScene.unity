@@ -150,21 +150,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d3632ab0ebbf2147806eb5cd05a9e9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VBDCloth
+  frameRate: 30
   numSubsteps: 1
-  numIterations: 15
-  stretchingStiffness: 100000
-  shearStiffness: 10000
-  bendingStiffness: 1000
+  numIterations: 8
+  useAcceleration: 0
+  accelerationRho: 0.25
+  stretchingStiffness: 50
+  shearStiffness: 50
+  bendingStiffness: 50
+  totalMass: 5
   handleSelfCollisions: 0
   selfCollisionStiffness: 10000
   velCapPerFrame: 3
-  rayleighMassDamping: 0.5
-  rayleighStiffnessDamping: 0.01
-  logMsPerFrame: 1
-  logEnergy: 1
+  rayleighMassDamping: 0
+  rayleighStiffnessDamping: 0
+  useLineSearch: 0
+  maxLineSearchIters: 8
   addInitNoise: 0
-  useAcceleration: 0
-  accelerationRho: 0.055
+  logMsPerFrame: 0
+  logEnergy: 0
+  logArea: 0
+  logResidual: 0
   numVerts: 0
   numX: 0
   numY: 0

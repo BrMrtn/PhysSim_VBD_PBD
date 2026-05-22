@@ -133,11 +133,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.5
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
       propertyPath: m_LocalRotation.w
@@ -207,15 +207,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d3632ab0ebbf2147806eb5cd05a9e9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VBDClothSim
-  numSubsteps: 1
-  numIterations: 15
-  stretchingStiffness: 100000
-  shearStiffness: 10000
-  bendingStiffness: 1000
-  logMsPerFrame: 1
-  addInitNoise: 0
+  frameRate: 30
+  numSubsteps: 4
+  numIterations: 50
   useAcceleration: 0
   accelerationRho: 0.5
+  stretchingStiffness: 50
+  shearStiffness: 50
+  bendingStiffness: 50
+  totalMass: 5
+  handleSelfCollisions: 0
+  selfCollisionStiffness: 10000000
+  velCapPerFrame: 3
+  rayleighMassDamping: 0
+  rayleighStiffnessDamping: 0
+  useLineSearch: 1
+  maxLineSearchIters: 8
+  addInitNoise: 0
+  logMsPerFrame: 0
+  logEnergy: 1
+  logArea: 0
+  logResidual: 1
   numVerts: 0
   numX: 0
   numY: 0

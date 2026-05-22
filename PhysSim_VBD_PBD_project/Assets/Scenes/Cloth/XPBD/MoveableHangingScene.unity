@@ -256,14 +256,14 @@ MonoBehaviour:
   shearCompliance: 0.0001
   bendingCompliance: 0.001
   totalMass: 1
-  handleSelfCollisions: 0
+  handleSelfCollisions: 1
   selfCollisionFriction: 0
   velCapPerFrame: 3
   rayleighMassDamping: 0
   rayleighStiffnessDamping: 0
-  addInitNoise: 1
-  logMsPerFrame: 1
-  logEnergy: 1
+  addInitNoise: 0
+  logMsPerFrame: 0
+  logEnergy: 0
   logArea: 0
   numVerts: 0
   numX: 0
@@ -296,20 +296,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::XPBDGroundCollision
   ground: {fileID: 124310501}
   friction: 0.3
---- !u!114 &150870330
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 150870319}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8a70e860f4ac7a46883b6549f239dc7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::XPBDWindInteraction
-  windZone: {fileID: 0}
-  windDrag: 0.05
 --- !u!1 &569257114
 GameObject:
   m_ObjectHideFlags: 0
@@ -787,9 +773,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
       insertIndex: -1
       addedObject: {fileID: 150870329}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 150870330}
   m_SourcePrefab: {fileID: 100100000, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
 --- !u!1 &1846345023
 GameObject:
