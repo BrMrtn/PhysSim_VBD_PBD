@@ -3,115 +3,85 @@
 \label{chap:RelatedWork}
 %----------------------------------------------------------------------------
 
-This chapter surveys the position-based and primal-descent lineages whose
-endpoints --- XPBD and VBD --- this thesis compares, and positions my work
-relative to the closest prior comparison.
+\begin{itemize}
+    \item This chapter surveys the position-based and primal-descent lineages whose endpoints --- XPBD and VBD --- this thesis compares.
+    \item It positions my work relative to the closest prior comparison.
+\end{itemize}
 
 %----------------------------------------------------------------------------
 \section{From PBD to XPBD}
 \label{sec:PBDtoXPBD}
 %----------------------------------------------------------------------------
-Position-Based Dynamics (PBD) was introduced by M\"uller
-et~al.~\cite{MULLER2007109} for real-time cloth and soft-body simulation in
-games. Each iteration projects positions onto constraint manifolds (e.g.\
-fixed edge lengths) via Gauss--Seidel sweeps, recovering velocities by
-finite difference. PBD is unconditionally stable but suffers a well-known
-flaw: \emph{constraint stiffness depends on iteration count and time step}.
-Practitioners cannot specify a Young's modulus directly; they specify a
-stiffness coefficient that interacts unpredictably with solver settings.
-
-Extended Position-Based Dynamics (XPBD), introduced by Macklin
-et~al.~\cite{10.1145/2994258.2994272}, fixes this by augmenting each
-constraint with a compliance term $\alpha = 1/k$ and solving for the
-associated Lagrange multiplier $\lambda$. The resulting iteration solves an
-implicit-Euler problem with arbitrary elastic energies, and constraint
-stiffness becomes a true material parameter independent of iteration count.
+\begin{itemize}
+    \item Position-Based Dynamics (PBD), introduced by M\"uller et~al.~\cite{MULLER2007109}, targets real-time cloth and soft-body simulation in games.
+    \item Each iteration projects positions onto constraint manifolds (e.g.\ fixed edge lengths) via Gauss--Seidel sweeps, recovering velocities by finite difference.
+    \item PBD is unconditionally stable but has a known flaw: \emph{constraint stiffness depends on iteration count and time step}.
+    \begin{itemize}
+        \item Practitioners cannot specify a Young's modulus directly; they specify a stiffness coefficient that interacts unpredictably with solver settings.
+    \end{itemize}
+    \item XPBD, introduced by Macklin et~al.~\cite{10.1145/2994258.2994272}, fixes this by augmenting each constraint with a compliance term $\alpha = 1/k$ and solving for the associated Lagrange multiplier $\lambda$.
+    \item The resulting iteration solves an implicit-Euler problem with arbitrary elastic energies, and constraint stiffness becomes a true material parameter independent of iteration count.
+\end{itemize}
 
 \paragraph{Small steps in physics simulation.}
-Macklin et~al.~\cite{Chen2024} (the ``Small Steps'' note) later argued that
-XPBD converges most reliably when used with \emph{many short substeps and a
-single iteration per substep}, rather than a single long step with many
-iterations. This is now a standard XPBD configuration, and it is the
-default I adopt in \autoref{chap:Methodology}: it both follows the
-recommendation and exposes XPBD's per-substep cost as the primary
-performance lever.
+\begin{itemize}
+    \item Macklin et~al.~\cite{Macklin2019SmallSI} (the ``Small Steps'' note) later argued that XPBD converges most reliably with \emph{many short substeps and a single iteration per substep}, rather than a single long step with many iterations.
+    \item This is now a standard XPBD configuration and is the default I adopt in \autoref{chap:Methodology}: it follows the recommendation and exposes XPBD's per-substep cost as the primary performance lever.
+\end{itemize}
 
 %----------------------------------------------------------------------------
 \section{Projective dynamics and descent methods}
 \label{sec:ProjectiveDynamics}
 %----------------------------------------------------------------------------
-A parallel line of work, projective dynamics, recasts implicit Euler as a
-quadratic minimisation alternating between a global linear solve and local
-constraint projections. Variants and accelerations (descent methods,
-Chebyshev acceleration, ADMM) bridge between projective dynamics and
-position-based methods, and provide the theoretical bridge to VBD: VBD can
-be read as a \emph{block-coordinate descent} on the same variational
-energy~\eqref{eq:G} that projective dynamics minimises, but with single-
-vertex blocks rather than a global solve.
+\begin{itemize}
+    \item Projective dynamics recasts implicit Euler as a quadratic minimisation alternating between a global linear solve and local constraint projections.
+    \item Variants and accelerations (descent methods, Chebyshev acceleration, ADMM) bridge between projective dynamics and position-based methods.
+    \item They provide the theoretical bridge to VBD: VBD can be read as a \emph{block-coordinate descent} on the same variational energy~\eqref{eq:G} that projective dynamics minimises, but with single-vertex blocks rather than a global solve.
+\end{itemize}
 
 %----------------------------------------------------------------------------
 \section{Vertex Block Descent (VBD) and successors}
 \label{sec:VBDLineage}
 %----------------------------------------------------------------------------
-Vertex Block Descent, due to Chen et~al.~\cite{Chen2024}, treats each
-vertex as a tiny optimisation block: at each iteration, every vertex moves
-to the minimiser of $G$ with all other vertices held fixed. This requires
-the local $3\times 3$ Hessian of the energies sharing the vertex and a
-Newton step on that block. Critical features of the original VBD paper
-include:
 \begin{itemize}
-    \item \emph{Chebyshev acceleration}, an over-relaxation that
-    significantly speeds convergence at the cost of energy guarantees.
-    \item \emph{Adaptive initialisation}, which seeds the iteration from a
-    blend of inertial and previous-step positions.
-    \item \emph{Graph-colouring parallelism}: vertices that share no
-    constraint can be updated independently, enabling massive parallelism.
+    \item Vertex Block Descent, due to Chen et~al.~\cite{Chen2024}, treats each vertex as a tiny optimisation block: at each iteration, every vertex moves to the minimiser of $G$ with all other vertices held fixed.
+    \item This requires the local $3\times 3$ Hessian of the energies sharing the vertex and a Newton step on that block.
 \end{itemize}
-
-A follow-up line, Augmented VBD (AVBD)~\cite{Chen2024} and 2025
-extensions, has improved stiffness-ratio handling and convergence behaviour.
-I restrict the present comparison to the canonical 2024 VBD since AVBD
-post-dates my implementation window; I cite AVBD in
-\autoref{sec:FlexResults} as the most relevant counter-evidence on the
-stiffness-ratio axis.
+Critical features of the original VBD paper:
+\begin{itemize}
+    \item \emph{Chebyshev acceleration}, an over-relaxation that significantly speeds convergence at the cost of energy guarantees.
+    \item \emph{Adaptive initialisation}, seeding the iteration from a blend of inertial and previous-step positions.
+    \item \emph{Graph-colouring parallelism}: vertices sharing no constraint can be updated independently, enabling massive parallelism.
+\end{itemize}
+\begin{itemize}
+    \item A follow-up, Augmented VBD (AVBD)~\cite{Giles2025}, has improved stiffness-ratio handling and convergence behaviour.
+    \item I restrict the comparison to the canonical 2024 VBD since AVBD post-dates my implementation window; I cite AVBD in \autoref{sec:FlexResults} as the most relevant counter-evidence on the stiffness-ratio axis.
+\end{itemize}
 
 %----------------------------------------------------------------------------
 \section{Prior comparison: Ma et~al.\ (2024)}
 \label{sec:Ma2024}
 %----------------------------------------------------------------------------
-The most directly comparable prior work is Ma et~al.~\cite{app142311072},
-who compare cloth simulation under PBD and VBD in Unity. Their study
-established that VBD scales better than PBD with node count and identified
-maximum sustainable node counts at 30~fps.
+\begin{itemize}
+    \item The most directly comparable prior work is Ma et~al.~\cite{app142311072}, who compare cloth simulation under PBD and VBD in Unity.
+    \item Their study established that VBD scales better than PBD with node count, and identified maximum sustainable node counts at 30~fps.
+\end{itemize}
 
 My work differs in three substantial ways:
 \begin{enumerate}
-    \item \textbf{XPBD, not PBD.} Plain PBD has the stiffness-coupling flaw
-    that XPBD was designed to fix, so a PBD-vs-VBD comparison conflates
-    algorithmic differences with this known bug. Using XPBD isolates the
-    primal/dual distinction.
-    \item \textbf{Canonical VBD.} Ma et~al.'s pseudocode departs in details
-    (initialisation, Chebyshev handling) from the formulation in
-    \cite{Chen2024}. I follow the canonical VBD and disable Chebyshev /
-    adaptive init for the core comparison so that I am reading off
-    algorithm properties, not acceleration tricks.
-    \item \textbf{Beyond frame rate.} Ma et~al.\ report fps and node counts.
-    I add a Newton ground truth, an equal-wall-clock quality frontier, and
-    targeted stress tests (mass ratio, stiffness ratio, large $dt$) keyed to
-    the primal/dual hypotheses.
+    \item \textbf{XPBD, not PBD.} Plain PBD has the stiffness-coupling flaw that XPBD was designed to fix, so a PBD-vs-VBD comparison conflates algorithmic differences with this known bug. Using XPBD isolates the primal/dual distinction.
+    \item \textbf{Canonical VBD.} Ma et~al.'s pseudocode departs in details (initialisation, Chebyshev handling) from \cite{Chen2024}. I follow canonical VBD and disable Chebyshev / adaptive init for the core comparison, so I read off algorithm properties, not acceleration tricks.
+    \item \textbf{Beyond frame rate.} Ma et~al.\ report fps and node counts. I add a Newton ground truth, an equal-wall-clock quality frontier, and targeted stress tests (mass ratio, stiffness ratio, large $dt$) keyed to the primal/dual hypotheses.
 \end{enumerate}
-
-In short, this thesis answers a question Ma et~al.\ explicitly left as
-future work: how does VBD compare to \emph{XPBD}, and at \emph{matched
-quality} rather than only at matched node counts?
+\begin{itemize}
+    \item In short, this thesis answers a question Ma et~al.\ explicitly left as future work: how does VBD compare to \emph{XPBD}, and at \emph{matched quality} rather than only at matched node counts?
+\end{itemize}
 
 %----------------------------------------------------------------------------
 \section{Reference materials}
 \label{sec:RefMaterials}
 %----------------------------------------------------------------------------
-Throughout the implementation I drew on the Physics-Based Simulation book
-of Li et~al.~\cite{li2026physics} for canonical derivations and pedagogical
-notes; their treatment of implicit Euler as variational minimisation
-directly informs the framing in \autoref{sec:Variational}. The
-\emph{Ten Minute Physics} tutorial series~\cite{tenMinutePhysics} was used as a
-sanity-check reference for XPBD implementation correctness.
+\begin{itemize}
+    \item The Physics-Based Simulation book of Li et~al.~\cite{li2026physics} provided canonical derivations and pedagogical notes; their treatment of implicit Euler as variational minimisation directly informs the framing in \autoref{sec:Variational}.
+    \item The \emph{Ten Minute Physics} tutorial series~\cite{tenMinutePhysics} was used as a sanity-check reference for XPBD implementation correctness.
+\end{itemize}

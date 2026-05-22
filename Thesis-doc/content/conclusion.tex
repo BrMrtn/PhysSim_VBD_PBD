@@ -7,15 +7,15 @@
 \section{Summary}
 \label{sec:Summary}
 %----------------------------------------------------------------------------
-This thesis presented a controlled comparison of XPBD and VBD, the two
-dominant solvers for real-time deformable simulation. The contribution is
-threefold: a shared Unity codebase implementing both solvers under matched
-material parameters and compute budget; a Newton ground-truth reference
-that lets me report solution error rather than only relative performance;
-and an experimental design driven by the primal/dual theory of
-\cite{Chen2024}, organised around three falsifiable hypotheses
-(H1--H3).
-
+\begin{itemize}
+    \item This thesis presented a controlled comparison of XPBD and VBD, the two dominant solvers for real-time deformable simulation.
+    \item The contribution is threefold:
+    \begin{itemize}
+        \item a shared Unity codebase implementing both solvers under matched material parameters and compute budget;
+        \item a Newton ground-truth reference, enabling reporting of solution error rather than only relative performance;
+        \item an experimental design driven by the primal/dual theory of \cite{10.1111/cgf.14104}, organised around three falsifiable hypotheses (H1--H3).
+    \end{itemize}
+\end{itemize}
 \emph{TODO: once results are finalised, a single paragraph summary of
 \autoref{sec:Verdicts} goes here: which hypotheses hold, what the
 equal-wall-clock frontier looks like, and the regime-based recommendation
@@ -28,30 +28,29 @@ for practitioners.}
 
 \subsection{Multithreaded and GPU comparison}
 \label{ssec:FWParallel}
-The most consequential extension is to repeat the experiments on a
-multithreaded CPU and on the GPU. Both solvers admit parallelisation via
-graph colouring, but the structures differ in granularity
-(\autoref{sec:Parallelisation}). The expected outcome is that VBD's
-per-vertex blocks colour more cleanly than XPBD's per-constraint blocks,
-amplifying its production advantage; quantifying this gap is the natural
-next study.
+\begin{itemize}
+    \item The most consequential extension is to repeat the experiments on a multithreaded CPU and on the GPU.
+    \item Both solvers admit parallelisation via graph colouring, but the structures differ in granularity (\autoref{sec:Parallelisation}).
+    \item Expected outcome: VBD's per-vertex blocks colour more cleanly than XPBD's per-constraint blocks, amplifying its production advantage; quantifying this gap is the natural next study.
+\end{itemize}
 
 \subsection{Extend research to other dynamic types}
 \label{ssec:FWOtherDynamics}
-Beside mass-spring systems, in theory, both solver could also handle other chloth representations,
-soft bodies and rigid bodies as well. It would be interesting to see how the two solvers perform on these other types of dynamics, and whether the same conclusions hold.
+\begin{itemize}
+    \item Beside mass-spring systems, in theory both solvers could also handle other cloth representations, soft bodies, and rigid bodies.
+    \item It would be interesting to see how the two solvers perform on these other types of dynamics, and whether the same conclusions hold.
+\end{itemize}
 
 \subsection{FEM constraints}
 \label{ssec:FWFEM}
-Replacing mass-spring with FEM-based stretch and bending energies would
-both lift the realism ceiling and test whether the H1--H3 effects observed
-here survive the change of discretisation. The primal/dual framing
-predicts they should, but only experiments can confirm.
+\begin{itemize}
+    \item Replacing mass-spring with FEM-based stretch and bending energies would lift the realism ceiling and test whether the H1--H3 effects survive the change of discretisation.
+    \item The primal/dual framing predicts they should, but only experiments can confirm.
+\end{itemize}
 
 \subsection{AVBD and post-2024 variants}
 \label{ssec:FWAVBD}
-Augmented VBD~\cite{Chen2024} reportedly handles wide stiffness ratios
-substantially better than canonical VBD. Re-running the H2 and stiffness-
-ratio experiments with AVBD would clarify whether the gap I observe is
-intrinsic to the primal approach or to the canonical 2024 implementation
-specifically.
+\begin{itemize}
+    \item Augmented VBD~\cite{Giles2025} reportedly handles wide stiffness ratios substantially better than canonical VBD.
+    \item Re-running the H2 and stiffness-ratio experiments with AVBD would clarify whether the gap I observe is intrinsic to the primal approach or specific to the canonical 2024 implementation.
+\end{itemize}

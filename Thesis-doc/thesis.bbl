@@ -1,4 +1,4 @@
-\begin{thebibliography}{6}
+\begin{thebibliography}{9}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -13,6 +13,15 @@ Anka~He Chen, Ziheng Liu, Yin Yang, and Cem Yuksel.
 \newblock ISSN 0730-0301.
 \newblock \doi{10.1145/3658179}.
 \newblock URL \url{https://doi.org/10.1145/3658179}.
+
+\bibitem[Giles et~al.(2025)Giles, Diaz, and Yuksel]{Giles2025}
+Chris Giles, Elie Diaz, and Cem Yuksel.
+\newblock Augmented vertex block descent.
+\newblock \emph{ACM Transactions on Graphics (Proceedings of SIGGRAPH 2025)},
+  44\penalty0 (4), 08 2025.
+\newblock ISSN 0730-0301.
+\newblock \doi{10.1145/3731195}.
+\newblock URL \url{https://doi.org/10.1145/3731195}.
 
 \bibitem[Li et~al.(2026)Li, Jiang, Luo, Du, Yu, Kova{\v{c}}i{\v{c}}, and
   Xie]{li2026physics}
@@ -31,6 +40,15 @@ Jun Ma, Nak-Jun Sung, Min-Hyung Choi, and Min Hong.
 \newblock \doi{10.3390/app142311072}.
 \newblock URL \url{https://www.mdpi.com/2076-3417/14/23/11072}.
 
+\bibitem[Macklin et~al.(2020)Macklin, Erleben, M\"{u}ller, Chentanez, Jeschke,
+  and Kim]{10.1111/cgf.14104}
+M.~Macklin, K.~Erleben, M.~M\"{u}ller, N.~Chentanez, S.~Jeschke, and T.~Y. Kim.
+\newblock Primal/dual descent methods for dynamics.
+\newblock In \emph{Proceedings of the ACM SIGGRAPH/Eurographics Symposium on
+  Computer Animation}, SCA '20, Goslar, DEU, 2020. Eurographics Association.
+\newblock \doi{10.1111/cgf.14104}.
+\newblock URL \url{https://doi.org/10.1111/cgf.14104}.
+
 \bibitem[Macklin et~al.(2016)Macklin, M\"{u}ller, and
   Chentanez]{10.1145/2994258.2994272}
 Miles Macklin, Matthias M\"{u}ller, and Nuttapong Chentanez.
@@ -41,6 +59,15 @@ Miles Macklin, Matthias M\"{u}ller, and Nuttapong Chentanez.
 \newblock ISBN 9781450345927.
 \newblock \doi{10.1145/2994258.2994272}.
 \newblock URL \url{https://doi.org/10.1145/2994258.2994272}.
+
+\bibitem[Macklin et~al.(2019)Macklin, Storey, Lu, Terdiman, Chentanez, Jeschke,
+  and M{\"u}ller]{Macklin2019SmallSI}
+Miles Macklin, Kier Storey, Michelle Lu, Pierre Terdiman, Nuttapong Chentanez,
+  Stefan Jeschke, and Matthias M{\"u}ller.
+\newblock Small steps in physics simulation.
+\newblock \emph{Proceedings of the 18th annual ACM SIGGRAPH/Eurographics
+  Symposium on Computer Animation}, 2019.
+\newblock URL \url{https://api.semanticscholar.org/CorpusID:197928472}.
 
 \bibitem[M\"uller(2022)]{tenMinutePhysics}
 Matthias M\"uller.

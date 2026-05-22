@@ -3,22 +3,25 @@
 \label{chap:Methodology}
 %----------------------------------------------------------------------------
 
-This chapter describes the implementation that produces the data in
-\autoref{chap:Experiments} and --- more importantly --- the decisions that
-keep the XPBD-vs-VBD comparison fair.
+\begin{itemize}
+    \item This chapter describes the implementation that produces the data in \autoref{chap:Experiments}.
+    \item More importantly, it describes the decisions that keep the XPBD-vs-VBD comparison fair.
+\end{itemize}
 
 %----------------------------------------------------------------------------
 \section{Platform and environment}
 \label{sec:Platform}
 %----------------------------------------------------------------------------
-The simulators are implemented inside the Unity Editor. All measurements reported in \autoref{chap:Experiments} were
-collected in the following environment:
 \begin{itemize}
-    \item CPU: \emph{AMD Ryzen 7 5800H}.
-    \item RAM: \emph{16 GB DDR4}.
-    \item GPU: \emph{NVIDIA GeForce RTX 3060 Laptop GPU}.
-    \item OS: \emph{Windows 11 Pro}
-    \item Dev Tool: \emph{Unity 6000.4.0f1}.
+    \item Simulators implemented inside the Unity Editor.
+    \item All measurements in \autoref{chap:Experiments} were collected in this environment:
+    \begin{itemize}
+        \item CPU: \emph{AMD Ryzen 7 5800H}.
+        \item RAM: \emph{16 GB DDR4}.
+        \item GPU: \emph{NVIDIA GeForce RTX 3060 Laptop GPU}.
+        \item OS: \emph{Windows 11 Pro}.
+        \item Dev Tool: \emph{Unity 6000.4.0f1}.
+    \end{itemize}
 \end{itemize}
 TODO: used Unity functionalities: Recorder, shader graph,
 
@@ -26,96 +29,90 @@ TODO: used Unity functionalities: Recorder, shader graph,
 \section{Integration architecture}
 \label{sec:Architecture}
 %----------------------------------------------------------------------------
-Both solvers share a common scene scaffolding. Unity drives a fixed-rate
-physics tick at $1/dt = 24$~Hz, and within each tick the active solver runs
-its update loop --- substeps and inner iterations for XPBD, block
-iterations for VBD --- on the shared particle/spring data structures. The
-scaffolding handles:
+\begin{itemize}
+    \item Both solvers share a common scene scaffolding.
+    \item Unity drives a fixed-rate physics tick at $1/dt = 30$~Hz; within each tick the active solver runs its update loop --- substeps and inner iterations for XPBD, block iterations for VBD --- on the shared particle/spring data structures.
+\end{itemize}
+The scaffolding handles:
 \begin{itemize}
     \item mesh and spring topology construction at scene load,
-    \item particle/spring storage in flat C\# arrays to keep cache
-    behaviour comparable,
+    \item particle/spring storage in flat C\# arrays to keep cache behaviour comparable,
     \item recording of per-frame timing, energies, and reference solutions,
-    \item rendering, which runs on the Unity main thread separately from
-    the simulator.
+    \item rendering, which runs on the Unity main thread separately from the simulator.
 \end{itemize}
 
 \paragraph{Overhead of the shared scaffolding.}
-The scaffolding adds a small constant overhead per frame for buffer
-swapping, Unity message dispatch, and rendering; both solvers pay this
-overhead identically, so it does not bias the comparison. I report the
-isolated solver time (excluding render and dispatch) separately from
-end-to-end frame time in \autoref{sec:EffResults}.
+\begin{itemize}
+    \item The scaffolding adds a small constant per-frame overhead (buffer swapping, Unity message dispatch, rendering).
+    \item Both solvers pay this overhead identically, so it does not bias the comparison.
+    \item I report the isolated solver time (excluding render and dispatch) separately from end-to-end frame time in \autoref{sec:EffResults}.
+\end{itemize}
 
 %----------------------------------------------------------------------------
 \section{How the comparison is kept fair}
 \label{sec:Fairness}
 %----------------------------------------------------------------------------
-A common pitfall in comparing position-based and primal solvers is to set
-some parameter ``the same'' that is not actually the same physical quantity
-on the two sides. I adopt four explicit fairness controls.
+\begin{itemize}
+    \item A common pitfall is to set some parameter ``the same'' that is not actually the same physical quantity on the two sides.
+    \item I adopt four explicit fairness controls.
+\end{itemize}
 
 \subsection{Stiffness $\leftrightarrow$ compliance mapping}
 \label{ssec:StiffCompl}
-VBD takes a stiffness $k$ directly. XPBD takes a compliance $\alpha = 1/k$
-and scales it by the time step to $\tilde\alpha = \alpha/h^{2}$. To match
-materials I set
+\begin{itemize}
+    \item VBD takes a stiffness $k$ directly.
+    \item XPBD takes a compliance $\alpha = 1/k$, scaled by the time step to $\tilde\alpha = \alpha/h^{2}$.
+    \item To match materials I set:
+\end{itemize}
 \begin{equation}
     \alpha_{\mathrm{XPBD}} \;=\; 1/k_{\mathrm{VBD}},
 \end{equation}
-and verify the mapping in a controlled test: a single spring with a known
-analytic period is simulated under both solvers, and the measured period is
-required to match to within \emph{TODO: tolerance, e.g.\ 1\%}. The
-verification result is reported in \autoref{sec:Realism}.
+\begin{itemize}
+    \item Mapping verified in a controlled test: a single spring with known analytic period simulated under both solvers; measured period required to match to within \emph{TODO: tolerance, e.g.\ 1\%}.
+    \item Verification result reported in \autoref{sec:Realism}.
+\end{itemize}
 
 \subsection{Matched compute budget --- and the substep/iteration caveat}
 \label{ssec:ComputeBudget}
-The natural unit of work differs: XPBD's primary lever is the substep
-count, VBD's is the inner iteration count. \textbf{A substep is not an
-iteration.} An XPBD substep recomputes the inertial target $\mathbf{y}$ and
-solves a fresh constraint system; a VBD iteration refines the same step.
-
-Because of this asymmetry, \emph{wall-clock} is the primary axis of
-comparison throughout \autoref{chap:Experiments}. I sweep substep counts
-for XPBD and iteration counts for VBD independently, plot quality vs.\
-ms/frame, and read the \emph{equal-wall-clock frontier} from the resulting
-curves. Iteration-count comparisons are reported only as secondary
-information.
+\begin{itemize}
+    \item The natural unit of work differs: XPBD's primary lever is substep count, VBD's is inner iteration count.
+    \item \textbf{A substep is not an iteration.} An XPBD substep recomputes the inertial target $\mathbf{y}$ and solves a fresh constraint system; a VBD iteration refines the same step.
+    \item Because of this asymmetry, \emph{wall-clock} is the primary axis of comparison throughout \autoref{chap:Experiments}.
+    \item I sweep substep counts for XPBD and iteration counts for VBD independently, plot quality vs.\ ms/frame, and read the \emph{equal-wall-clock frontier} from the resulting curves.
+    \item Iteration-count comparisons are reported only as secondary information.
+\end{itemize}
 
 \subsection{Matched gravity, $dt$, and damping}
 \label{ssec:MatchedDtGravity}
 For all experiments unless otherwise noted:
 \begin{itemize}
     \item gravity $\mathbf{g} = (0, -9.81, 0)$~m/s$^{2}$,
-    \item simulation time step $dt = 1/24$~s,
-    \item Rayleigh damping with matched $\alpha_{\mathrm{Rayleigh}}$ and
-    $\beta_{\mathrm{Rayleigh}}$ coefficients (see \autoref{sec:Damping}),
-    \item particle mass $m_{i} = 1$~kg unless a mass-ratio sweep is in
-    progress.
+    \item simulation time step $dt = 1/30$~s,
+    \item Rayleigh damping with matched $\alpha_{\mathrm{Rayleigh}}$ and $\beta_{\mathrm{Rayleigh}}$ coefficients (see \autoref{sec:Damping}),
+    \item particle mass $m_{i} = 1$~kg unless a mass-ratio sweep is in progress.
 \end{itemize}
 
 \subsection{Disabling VBD's accelerations for the core comparison}
 \label{ssec:DisableChebyshev}
-The 2024 VBD paper~\cite{Chen2024} reports significant speedups from
-Chebyshev acceleration and from adaptive initialisation. These features are
-genuinely part of VBD, but they confound an apples-to-apples comparison: an
-XPBD with Chebyshev-style acceleration would be an entirely different
-solver (essentially Anderson-accelerated XPBD).
-
-For the core comparison I therefore \textbf{disable Chebyshev acceleration
-and adaptive initialisation in VBD}, using only inertial initialisation. I
-report results \emph{with} the accelerations separately in
-\autoref{ssec:VBDChebyshev}, framed as ``what VBD looks like in production''
-rather than ``what VBD looks like in this controlled comparison''.
+\begin{itemize}
+    \item The 2024 VBD paper~\cite{Chen2024} reports significant speedups from Chebyshev acceleration and adaptive initialisation.
+    \item These features are genuinely part of VBD, but they confound an apples-to-apples comparison: an XPBD with Chebyshev-style acceleration would be an entirely different solver (essentially Anderson-accelerated XPBD).
+    \item For the core comparison I therefore \textbf{disable Chebyshev acceleration and adaptive initialisation in VBD}, using only inertial initialisation.
+    \item Results \emph{with} the accelerations are reported separately in \autoref{ssec:VBDChebyshev}, framed as ``what VBD looks like in production'' rather than ``what VBD looks like in this controlled comparison''.
+\end{itemize}
 
 %----------------------------------------------------------------------------
 \section{Damping models}
 \label{sec:Damping}
 %----------------------------------------------------------------------------
-Both solvers implement Rayleigh damping, but through different mechanisms.
+\begin{itemize}
+    \item Both solvers implement Rayleigh damping, but through different mechanisms.
+\end{itemize}
 
 \paragraph{XPBD damping ($\gamma$-formulation).}
-I use the multiplier-update extension of \cite{10.1145/2994258.2994272}:
+\begin{itemize}
+    \item I use the multiplier-update extension of \cite{10.1145/2994258.2994272}:
+\end{itemize}
 \begin{equation}
     \Delta \lambda_{j} \;=\;
         \frac{-C_{j} - \tilde\alpha_{j}\lambda_{j}
@@ -123,19 +120,19 @@ I use the multiplier-update extension of \cite{10.1145/2994258.2994272}:
              {\nabla C_{j}^{\top}\mathbf{M}^{-1}\nabla C_{j}\,(1+\tilde\gamma_{j})
               + \tilde\alpha_{j}},
 \end{equation}
-where $\tilde\gamma$ encodes the dissipation coefficient. This couples
-damping into the dual update without changing the algorithm's structure.
+\begin{itemize}
+    \item $\tilde\gamma$ encodes the dissipation coefficient.
+    \item This couples damping into the dual update without changing the algorithm's structure.
+\end{itemize}
 
 \paragraph{VBD damping (implicit Hessian).}
-VBD absorbs Rayleigh damping into the local Hessian
-$\mathbf{H}_{i} \to \mathbf{H}_{i} + \beta\,\mathbf{H}_{i,\mathrm{el}}$ and
-into the gradient via a velocity term. Because the local solve is a Newton
-step, damping is handled fully implicitly with no additional outer
-iteration.
-
-The analytical \emph{result} of whether the two damping models produce the
-same physical decay at matched coefficients is deferred to
-\autoref{ssec:DampingCheck}, where it doubles as a fairness check.
+\begin{itemize}
+    \item VBD absorbs Rayleigh damping into the local Hessian $\mathbf{H}_{i} \to \mathbf{H}_{i} + \beta\,\mathbf{H}_{i,\mathrm{el}}$ and into the gradient via a velocity term.
+    \item Because the local solve is a Newton step, damping is handled fully implicitly with no additional outer iteration.
+\end{itemize}
+\begin{itemize}
+    \item Whether the two damping models produce the same physical decay at matched coefficients is analysed in \autoref{ssec:DampingCheck}, where it doubles as a fairness check.
+\end{itemize}
 
 %----------------------------------------------------------------------------
 \section{Self-collision handling}
@@ -143,37 +140,25 @@ same physical decay at matched coefficients is deferred to
 %----------------------------------------------------------------------------
 The two solvers implement self-collision differently, by necessity:
 \begin{itemize}
-    \item \emph{XPBD self-collision} uses non-penetration constraints
-    projected each iteration --- the contact is enforced as a position
-    constraint.
-    \item \emph{VBD self-collision} uses an elastic penalty potential added
-    to $E$, contributing a gradient and Hessian to the affected vertex
-    blocks.
+    \item \emph{XPBD self-collision} uses non-penetration constraints projected each iteration --- contact enforced as a position constraint.
+    \item \emph{VBD self-collision} uses an elastic penalty potential added to $E$, contributing a gradient and Hessian to the affected vertex blocks.
 \end{itemize}
-This is a model difference, not a solver difference: a penalty model
-\emph{could} be implemented in XPBD and a projection model \emph{could} be
-implemented in VBD, but the natural form differs. I flag the difference
-here so the self-collision result in \autoref{ssec:SelfCollResults} is read
-correctly: differences there are partly attributable to the contact model,
-not solely to XPBD vs.\ VBD.
+\begin{itemize}
+    \item This is a model difference, not a solver difference: a penalty model \emph{could} be implemented in XPBD and a projection model \emph{could} be implemented in VBD, but the natural form differs.
+    \item Flagged here so the self-collision result in \autoref{ssec:SelfCollResults} is read correctly: differences there are partly attributable to the contact model, not solely to XPBD vs.\ VBD.
+\end{itemize}
 
 %----------------------------------------------------------------------------
 \section{Parallelisation (forward-looking)}
 \label{sec:Parallelisation}
 \label{ssec:Parallelisation}
 %----------------------------------------------------------------------------
-All measurements in this thesis are single-threaded on CPU. I note here,
-and revisit in \autoref{sec:ThreatsValidity}, that the two solvers have
-different parallelisation profiles:
 \begin{itemize}
-    \item \emph{VBD} parallelises naturally over vertex blocks via graph
-    colouring: vertices that share no constraint can be updated
-    independently within a colour class. This is well-suited to GPU
-    execution.
-    \item \emph{XPBD} can be parallelised via constraint-graph colouring,
-    but the colouring is finer-grained (per constraint, not per vertex) and
-    the dependency structure is less regular.
+    \item All measurements in this thesis are single-threaded on CPU.
+    \item Noted here, and revisited in \autoref{sec:ThreatsValidity}, the two solvers have different parallelisation profiles:
+    \begin{itemize}
+        \item \emph{VBD} parallelises naturally over vertex blocks via graph colouring: vertices sharing no constraint can be updated independently within a colour class. Well-suited to GPU execution.
+        \item \emph{XPBD} can be parallelised via constraint-graph colouring, but the colouring is finer-grained (per constraint, not per vertex) and the dependency structure is less regular.
+    \end{itemize}
+    \item The expected result --- parallelisation favours VBD more than XPBD --- is plausible but unverified by my experiments, and stands as a threat to external validity for any claim about which solver is ``faster overall''.
 \end{itemize}
-The expected result --- that parallelisation favours VBD more than XPBD ---
-is plausible but unverified by my experiments and stands as a threat to
-external validity for any claim about which solver is ``faster overall''.

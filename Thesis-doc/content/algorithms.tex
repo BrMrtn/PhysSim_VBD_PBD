@@ -3,11 +3,11 @@
 \label{chap:Algorithms}
 %----------------------------------------------------------------------------
 
-This chapter states XPBD and VBD in the form actually implemented in
-\autoref{chap:Methodology}. Both target the same variational problem
-\eqref{eq:G}, but they reach it through opposite descent directions; the
-contrast made explicit here is what drives the experimental design in
-\autoref{chap:Experiments}.
+\begin{itemize}
+    \item This chapter states XPBD and VBD in the form actually implemented in \autoref{chap:Methodology}.
+    \item Both target the same variational problem \eqref{eq:G} but reach it through opposite descent directions.
+    \item The contrast made explicit here drives the experimental design in \autoref{chap:Experiments}.
+\end{itemize}
 
 %----------------------------------------------------------------------------
 \section{XPBD: dual-variable position projection}
@@ -16,26 +16,28 @@ contrast made explicit here is what drives the experimental design in
 
 \subsection{Derivation}
 \label{ssec:XPBDDeriv}
-For each elastic spring I associate a constraint $C(\mathbf{x}) = 0$ at
-zero deformation and a compliance $\alpha = 1/k$. The augmented Lagrangian
-of \eqref{eq:G} with a single substep $h$ has stationarity conditions
+\begin{itemize}
+    \item For each elastic spring, associate a constraint $C(\mathbf{x}) = 0$ at zero deformation and a compliance $\alpha = 1/k$.
+    \item The augmented Lagrangian of \eqref{eq:G} with a single substep $h$ has stationarity conditions:
+\end{itemize}
 \begin{align}
     \mathbf{M}(\mathbf{x} - \mathbf{y}) &= h^{2}\,\nabla C(\mathbf{x})^{\!\top}\,\boldsymbol{\lambda}, \\
     C(\mathbf{x}) + \tilde{\alpha}\,\boldsymbol{\lambda} &= \mathbf{0},
 \end{align}
-where $\tilde{\alpha} = \alpha / h^{2}$ is the time-step-scaled compliance.
-XPBD solves this coupled system by a Gauss--Seidel sweep over constraints:
-for each constraint $j$, the multiplier increment is
+\begin{itemize}
+    \item $\tilde{\alpha} = \alpha / h^{2}$ is the time-step-scaled compliance.
+    \item XPBD solves this coupled system by a Gauss--Seidel sweep over constraints: for each constraint $j$, the multiplier increment is
+\end{itemize}
 \begin{equation}
     \label{eq:XPBDLambda}
     \Delta \lambda_{j} \;=\; \frac{-C_{j}(\mathbf{x}) - \tilde{\alpha}_{j}\, \lambda_{j}}
                                 {\nabla C_{j}^{\!\top}\,\mathbf{M}^{-1}\nabla C_{j}
                                  + \tilde{\alpha}_{j}},
 \end{equation}
-and the corresponding position correction is
-$\Delta \mathbf{x} = \mathbf{M}^{-1}\nabla C_{j}^{\!\top}\,\Delta \lambda_{j}$.
-Velocities are recovered at the end of the substep by
-$\mathbf{v}_{t+h} = (\mathbf{x}_{t+h} - \mathbf{x}_{t}) / h$.
+\begin{itemize}
+    \item Corresponding position correction: $\Delta \mathbf{x} = \mathbf{M}^{-1}\nabla C_{j}^{\!\top}\,\Delta \lambda_{j}$.
+    \item Velocities are recovered at substep end by $\mathbf{v}_{t+h} = (\mathbf{x}_{t+h} - \mathbf{x}_{t}) / h$.
+\end{itemize}
 
 \subsection{Algorithm}
 \label{ssec:XPBDPseudo}
@@ -58,15 +60,10 @@ def xpbd_substep(x, v, h, constraints):
 \subsection{Characteristics}
 \label{ssec:XPBDChar}
 \begin{itemize}
-    \item \emph{Dual-variable.} The state of an iteration is encoded in the
-    multipliers $\boldsymbol{\lambda}$; positions are derived.
-    \item \emph{Stiffness-by-compliance.} Material stiffness enters only
-    through $\tilde{\alpha} = 1/(k h^{2})$, so very stiff constraints
-    naturally degenerate to projection ($\tilde\alpha \to 0$).
-    \item \emph{First-order gradient information only.} Each constraint
-    contributes its gradient $\nabla C_j$; no Hessian of $E$ is built.
-    \item \emph{Substeps preferred over iterations.} Following the small-
-    steps result, I use many short substeps with one inner iteration.
+    \item \emph{Dual-variable.} An iteration's state is encoded in the multipliers $\boldsymbol{\lambda}$; positions are derived.
+    \item \emph{Stiffness-by-compliance.} Material stiffness enters only through $\tilde{\alpha} = 1/(k h^{2})$, so very stiff constraints naturally degenerate to projection ($\tilde\alpha \to 0$).
+    \item \emph{First-order gradient information only.} Each constraint contributes its gradient $\nabla C_j$; no Hessian of $E$ is built.
+    \item \emph{Substeps preferred over iterations.} Following the small-steps result, I use many short substeps with one inner iteration.
 \end{itemize}
 
 %----------------------------------------------------------------------------
@@ -76,9 +73,10 @@ def xpbd_substep(x, v, h, constraints):
 
 \subsection{Derivation}
 \label{ssec:VBDDeriv}
-VBD performs block-coordinate descent on $G$ in
-\eqref{eq:G} with one block per vertex. Holding all other vertices fixed,
-the update for vertex $i$ is the Newton step on the local 3-vector problem:
+\begin{itemize}
+    \item VBD performs block-coordinate descent on $G$ in \eqref{eq:G} with one block per vertex.
+    \item Holding all other vertices fixed, the update for vertex $i$ is the Newton step on the local 3-vector problem:
+\end{itemize}
 \begin{equation}
     \mathbf{x}_{i} \;\leftarrow\; \mathbf{x}_{i} - \mathbf{H}_{i}^{-1}\,\mathbf{g}_{i},
 \end{equation}
@@ -89,9 +87,9 @@ where
     \mathbf{H}_{i} &= \frac{m_{i}}{h^{2}}\,\mathbf{I}_{3}
                       + \sum_{e \in \mathcal{N}(i)} \nabla_{ii}^{2}\, E_{e}(\mathbf{x}).
 \end{align}
-For a distance-spring energy
-$E_{e} = \tfrac{1}{2} k\,(\|\mathbf{x}_{i} - \mathbf{x}_{j}\| - \ell_{0})^{2}$
-the per-vertex gradient and Hessian are closed-form and inexpensive.
+\begin{itemize}
+    \item For a distance-spring energy $E_{e} = \tfrac{1}{2} k\,(\|\mathbf{x}_{i} - \mathbf{x}_{j}\| - \ell_{0})^{2}$, the per-vertex gradient and Hessian are closed-form and inexpensive.
+\end{itemize}
 
 \subsection{Algorithm}
 \label{ssec:VBDPseudo}
@@ -114,16 +112,10 @@ def vbd_step(x, v, h):
 \subsection{Characteristics}
 \label{ssec:VBDChar}
 \begin{itemize}
-    \item \emph{Primal.} The state of an iteration is positions
-    $\mathbf{x}$; no auxiliary multipliers.
-    \item \emph{Second-order locally.} Each block update is a Newton step on
-    the true elastic Hessian restricted to one vertex.
-    \item \emph{Iterations over substeps.} VBD is normally used with one
-    long step subdivided by many block iterations; the implicit Hessian
-    handles stiffness without needing tiny $h$.
-    \item \emph{Parallel-friendly.} Vertices sharing no constraint can be
-    updated independently (graph colouring). I disable parallelism for
-    the core comparison; see \autoref{ssec:Parallelisation}.
+    \item \emph{Primal.} An iteration's state is positions $\mathbf{x}$; no auxiliary multipliers.
+    \item \emph{Second-order locally.} Each block update is a Newton step on the true elastic Hessian restricted to one vertex.
+    \item \emph{Iterations over substeps.} VBD is normally used with one long step subdivided by many block iterations; the implicit Hessian handles stiffness without tiny $h$.
+    \item \emph{Parallel-friendly.} Vertices sharing no constraint can be updated independently (graph colouring). I disable parallelism for the core comparison; see \autoref{ssec:Parallelisation}.
 \end{itemize}
 
 %----------------------------------------------------------------------------
@@ -150,6 +142,7 @@ def vbd_step(x, v, h):
     \label{tab:XPBDvsVBD}
 \end{table}
 
-The single row of \autoref{tab:XPBDvsVBD} that drives the rest of this
-thesis is the first: XPBD lives in the dual, VBD lives in the primal. Every
-hypothesis in \autoref{sec:Hypotheses} ultimately traces back to that row.
+\begin{itemize}
+    \item The row of \autoref{tab:XPBDvsVBD} that drives the rest of the thesis is the first: XPBD lives in the dual, VBD lives in the primal.
+    \item Every hypothesis in \autoref{sec:Hypotheses} ultimately traces back to that row.
+\end{itemize}

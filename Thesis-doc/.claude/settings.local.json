@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(xelatex -interaction=nonstopmode thesis.tex)"
+      "Bash(xelatex -interaction=nonstopmode thesis.tex)",
+      "Bash(latexmk -xelatex -interaction=nonstopmode -g thesis.tex)",
+      "Bash(echo \"EXIT=$?\")"
     ]
   }
 }

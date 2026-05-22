@@ -3,16 +3,11 @@
 \label{chap:Experiments}
 %----------------------------------------------------------------------------
 
-This chapter reports measurements along the four evaluation axes from
-\autoref{sec:EvalAxes}: efficiency, robustness, physical realism, and
-flexibility. Each axis is designed to bear on at least one of the
-hypotheses H1--H3 stated in \autoref{sec:Hypotheses}, and the synthesis is
-deferred to \autoref{chap:Discussion}.
-
-All experiments use the shared scaffolding and fairness controls described
-in \autoref{sec:Fairness}: matched gravity, $dt = 1/24$~s, matched Rayleigh
-damping, $\alpha_{\mathrm{XPBD}} = 1/k_{\mathrm{VBD}}$, Chebyshev and
-adaptive initialisation disabled in VBD for the core comparison.
+\begin{itemize}
+    \item This chapter reports measurements along the four evaluation axes from \autoref{sec:EvalAxes}: efficiency, robustness, physical realism, flexibility.
+    \item Each axis bears on at least one of the hypotheses H1--H3 from \autoref{sec:Hypotheses}; synthesis is deferred to \autoref{chap:Discussion}.
+    \item All experiments use the shared scaffolding and fairness controls of \autoref{sec:Fairness}: matched gravity, $dt = 1/30$~s, matched Rayleigh damping, $\alpha_{\mathrm{XPBD}} = 1/k_{\mathrm{VBD}}$, Chebyshev and adaptive initialisation disabled in VBD for the core comparison.
+\end{itemize}
 
 %----------------------------------------------------------------------------
 \section{Computational efficiency --- cloth}
@@ -21,64 +16,52 @@ adaptive initialisation disabled in VBD for the core comparison.
 
 \subsection{Frame time vs.\ node count}
 \label{ssec:MsVsNodes}
-I measure isolated solver time (ms/frame) over a hanging-cloth scene at
-mesh resolutions \emph{TODO: list resolutions, e.g.\ $10\times 10$ to
-$100\times 100$}, holding solver settings fixed at the defaults of
-\autoref{sec:Fairness}.
-
+\begin{itemize}
+    \item Measure isolated solver time (ms/frame) over a hanging-cloth scene at mesh resolutions \emph{TODO: list resolutions, e.g.\ $10\times 10$ to $100\times 100$}, holding solver settings fixed at the \autoref{sec:Fairness} defaults.
+\end{itemize}
 \emph{TODO: Figure --- ms/frame vs.\ node count, XPBD and VBD curves.}
 
 \subsection{Frame time vs.\ substep / iteration count}
 \label{ssec:MsVsCount}
 For a fixed mesh resolution I sweep:
 \begin{itemize}
-    \item XPBD substep count $n_{\mathrm{sub}} \in \{1, 2, 4, 8, 16, 32\}$
-    with a single inner iteration (the small-steps configuration),
+    \item XPBD substep count $n_{\mathrm{sub}} \in \{1, 2, 4, 8, 16, 32\}$ with a single inner iteration (the small-steps configuration),
     \item VBD iteration count $n_{\mathrm{it}} \in \{1, 2, 4, 8, 16, 32\}$.
 \end{itemize}
-
-\emph{TODO: Figure --- ms/frame vs.\ work count, both solvers on common
-axis.}
+\emph{TODO: Figure --- ms/frame vs.\ work count, both solvers on common axis.}
 
 \subsection{Maximum node counts at 30 and 60~fps}
 \label{ssec:MaxNodes}
-Following Ma et~al.~\cite{app142311072}, I report the largest mesh
-sustaining 30~fps and 60~fps for each solver at default
-settings.
-
+\begin{itemize}
+    \item Following Ma et~al.~\cite{app142311072}, I report the largest mesh sustaining 30~fps and 60~fps for each solver at default settings.
+\end{itemize}
 \emph{TODO: Table --- max node count, two thresholds, two solvers.}
 
 \subsection{Convergence: residual vs.\ work}
 \label{ssec:ResidualConvergence}
-For a moderately stretched cloth in isolation, I measure the variational
-residual $\|\nabla G(\mathbf{x})\|$ as a function of iteration count and as
-a function of wall-clock time, plotting both solvers against a Newton
-reference. This is the analogue of Fig.~17 in \cite{Chen2024}.
-
+\begin{itemize}
+    \item For a moderately stretched cloth in isolation, measure the variational residual $\|\nabla G(\mathbf{x})\|$ as a function of iteration count and of wall-clock time, plotting both solvers against a Newton reference.
+    \item This is the analogue of Fig.~17 in \cite{Chen2024}.
+\end{itemize}
 \emph{TODO: Figure --- residual vs.\ iterations and residual vs.\ wall-clock.}
 
 \subsection{Equal-wall-clock quality frontier}
 \label{ssec:EqualWallClock}
-The headline efficiency result. I compute the solution error (vs.\ Newton)
-at every combination of $n_{\mathrm{sub}}$ for XPBD and $n_{\mathrm{it}}$
-for VBD, and plot error against ms/frame on a log--log axis. The lower
-envelope of the two clouds is each solver's quality frontier; the
-\emph{equal-wall-clock} comparison reads off which solver achieves lower
-error at a given ms/frame budget.
-
+\begin{itemize}
+    \item The headline efficiency result.
+    \item Compute solution error (vs.\ Newton) at every combination of $n_{\mathrm{sub}}$ (XPBD) and $n_{\mathrm{it}}$ (VBD), and plot error against ms/frame on a log--log axis.
+    \item The lower envelope of the two clouds is each solver's quality frontier; the \emph{equal-wall-clock} comparison reads off which solver achieves lower error at a given ms/frame budget.
+\end{itemize}
 \emph{TODO: Figure --- error vs.\ ms/frame Pareto fronts.}
 
 \subsection{VBD with Chebyshev and adaptive initialisation (production mode)}
 \label{ssec:VBDChebyshev}
-For completeness I re-run the equal-wall-clock experiment of
-\autoref{ssec:EqualWallClock} with VBD's Chebyshev acceleration and
-adaptive initialisation re-enabled. This is the configuration a
-practitioner would deploy; the result is reported separately because, per
-\autoref{ssec:DisableChebyshev}, it does not isolate the primal/dual
-distinction --- it measures VBD plus its accelerations against vanilla XPBD.
-
-\emph{TODO: Figure / table --- accelerated VBD on the same axes as
-\autoref{ssec:EqualWallClock}.}
+\begin{itemize}
+    \item For completeness, re-run the equal-wall-clock experiment of \autoref{ssec:EqualWallClock} with VBD's Chebyshev acceleration and adaptive initialisation re-enabled.
+    \item This is the configuration a practitioner would deploy.
+    \item Reported separately because, per \autoref{ssec:DisableChebyshev}, it does not isolate the primal/dual distinction --- it measures VBD plus its accelerations against vanilla XPBD.
+\end{itemize}
+\emph{TODO: Figure / table --- accelerated VBD on the same axes as \autoref{ssec:EqualWallClock}.}
 
 %----------------------------------------------------------------------------
 \section{Robustness and stability}
@@ -87,55 +70,52 @@ distinction --- it measures VBD plus its accelerations against vanilla XPBD.
 
 \subsection{Stability map: max stable $dt$ vs.\ stiffness}
 \label{ssec:StabilityMap}
-For each solver I sweep $dt$ and material stiffness $k$, flagging
-combinations where artefacts appear (oscillation amplitude exceeds rest
-length, NaNs, visible blow-up). The deliverable is a 2D stability map per
-solver, summarising at a glance the operating envelope of each. This
-replaces the simpler ``raise $dt$ until artefacts appear'' test of
-\cite{app142311072} (their Figs.~7--8) with a fuller picture.
-
+\begin{itemize}
+    \item For each solver, sweep $dt$ and material stiffness $k$, flagging combinations where artefacts appear (oscillation amplitude exceeds rest length, NaNs, visible blow-up).
+    \item Deliverable: a 2D stability map per solver, summarising at a glance each solver's operating envelope.
+    \item This replaces the simpler ``raise $dt$ until artefacts appear'' test of \cite{app142311072} (their Figs.~7--8) with a fuller picture.
+\end{itemize}
 \emph{TODO: Figure --- 2D stability map for XPBD and VBD on shared axes.}
 
 \subsection{Single-iteration regime}
 \label{ssec:SingleIter}
-Both solvers are configured to perform exactly one inner iteration per
-substep, and I report whether each remains visually plausible across the
-default scenes. This is the most adversarial setting for each algorithm
-and isolates per-iteration update quality.
-
+\begin{itemize}
+    \item Both solvers configured for exactly one inner iteration per substep; report whether each remains visually plausible across the default scenes.
+    \item This is the most adversarial setting for each algorithm and isolates per-iteration update quality.
+\end{itemize}
 \emph{TODO: Side-by-side renders, qualitative description.}
 
 \subsection{High mass ratio at the end of a pendulum}
 \label{ssec:MassRatioPendulum}
-A single spring pendulum with a heavy weight at the free end and a light
-chain leading to the pivot. I sweep the mass ratio $m_{\mathrm{tip}} /
-m_{\mathrm{chain}}$ from $1$ to $10^{4}$ and report each solver's
-qualitative behaviour and quantitative position error vs.\ Newton.
-\emph{Hypothesis H1 prediction: XPBD degrades.}
-
+\begin{itemize}
+    \item A single spring pendulum with a heavy weight at the free end and a light chain leading to the pivot.
+    \item Sweep the mass ratio $m_{\mathrm{tip}} / m_{\mathrm{chain}}$ from $1$ to $10^{4}$; report each solver's qualitative behaviour and quantitative position error vs.\ Newton.
+    \item \emph{Hypothesis H1 prediction: XPBD degrades.}
+\end{itemize}
 \emph{TODO: Figure --- error vs.\ mass ratio.}
 
 \subsection{High mass ratio chain}
 \label{ssec:MassRatioChain}
-A chain with alternating heavy and light particles, designed to maximise
-the chain length over which mass disparities couple. Same outputs as the
-pendulum.
-
+\begin{itemize}
+    \item A chain with alternating heavy and light particles, designed to maximise the chain length over which mass disparities couple.
+    \item Same outputs as the pendulum.
+\end{itemize}
 \emph{TODO: Figure / description.}
 
 \subsection{High stiffness ratio chain}
 \label{ssec:StiffnessRatioChain}
-A chain with alternating stiff and soft springs. Sweep the stiffness ratio
-from $1$ to $10^{4}$. \emph{Hypothesis H2 prediction: VBD degrades.}
-
+\begin{itemize}
+    \item A chain with alternating stiff and soft springs; sweep the stiffness ratio from $1$ to $10^{4}$.
+    \item \emph{Hypothesis H2 prediction: VBD degrades.}
+\end{itemize}
 \emph{TODO: Figure --- error vs.\ stiffness ratio.}
 
 \subsection{Self-collision: cloth folded onto itself}
 \label{ssec:SelfCollResults}
-A cloth dropped onto a small obstacle, folding onto itself. Qualitative
-visual comparison, noting that the contact model differs (projection vs.\
-penalty) per \autoref{sec:SelfCollision}.
-
+\begin{itemize}
+    \item A cloth dropped onto a small obstacle, folding onto itself.
+    \item Qualitative visual comparison, noting that the contact model differs (projection vs.\ penalty) per \autoref{sec:SelfCollision}.
+\end{itemize}
 \emph{TODO: Renders, qualitative description.}
 
 %----------------------------------------------------------------------------
@@ -145,52 +125,48 @@ penalty) per \autoref{sec:SelfCollision}.
 
 \subsection{Newton reference}
 \label{ssec:NewtonRef}
-I build a high-iteration Newton solver targeting $\|\nabla G\| < 10^{-9}$
-(or until further iterations reduce $G$ by less than $10^{-12}$). The
-Newton solver shares storage and energies with the production solvers, so
-the comparison is over algorithm, not material. The error metric throughout
-is the mass-weighted position error
-$\|\mathbf{x} - \mathbf{x}^{\star}\|_{\mathbf{M}}$, where
-$\mathbf{x}^{\star}$ is the Newton solution.
+\begin{itemize}
+    \item Build a high-iteration Newton solver targeting $\|\nabla G\| < 10^{-9}$ (or until further iterations reduce $G$ by less than $10^{-12}$).
+    \item The Newton solver shares storage and energies with the production solvers, so the comparison is over algorithm, not material.
+    \item Error metric throughout: mass-weighted position error $\|\mathbf{x} - \mathbf{x}^{\star}\|_{\mathbf{M}}$, where $\mathbf{x}^{\star}$ is the Newton solution.
+\end{itemize}
 
 \subsection{Harmonic oscillator}
 \label{ssec:Harmonic}
-A single spring-mass system oscillating in 1D, compared against the
-analytic solution $x(t) = A\cos(\omega t - \phi)\,e^{-\zeta\omega t}$.
-I measure:
 \begin{itemize}
-    \item period as a function of $h$ and of iteration / substep count,
-    \item amplitude decay rate as a function of damping coefficient.
+    \item A single spring-mass system oscillating in 1D, compared against the analytic solution $x(t) = A\cos(\omega t - \phi)\,e^{-\zeta\omega t}$.
+    \item I measure:
+    \begin{itemize}
+        \item period as a function of $h$ and of iteration / substep count,
+        \item amplitude decay rate as a function of damping coefficient.
+    \end{itemize}
+    \item This is the analogue of Fig.~2 in \cite{10.1145/2994258.2994272}.
 \end{itemize}
-This is the analogue of Fig.~2 in \cite{10.1145/2994258.2994272}.
-
-\emph{TODO: Figure --- measured period and decay, both solvers, against
-analytic.}
+\emph{TODO: Figure --- measured period and decay, both solvers, against analytic.}
 
 \subsection{Energy tracking}
 \label{ssec:EnergyTracking}
-For an undamped free-falling and bouncing cloth I plot total mechanical
-energy over time, identifying systematic energy gain (instability) or loss
-(numerical damping) for each solver.
-
+\begin{itemize}
+    \item For an undamped free-falling and bouncing cloth, plot total mechanical energy over time.
+    \item Identify systematic energy gain (instability) or loss (numerical damping) for each solver.
+\end{itemize}
 \emph{TODO: Figure --- energy vs.\ time, both solvers.}
 
 \subsection{Hanging cloth: stretched area vs.\ reference}
 \label{ssec:HangingCloth}
-A square cloth pinned at the top corners, allowed to settle. I measure
-the steady-state stretched area against the Newton reference. This is a
-realism check at static equilibrium, where transient dynamics drop out.
-
+\begin{itemize}
+    \item A square cloth pinned at the top corners, allowed to settle.
+    \item Measure steady-state stretched area against the Newton reference.
+    \item A realism check at static equilibrium, where transient dynamics drop out.
+\end{itemize}
 \emph{TODO: Figure --- stretched area error vs.\ stiffness.}
 
 \subsection{Damping cross-check}
 \label{ssec:DampingCheck}
-At matched Rayleigh coefficients $\alpha_{\mathrm{Rayleigh}}$ and
-$\beta_{\mathrm{Rayleigh}}$, I measure the amplitude-decay curve produced
-by each solver on the harmonic oscillator. Identical decay confirms the
-damping models of \autoref{sec:Damping} are calibrated consistently; this
-both validates fairness and is a result in its own right.
-
+\begin{itemize}
+    \item At matched Rayleigh coefficients $\alpha_{\mathrm{Rayleigh}}$ and $\beta_{\mathrm{Rayleigh}}$, measure the amplitude-decay curve produced by each solver on the harmonic oscillator.
+    \item Identical decay confirms the damping models of \autoref{sec:Damping} are calibrated consistently; this both validates fairness and is a result in its own right.
+\end{itemize}
 \emph{TODO: Figure --- decay envelopes overlaid.}
 
 %----------------------------------------------------------------------------
@@ -200,24 +176,20 @@ both validates fairness and is a result in its own right.
 
 \subsection{Iteration-count independence of stiffness}
 \label{ssec:IterIndepStiff}
-For each solver I sweep stiffness $k$ over several decades and measure how
-many iterations / substeps are needed to reach a fixed error threshold.
-Following Fig.~6 in \cite{10.1145/2994258.2994272}, XPBD is expected to be
-roughly stiffness-independent in iteration count thanks to the compliance
-formulation.
-
+\begin{itemize}
+    \item For each solver, sweep stiffness $k$ over several decades and measure how many iterations / substeps are needed to reach a fixed error threshold.
+    \item Following Fig.~6 in \cite{10.1145/2994258.2994272}, XPBD is expected to be roughly stiffness-independent in iteration count thanks to the compliance formulation.
+\end{itemize}
 \emph{TODO: Figure --- iterations to threshold vs.\ stiffness.}
 
 \subsection{Stiffness-ratio test}
 \label{ssec:StiffRatioTest}
-The same kind of plot as the previous subsection, but varying the
-\emph{ratio} of stiffnesses across the mesh rather than a uniform stiffness.
-This is the experiment of \cite{Chen2024} Fig.~24 (and AVBD Fig.~4). I
-include a brief discussion of AVBD's improvement on this axis without
-implementing it myself.
-
-\emph{TODO: Figure --- error vs.\ stiffness ratio, with AVBD reference
-qualitatively cited.}
+\begin{itemize}
+    \item Same kind of plot as the previous subsection, but varying the \emph{ratio} of stiffnesses across the mesh rather than a uniform stiffness.
+    \item This is the experiment of \cite{Chen2024} Fig.~24 (and AVBD~\cite{Giles2025} Fig.~4).
+    \item Includes a brief discussion of AVBD's improvement on this axis without implementing it myself.
+\end{itemize}
+\emph{TODO: Figure --- error vs.\ stiffness ratio, with AVBD reference qualitatively cited.}
 
 \subsection{Ease of adding a new constraint or force}
 \label{ssec:NewConstraint}
@@ -226,11 +198,10 @@ bending-angle constraint or area-preservation force} --- in both solvers
 and report:
 \begin{itemize}
     \item lines of code added,
-    \item whether a Hessian derivation was required (VBD: yes; XPBD: no, a
-    gradient suffices),
+    \item whether a Hessian derivation was required (VBD: yes; XPBD: no, a gradient suffices),
     \item time to first correct simulation.
 \end{itemize}
-The metric is admittedly subjective but captures a real practitioner cost
-that the more quantitative experiments above do not.
-
+\begin{itemize}
+    \item The metric is admittedly subjective but captures a real practitioner cost that the more quantitative experiments above do not.
+\end{itemize}
 \emph{TODO: Table --- LOC, derivation effort, time-to-correct.}

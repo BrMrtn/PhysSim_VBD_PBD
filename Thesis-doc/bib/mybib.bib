@@ -6,6 +6,16 @@
   year         = {2022}
 }
 
+% Physics-Based Simulation book
+@book{li2026physics,
+  title   = {Physics-Based Simulation},
+  author  = {Minchen Li and Chenfanfu Jiang and Zhaofeng Luo and Wenxin Du and Chang Yu and {\v{Z}}iga Kova{\v{c}}i{\v{c}} and Tianyi Xie},
+  year    = {2026},
+  month   = Mar,
+  version = {1.0.3},
+  url     = {https://phys-sim-book.github.io/}
+}
+
 % Closes prior comparison
 @article{app142311072,
   author         = {Ma, Jun and Sung, Nak-Jun and Choi, Min-Hyung and Hong, Min},
@@ -76,12 +86,47 @@
   address   = {New York, NY, USA}
 }
 
-% Physics-Based Simulation book
-@book{li2026physics,
-  title   = {Physics-Based Simulation},
-  author  = {Minchen Li and Chenfanfu Jiang and Zhaofeng Luo and Wenxin Du and Chang Yu and {\v{Z}}iga Kova{\v{c}}i{\v{c}} and Tianyi Xie},
-  year    = {2026},
-  month   = Mar,
-  version = {1.0.3},
-  url     = {https://phys-sim-book.github.io/}
+% AVBD paper
+@article{Giles2025,
+  author    = {Chris Giles and Elie Diaz and Cem Yuksel},
+  title     = {Augmented Vertex Block Descent},
+  journal   = {ACM Transactions on Graphics (Proceedings of SIGGRAPH 2025)},
+  year      = {2025},
+  month     = {08},
+  volume    = {44},
+  number    = {4},
+  numpages  = {12},
+  location  = {Vancouver, Canada},
+  url       = {https://doi.org/10.1145/3731195},
+  doi       = {10.1145/3731195},
+  issn      = {0730-0301},
+  publisher = {ACM Press},
+  address   = {New York, NY, USA}
+}
+
+% Small steps paper
+@article{Macklin2019SmallSI,
+  title={Small steps in physics simulation},
+  author={Miles Macklin and Kier Storey and Michelle Lu and Pierre Terdiman and Nuttapong Chentanez and Stefan Jeschke and Matthias M{\"u}ller},
+  journal={Proceedings of the 18th annual ACM SIGGRAPH/Eurographics Symposium on Computer Animation},
+  year={2019},
+  url={https://api.semanticscholar.org/CorpusID:197928472}
+}
+
+% Primal/dual descent methods paper
+@inproceedings{10.1111/cgf.14104,
+author = {Macklin, M. and Erleben, K. and M\"{u}ller, M. and Chentanez, N. and Jeschke, S. and Kim, T. Y.},
+title = {Primal/dual descent methods for dynamics},
+year = {2020},
+publisher = {Eurographics Association},
+address = {Goslar, DEU},
+url = {https://doi.org/10.1111/cgf.14104},
+doi = {10.1111/cgf.14104},
+abstract = {We examine the relationship between primal, or force-based, and dual, or constraint-based formulations of dynamics. Variational frameworks such as Projective Dynamics have proved popular for deformable simulation, however they have not been adopted for contact-rich scenarios such as rigid body simulation. We propose a new preconditioned frictional contact solver that is compatible with existing primal optimization methods, and competitive with complementarity-based approaches. Our relaxed primal model generates improved contact force distributions when compared to dual methods, and has the advantage of being differentiable, making it well-suited for trajectory optimization. We derive both primal and dual methods from a common variational point of view, and present a comprehensive numerical analysis of both methods with respect to conditioning. We demonstrate our method on scenarios including rigid body contact, deformable simulation, and robotic manipulation.},
+booktitle = {Proceedings of the ACM SIGGRAPH/Eurographics Symposium on Computer Animation},
+articleno = {9},
+numpages = {12},
+keywords = {robotics, numerical optimization, friction, contact},
+location = {Virtual Event, Canada},
+series = {SCA '20}
 }
