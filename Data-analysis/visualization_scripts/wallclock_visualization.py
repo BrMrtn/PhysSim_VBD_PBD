@@ -3,6 +3,18 @@ from collections import defaultdict
 
 import matplotlib.pyplot as plt
 
+
+def solver_color(name):
+    """Color a series by its solver name: XPBD->green, VBD->red, Newton->blue."""
+    if name.startswith("XPBD"):
+        return "green"
+    if name.startswith("VBD"):
+        return "red"
+    if name.startswith("Newton"):
+        return "blue"
+    return None
+
+
 # Path to the summary CSV written by WallClockExperiment (per-(S,n) medians).
 csv_path = r"..\Data\WallClock\WallClock_summary_20260521_181210.csv"
 
@@ -25,7 +37,7 @@ for (method, substeps), pts in sorted(rows.items()):
     pts.sort(key=lambda p: p[2])  # by time
     xs = [p[2] for p in pts]
     ys = [p[3] for p in pts]
-    c = "red" if "VBD" in method else "green" if "XPBD" in method else None
+    c = solver_color(method)
     plt.plot(xs, ys, "-o", label=f"{method} S{substeps}", markersize=5, alpha=0.8, color=c)
     for S, n, ms, err in pts:
         plt.annotate(f"S{S}xI{n}", (ms, err), fontsize=7,

@@ -31,6 +31,19 @@ public class SpringLengthLogger : MonoBehaviour
     void OnDestroy() { CloseCsv(); }
     void OnApplicationQuit() { CloseCsv(); }
 
+    // Records the state before any stepping so the initial configuration
+    // (e.g. a stretched spring) is captured at frame 0 / time 0. Call once
+    // before the first Step(); subsequent Log(dt) calls record post-step state.
+    public void LogInitial()
+    {
+        latest = Sampler();
+
+        if (csv == null) return;
+
+        if (!headerWritten) WriteHeader();
+        WriteSampleRow();
+    }
+
     public void Log(float dt)
     {
         latest = Sampler();
@@ -43,6 +56,11 @@ public class SpringLengthLogger : MonoBehaviour
         // columns depend on the spring count.
         if (!headerWritten) WriteHeader();
 
+        WriteSampleRow();
+    }
+
+    private void WriteSampleRow()
+    {
         var sb = new StringBuilder();
         sb.AppendFormat(Inv, "{0};{1:F6};{2:F6};{3:F6};{4:F6};{5:F6}",
             frameNumber, simTime,
@@ -117,13 +135,6 @@ public class SpringLengthLogger : MonoBehaviour
         var sb = new StringBuilder();
         sb.Append("frame;time;totalCurrent;totalRest;maxStretchRatio;avgStretchRatio"); // lengths in meters, time in seconds
         for (int i = 0; i < latest.count; i++) sb.AppendFormat(Inv, ";len{0}", i);
-        csv.WriteLine(sb.ToString());
-
-        // Rest lengths are constant; record them once as a reference row (frame 0, time 0).
-        sb.Clear();
-        sb.Append("0;0.000000;");
-        sb.AppendFormat(Inv, "{0:F6};{1:F6};1.000000;1.000000", TotalRest(), TotalRest());
-        for (int i = 0; i < latest.count; i++) sb.AppendFormat(Inv, ";{0:F6}", latest.restLengths[i]);
         csv.WriteLine(sb.ToString());
 
         headerWritten = true;

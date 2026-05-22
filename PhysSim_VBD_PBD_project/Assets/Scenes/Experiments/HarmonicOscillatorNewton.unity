@@ -119,7 +119,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &368628021
+--- !u!1 &694411861
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,10 +127,10 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 368628025}
-  - component: {fileID: 368628024}
-  - component: {fileID: 368628023}
-  - component: {fileID: 368628022}
+  - component: {fileID: 694411864}
+  - component: {fileID: 694411863}
+  - component: {fileID: 694411866}
+  - component: {fileID: 694411865}
   m_Layer: 0
   m_Name: HarmonicOscillator
   m_TagString: Untagged
@@ -138,59 +138,14 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &368628022
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 368628021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 383794831aab7a84ebea1f0667c1fcd0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::VBDEndWeight
-  mass: 1
---- !u!114 &368628023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 368628021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b5c4bc101177494f8b372c1cc0e1bdc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::VBDChain
-  frameRate: 120
-  numSubsteps: 2
-  numIterations: 1
-  useAcceleration: 0
-  accelerationRho: 0.5
-  numParticles: 2
-  restLength: 1
-  bobStartPosition: {x: 0, y: -0.5, z: 0}
-  stretchingStiffness: 1000
-  alternatingStiffness: 0
-  stiffnessRatio: 10000
-  hasBendingConstraints: 0
-  bendingStiffness: 100000
-  rayleighMassDamping: 0
-  rayleighStiffnessDamping: 0
-  addInitNoise: 0
-  logMsPerFrame: 0
-  logEnergy: 0
-  logSpringLength: 1
-  sphereMaterial: {fileID: 2100000, guid: bbcad39595315ce4f97a994c8990f658, type: 2}
---- !u!120 &368628024
+--- !u!120 &694411863
 LineRenderer:
   serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 368628021}
+  m_GameObject: {fileID: 694411861}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -209,7 +164,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6437d85fda830fa48a901592e304173b, type: 2}
+  - {fileID: 2100000, guid: 0f7f560324c3d4d41a1fa48436cb4759, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -243,7 +198,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.068339564
+        value: 0.103006914
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -293,13 +248,13 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!4 &368628025
+--- !u!4 &694411864
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 368628021}
+  m_GameObject: {fileID: 694411861}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -308,6 +263,49 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &694411865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 694411861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7837ea04f5178f4eb98a8bfac164092, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NewtonEndWeight
+  mass: 1
+--- !u!114 &694411866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 694411861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75adc058518c8494a9c786feafe91834, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NewtonChain
+  frameRate: 120
+  numSubsteps: 100
+  maxIterations: 100
+  projectHessianToPSD: 0
+  absTolerance: 0.000000001
+  relTolerance: 0.0000000001
+  numParticles: 2
+  restLength: 1
+  bobStartPosition: {x: 0, y: -0.5, z: 0}
+  stretchingStiffness: 1000
+  alternatingStiffness: 0
+  stiffnessRatio: 10000
+  hasBendingConstraints: 0
+  bendingStiffness: 100000
+  logMsPerFrame: 0
+  logEnergy: 0
+  logSpringLength: 1
+  sphereMaterial: {fileID: 2100000, guid: bbcad39595315ce4f97a994c8990f658, type: 2}
 --- !u!1 &1039876911
 GameObject:
   m_ObjectHideFlags: 0
@@ -319,7 +317,6 @@ GameObject:
   - component: {fileID: 1039876914}
   - component: {fileID: 1039876913}
   - component: {fileID: 1039876912}
-  - component: {fileID: 1039876915}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -401,50 +398,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1039876915
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1039876911}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
-  m_RenderShadows: 1
-  m_RequiresDepthTextureOption: 2
-  m_RequiresOpaqueTextureOption: 2
-  m_CameraType: 0
-  m_Cameras: []
-  m_RendererIndex: -1
-  m_VolumeLayerMask:
-    serializedVersion: 2
-    m_Bits: 1
-  m_VolumeTrigger: {fileID: 0}
-  m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
-  m_Antialiasing: 0
-  m_AntialiasingQuality: 2
-  m_StopNaN: 0
-  m_Dithering: 0
-  m_ClearDepth: 1
-  m_AllowXRRendering: 1
-  m_AllowHDROutput: 1
-  m_UseScreenCoordOverride: 0
-  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
-  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
-  m_RequiresDepthTexture: 0
-  m_RequiresColorTexture: 0
-  m_TaaSettings:
-    m_Quality: 3
-    m_FrameInfluence: 0.1
-    m_JitterScale: 1
-    m_MipBias: 0
-    m_VarianceClampScale: 0.9
-    m_ContrastAdaptiveSharpening: 0
-  m_Version: 2
 --- !u!1 &1568227440
 GameObject:
   m_ObjectHideFlags: 0
@@ -578,4 +531,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 1039876914}
   - {fileID: 1568227442}
-  - {fileID: 368628025}
+  - {fileID: 694411864}

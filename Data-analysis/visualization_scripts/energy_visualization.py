@@ -1,8 +1,21 @@
+import os
+
 import matplotlib.pyplot as plt
 import numpy as np
 
 # Path to your CSV file
 csv_path = r"..\Logs\EnergyLogs\VBDCloth_noLineSearch.csv"
+
+
+def solver_color(name):
+    """Color a series by its solver name: XPBD->green, VBD->red, Newton->blue."""
+    if name.startswith("XPBD"):
+        return "green"
+    if name.startswith("VBD"):
+        return "red"
+    if name.startswith("Newton"):
+        return "blue"
+    return None
 
 # Load CSV data
 data = np.genfromtxt(csv_path, delimiter=';', skip_header=1)
@@ -20,7 +33,7 @@ total_energy = data[:, 5]
 
 # Draw graph
 plt.figure(figsize=(10, 5))
-plt.plot(time, total_energy, linewidth=2)
+plt.plot(time, total_energy, linewidth=2, color=solver_color(os.path.basename(csv_path)))
 
 plt.xlabel("Time")
 plt.ylabel("Total Energy")

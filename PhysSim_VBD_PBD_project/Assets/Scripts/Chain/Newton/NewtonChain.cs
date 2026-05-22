@@ -31,6 +31,7 @@ public class NewtonChain : MonoBehaviour
     public NewtonSolver Solver { get; private set; }
     private EnergyLogger energyLogger;
     private SpringLengthLogger springLengthLogger;
+    private bool initialLogged;
 
     private float dt;
     private LineRenderer lineRenderer;
@@ -114,6 +115,13 @@ public class NewtonChain : MonoBehaviour
     {
         bool shouldLogPerformance = logMsPerFrame && Time.frameCount % logEveryNFrames == 0;
         double simStartTime = shouldLogPerformance ? Time.realtimeSinceStartupAsDouble : 0;
+
+        // Capture the initial (pre-step) configuration once at frame 0 / time 0.
+        if (logSpringLength && !initialLogged)
+        {
+            springLengthLogger.LogInitial();
+            initialLogged = true;
+        }
 
         Solver.Step(dt);
         if (logEnergy) energyLogger.Log(dt);
