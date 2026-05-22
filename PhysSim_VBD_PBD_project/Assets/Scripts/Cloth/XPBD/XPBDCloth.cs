@@ -26,9 +26,11 @@ public class XPBDCloth : MonoBehaviour
     public bool addInitNoise = false;
     public bool logMsPerFrame = true;
     public bool logEnergy = false;
+    public bool logArea = false;
 
     public XPBDSolver Solver { get; private set; }
     private EnergyLogger energyLogger;
+    private AreaLogger areaLogger;
 
     private float dt;
     private float spacing;
@@ -105,6 +107,14 @@ public class XPBDCloth : MonoBehaviour
             energyLogger.overlayY = 30f;
             energyLogger.Sampler = () => EnergySampler.Sample(Solver);
         }
+
+        if (logArea)
+        {
+            areaLogger = gameObject.AddComponent<AreaLogger>();
+            areaLogger.label = "XPBDCloth";
+            areaLogger.overlayY = 50f;
+            areaLogger.Sampler = () => AreaSampler.Sample(Solver.positions, Solver.restPositions, numX, numY);
+        }
     }
 
     void Update()
@@ -114,6 +124,7 @@ public class XPBDCloth : MonoBehaviour
 
         Solver.Step(dt);
         if (logEnergy) energyLogger.Log(dt);
+        if (logArea) areaLogger.Log(dt);
 
         Matrix4x4 worldToLocal = tr.worldToLocalMatrix;
         for (int i = 0; i < numVerts; i++)
