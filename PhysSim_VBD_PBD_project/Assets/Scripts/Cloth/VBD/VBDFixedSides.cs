@@ -31,30 +31,34 @@ public class VBDFixedSides : MonoBehaviour
         int numY = cloth.numY;
 
         // --- Top row: iy = numY - 1 -------------------------------------------
-        topIndices = new int[numX];
-        topLocalOffsets = new Vector3[numX];
-        int topRowStart = (numY - 1) * numX;
-        for (int ix = 0; ix < numX; ix++)
+        // Only pin this side when a cuboid transform is assigned.
+        if (topCuboid != null)
         {
-            int idx = topRowStart + ix;
-            topIndices[ix] = idx;
-            solver.invMasses[idx] = 0f;
-
-            if (topCuboid != null)
+            topIndices = new int[numX];
+            topLocalOffsets = new Vector3[numX];
+            int topRowStart = (numY - 1) * numX;
+            for (int ix = 0; ix < numX; ix++)
+            {
+                int idx = topRowStart + ix;
+                topIndices[ix] = idx;
+                solver.invMasses[idx] = 0f;
                 topLocalOffsets[ix] = topCuboid.InverseTransformPoint(solver.positions[idx]);
+            }
         }
 
         // --- Bottom row: iy = 0 -----------------------------------------------
-        bottomIndices = new int[numX];
-        bottomLocalOffsets = new Vector3[numX];
-        for (int ix = 0; ix < numX; ix++)
+        // Only pin this side when a cuboid transform is assigned.
+        if (bottomCuboid != null)
         {
-            int idx = ix; // iy * numX + ix with iy = 0
-            bottomIndices[ix] = idx;
-            solver.invMasses[idx] = 0f;
-
-            if (bottomCuboid != null)
+            bottomIndices = new int[numX];
+            bottomLocalOffsets = new Vector3[numX];
+            for (int ix = 0; ix < numX; ix++)
+            {
+                int idx = ix; // iy * numX + ix with iy = 0
+                bottomIndices[ix] = idx;
+                solver.invMasses[idx] = 0f;
                 bottomLocalOffsets[ix] = bottomCuboid.InverseTransformPoint(solver.positions[idx]);
+            }
         }
 
         SetAnchorPositions();
