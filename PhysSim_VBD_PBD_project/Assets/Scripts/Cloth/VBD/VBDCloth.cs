@@ -27,14 +27,19 @@ public class VBDCloth : MonoBehaviour
     public float rayleighMassDamping = 0f;
     public float rayleighStiffnessDamping = 0f;
 
+    public bool useLineSearch = true;
+    public int maxLineSearchIters = 8;
+
     public bool addInitNoise = false;
     public bool logMsPerFrame = true;
     public bool logEnergy = false;
     public bool logArea = false;
+    public bool logResidual = false;
 
     public VBDSolver Solver { get; private set; }
     private EnergyLogger energyLogger;
     private AreaLogger areaLogger;
+    private ResidualLogger residualLogger;
 
     private float dt;
     private float spacing;
@@ -96,7 +101,10 @@ public class VBDCloth : MonoBehaviour
             thickness = thickness,
             velCapPerFrame = velCapPerFrame,
             rayleighMassDamping = rayleighMassDamping,
-            rayleighStiffnessDamping = rayleighStiffnessDamping
+            rayleighStiffnessDamping = rayleighStiffnessDamping,
+            useLineSearch = useLineSearch,
+            maxLineSearchIters = maxLineSearchIters,
+            computeResidual = logResidual
         };
 
         BuildSimulationGrid(xCoords, yCoords);
@@ -109,7 +117,7 @@ public class VBDCloth : MonoBehaviour
         if (addInitNoise)
             for (int i = 0; i < numVerts; i++)
                 if (Solver.invMasses[i] > 0f)
-                    Solver.positions[i] += UnityEngine.Random.insideUnitSphere * 0.001f;
+                    Solver.positions[i] += UnityEngine.Random.insideUnitSphere * 0.00001f;
 
         if (handleSelfCollisions) Solver.CreateSpatialHash(spacing);
 
@@ -128,6 +136,14 @@ public class VBDCloth : MonoBehaviour
             areaLogger.overlayY = 50f;
             areaLogger.Sampler = () => AreaSampler.Sample(Solver.positions, Solver.restPositions, numX, numY);
         }
+
+        if (logResidual)
+        {
+            residualLogger = gameObject.AddComponent<ResidualLogger>();
+            residualLogger.label = "VBDCloth";
+            residualLogger.overlayY = 70f;
+            residualLogger.Sampler = () => ResidualSampler.Sample(Solver);
+        }
     }
 
     void Update()
@@ -138,6 +154,7 @@ public class VBDCloth : MonoBehaviour
         Solver.Step(dt);
         if (logEnergy) energyLogger.Log(dt);
         if (logArea) areaLogger.Log(dt);
+        if (logResidual) residualLogger.Log(dt);
 
         Matrix4x4 worldToLocal = tr.worldToLocalMatrix;
         for (int i = 0; i < numVerts; i++)

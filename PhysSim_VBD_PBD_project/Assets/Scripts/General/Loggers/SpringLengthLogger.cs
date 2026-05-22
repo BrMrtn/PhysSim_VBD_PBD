@@ -131,7 +131,7 @@ public class SpringLengthLogger : MonoBehaviour
 
     private void OpenCsv()
     {
-        var dir = Path.GetFullPath(Path.Combine(Application.dataPath, "../../Logs/SpringLengthLogs"));
+        var dir = Path.GetFullPath(Path.Combine(Application.dataPath, "../../Data-analysis/Logs/SpringLengthLogs"));
         Directory.CreateDirectory(dir);
         string safe = string.IsNullOrEmpty(label) ? "Sim" : label;
         foreach (char c in Path.GetInvalidFileNameChars()) safe = safe.Replace(c, '_');
