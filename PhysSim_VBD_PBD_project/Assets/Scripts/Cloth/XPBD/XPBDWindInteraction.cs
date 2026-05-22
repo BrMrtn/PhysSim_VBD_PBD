@@ -122,11 +122,12 @@ public class XPBDWindInteraction : MonoBehaviour
             Vector3 pb = positions[b];
             Vector3 pc = positions[c];
 
-            // Face normal, with a degeneracy guard.
+            // Face normal and area, with a degeneracy guard.
             Vector3 cross = Vector3.Cross(pb - pa, pc - pa);
             float crossMag = cross.magnitude;
             if (crossMag < 1e-8f) continue;
             Vector3 normal = cross / crossMag;
+            float area = 0.5f * crossMag; // |(b-a) x (c-a)| / 2
 
             Vector3 center = (pa + pb + pc) * (1f / 3f);
             Vector3 triVelocity = (velocities[a] + velocities[b] + velocities[c]) * (1f / 3f);
@@ -142,6 +143,13 @@ public class XPBDWindInteraction : MonoBehaviour
             // Tangential (skin friction) drag along the surface.
             Vector3 tangential = relVelocity - vn * normal;
             force += tangential * tangentialDrag;
+
+            // Aerodynamic force scales with face area, so refining the mesh (more,
+            // smaller faces) keeps the total force constant instead of growing with
+            // vertex count. Without this the per-vertex wind acceleration scales as N^2
+            // (mass per vertex falls as 1/N^2 while force per vertex stays fixed) and
+            // the XPBD integrator explodes on finer grids.
+            force *= area;
 
             // Spread the triangle's force evenly over its three vertices.
             // Pinned vertices (invMass 0) ignore it inside the solver.

@@ -119,11 +119,12 @@ public class VBDWindInteraction : MonoBehaviour
             Vector3 pb = positions[b];
             Vector3 pc = positions[c];
 
-            // Face normal, with a degeneracy guard.
+            // Face normal and area, with a degeneracy guard.
             Vector3 cross = Vector3.Cross(pb - pa, pc - pa);
             float crossMag = cross.magnitude;
             if (crossMag < 1e-8f) continue;
             Vector3 normal = cross / crossMag;
+            float area = 0.5f * crossMag; // |(b-a) x (c-a)| / 2
 
             Vector3 center = (pa + pb + pc) * (1f / 3f);
             Vector3 triVelocity = (velocities[a] + velocities[b] + velocities[c]) * (1f / 3f);
@@ -136,6 +137,12 @@ public class VBDWindInteraction : MonoBehaviour
 
             Vector3 tangential = relVelocity - vn * normal;
             force += tangential * tangentialDrag;
+
+            // Aerodynamic force scales with face area, so refining the mesh keeps the
+            // total force constant instead of growing with vertex count. (VBD's implicit
+            // solve tolerates the unscaled force, but XPBD does not, and keeping both
+            // wind models identical matters for a fair solver comparison.)
+            force *= area;
 
             Vector3 perVertex = force * (1f / 3f);
             vertexForces[a] += perVertex;
