@@ -35,11 +35,14 @@ public class VBDCloth : MonoBehaviour
     public bool logEnergy = false;
     public bool logArea = false;
     public bool logResidual = false;
+    public bool logSpringLength = false;
 
     public VBDSolver Solver { get; private set; }
     private EnergyLogger energyLogger;
     private AreaLogger areaLogger;
     private ResidualLogger residualLogger;
+    private SpringLengthLogger springLengthLogger;
+    private bool initialLogged;
 
     private float dt;
     private float spacing;
@@ -134,6 +137,7 @@ public class VBDCloth : MonoBehaviour
             areaLogger = gameObject.AddComponent<AreaLogger>();
             areaLogger.label = "VBDCloth";
             areaLogger.overlayY = 50f;
+            areaLogger.showOverlay = false;
             areaLogger.Sampler = () => AreaSampler.Sample(Solver.positions, Solver.restPositions, numX, numY);
         }
 
@@ -144,6 +148,16 @@ public class VBDCloth : MonoBehaviour
             residualLogger.overlayY = 70f;
             residualLogger.Sampler = () => ResidualSampler.Sample(Solver);
         }
+
+        if (logSpringLength)
+        {
+            springLengthLogger = gameObject.AddComponent<SpringLengthLogger>();
+            springLengthLogger.label = "VBDCloth";
+            springLengthLogger.overlayY = 90f;
+            springLengthLogger.showOverlay = false;
+            springLengthLogger.writePerSpring = false;
+            springLengthLogger.Sampler = () => SpringLengthSampler.SampleClothGrid(Solver.positions, Solver.restPositions, numX, numY);
+        }
     }
 
     void Update()
@@ -151,10 +165,18 @@ public class VBDCloth : MonoBehaviour
         bool shouldLogPerformance = logMsPerFrame && Time.frameCount % logEveryNFrames == 0;
         double simStartTime = shouldLogPerformance ? Time.realtimeSinceStartupAsDouble : 0;
 
+        // Capture the initial (pre-step) configuration once at frame 0 / time 0.
+        if (logSpringLength && !initialLogged)
+        {
+            springLengthLogger.LogInitial();
+            initialLogged = true;
+        }
+
         Solver.Step(dt);
         if (logEnergy) energyLogger.Log(dt);
         if (logArea) areaLogger.Log(dt);
         if (logResidual) residualLogger.Log(dt);
+        if (logSpringLength) springLengthLogger.Log(dt);
 
         Matrix4x4 worldToLocal = tr.worldToLocalMatrix;
         for (int i = 0; i < numVerts; i++)

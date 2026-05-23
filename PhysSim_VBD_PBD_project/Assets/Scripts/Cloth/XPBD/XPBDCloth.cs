@@ -27,10 +27,13 @@ public class XPBDCloth : MonoBehaviour
     public bool logMsPerFrame = true;
     public bool logEnergy = false;
     public bool logArea = false;
+    public bool logSpringLength = false;
 
     public XPBDSolver Solver { get; private set; }
     private EnergyLogger energyLogger;
     private AreaLogger areaLogger;
+    private SpringLengthLogger springLengthLogger;
+    private bool initialLogged;
 
     private float dt;
     private float spacing;
@@ -113,7 +116,18 @@ public class XPBDCloth : MonoBehaviour
             areaLogger = gameObject.AddComponent<AreaLogger>();
             areaLogger.label = "XPBDCloth";
             areaLogger.overlayY = 50f;
+            areaLogger.showOverlay = false;
             areaLogger.Sampler = () => AreaSampler.Sample(Solver.positions, Solver.restPositions, numX, numY);
+        }
+
+        if (logSpringLength)
+        {
+            springLengthLogger = gameObject.AddComponent<SpringLengthLogger>();
+            springLengthLogger.label = "XPBDCloth";
+            springLengthLogger.overlayY = 70f;
+            springLengthLogger.showOverlay = false;
+            springLengthLogger.writePerSpring = false;
+            springLengthLogger.Sampler = () => SpringLengthSampler.SampleClothGrid(Solver.positions, Solver.restPositions, numX, numY);
         }
     }
 
@@ -122,9 +136,17 @@ public class XPBDCloth : MonoBehaviour
         bool shouldLogPerformance = logMsPerFrame && Time.frameCount % logEveryNFrames == 0;
         double simStartTime = shouldLogPerformance ? Time.realtimeSinceStartupAsDouble : 0;
 
+        // Capture the initial (pre-step) configuration once at frame 0 / time 0.
+        if (logSpringLength && !initialLogged)
+        {
+            springLengthLogger.LogInitial();
+            initialLogged = true;
+        }
+
         Solver.Step(dt);
         if (logEnergy) energyLogger.Log(dt);
         if (logArea) areaLogger.Log(dt);
+        if (logSpringLength) springLengthLogger.Log(dt);
 
         Matrix4x4 worldToLocal = tr.worldToLocalMatrix;
         for (int i = 0; i < numVerts; i++)
