@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls \"d:\\\\uni\\\\Szakdoga_teljes\\\\PhysSim_VBD_PBD\\\\Data-analysis\\\\Logs\\\\EnergyLogs\")",
+      "Read(//d/uni/Szakdoga_teljes/PhysSim_VBD_PBD/Data-analysis/Logs/EnergyLogs/**)"
+    ]
+  }
+}

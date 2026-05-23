@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Path to your CSV file
-csv_path = r"..\Logs\EnergyLogs\VBDCloth_noLineSearch.csv"
+csv_path = r"..\Logs\EnergyLogs\XPBDCloth_20260523_202550.csv"
 
 
 def solver_color(name):

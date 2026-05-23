@@ -164,8 +164,8 @@ MonoBehaviour:
   rayleighMassDamping: 0
   rayleighStiffnessDamping: 0
   logMsPerFrame: 0
-  logEnergy: 0
-  logSpringLength: 1
+  logEnergy: 1
+  logSpringLength: 0
   sphereMaterial: {fileID: 2100000, guid: bbcad39595315ce4f97a994c8990f658, type: 2}
 --- !u!120 &694411863
 LineRenderer:

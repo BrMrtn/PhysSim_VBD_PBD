@@ -27,7 +27,7 @@ def solver_color(name):
 
 # Directory of per-run CSVs written by SpringLengthLogger.cs.
 # Each file is named "<label>_<timestamp>.csv" and holds a single-spring run.
-log_dir = r"..\Logs\SpringLengthLogs"
+log_dir = r"..\Logs\SpringLengthLogs\Chain"
 
 paths = sorted(glob.glob(os.path.join(log_dir, "*.csv")))
 if not paths:
