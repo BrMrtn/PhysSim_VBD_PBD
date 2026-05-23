@@ -36,8 +36,8 @@ running_avg_total = np.cumsum(total_energy) / np.arange(1, len(total_energy) + 1
 plt.figure(figsize=(10, 5))
 plt.plot(time, running_avg_total, linewidth=2, color=solver_color(os.path.basename(csv_path)))
 
-plt.xlabel("Time")
-plt.ylabel("Running Average of Total Energy")
+plt.xlabel("Time", fontsize=14)
+plt.ylabel("Running Average of Total Energy", fontsize=14)
 plt.title("Running Average of Total Energy Over Time")
 plt.grid(True)
 

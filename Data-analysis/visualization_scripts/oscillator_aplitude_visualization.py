@@ -89,8 +89,8 @@ if dt is not None and offset0 is not None:
         bbox=dict(boxstyle="round", fc="white", ec="0.7", alpha=0.85))
 
 plt.axhline(0.0, color="black", ls=":", alpha=0.5)
-plt.xlabel("frame number")
-plt.ylabel("offset [m]")
+plt.xlabel("frame number", fontsize=14)
+plt.ylabel("offset [m]", fontsize=14)
 plt.title("Harmonic oscillator: displacement over time")
 plt.grid(True, which="both", ls=":", alpha=0.5)
 plt.legend()

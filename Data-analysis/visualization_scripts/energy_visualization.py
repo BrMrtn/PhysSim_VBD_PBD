@@ -35,8 +35,8 @@ total_energy = data[:, 5]
 plt.figure(figsize=(10, 5))
 plt.plot(time, total_energy, linewidth=2, color=solver_color(os.path.basename(csv_path)))
 
-plt.xlabel("Time")
-plt.ylabel("Total Energy")
+plt.xlabel("Time", fontsize=14)
+plt.ylabel("Total Energy", fontsize=14)
 plt.title("Total Energy Over Time")
 plt.grid(True)
 

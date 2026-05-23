@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from adjustText import adjust_text
 
 # Path to the summary CSV written by WallClockExperiment (per-(S,n) medians).
-csv_path = r"..\Logs\WallClock\WallClock_fair_base_newton1ss.csv"
+csv_path = r"..\Logs\WallClock\WallClock_fair_base_newton128ss.csv"
 
 rows = defaultdict(list)
 with open(csv_path, newline="") as f:
@@ -42,22 +42,22 @@ for method, pts in sorted(rows.items()):
 
     xs = [p[2] for p in pareto_pts]
     ys = [p[3] for p in pareto_pts]
-    plt.plot(xs, ys, "-o", label=f"{method} Pareto", markersize=5, alpha=0.8, color=c)
+    plt.plot(xs, ys, "-o", label=f"{method} Pareto", markersize=6, alpha=0.8, color=c)
     
     for S, n, ms, err in pareto_pts:
-        texts.append(plt.text(ms, err, f"S{S}xI{n}", fontsize=7))
+        texts.append(plt.text(ms, err, f"S{S}xI{n}", fontsize=9))
 
 plt.xscale("log")
 plt.yscale("log")
-plt.xlabel("ms/frame")
-plt.ylabel("position error") # RMS position error vs converged Newton
+plt.xlabel("ms/frame", fontsize=14)
+plt.ylabel("position error", fontsize=14) # RMS position error vs converged Newton
 plt.grid(True, which="both", ls=":", alpha=0.5)
 
 adjust_text(texts, arrowprops=dict(arrowstyle="-", color="gray", lw=0.5))
-plt.legend()
+plt.legend(fontsize=12)
 plt.tight_layout()
 
-out_dir = r"..\Data\Visuals\WallClock"
+out_dir = r"..\Visuals\WallClock"
 os.makedirs(out_dir, exist_ok=True)
 out_name = os.path.basename(csv_path).replace(".csv", ".png")
 out_name = out_name.replace("WallClock_fair_base_newton", "WallClock_fair_base_clean_newton")
