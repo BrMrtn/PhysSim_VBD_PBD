@@ -3,9 +3,10 @@ import os
 from collections import defaultdict
 
 import matplotlib.pyplot as plt
+from adjustText import adjust_text
 
 # Path to the summary CSV written by WallClockExperiment (per-(S,n) medians).
-csv_path = r"..\Logs\WallClock\WallClock_fair_base_newton128ss.csv"
+csv_path = r"..\Logs\WallClock\WallClock_fair_base_newton1ss.csv"
 
 rows = defaultdict(list)
 with open(csv_path, newline="") as f:
@@ -22,6 +23,7 @@ with open(csv_path, newline="") as f:
         )
 
 plt.figure(figsize=(9, 6))
+texts = []
 for method, pts in sorted(rows.items()):
     pts.sort(key=lambda p: (p[2], p[3]))  # by time, then error
     
@@ -43,15 +45,15 @@ for method, pts in sorted(rows.items()):
     plt.plot(xs, ys, "-o", label=f"{method} Pareto", markersize=5, alpha=0.8, color=c)
     
     for S, n, ms, err in pareto_pts:
-        plt.annotate(f"S{S}xI{n}", (ms, err), fontsize=7,
-                     textcoords="offset points", xytext=(4, 4))
+        texts.append(plt.text(ms, err, f"S{S}xI{n}", fontsize=7))
 
 plt.xscale("log")
 plt.yscale("log")
 plt.xlabel("ms/frame")
-plt.ylabel("RMS position error vs converged Newton")
-plt.title("Chain solvers: accuracy vs wallclock time")
+plt.ylabel("position error") # RMS position error vs converged Newton
 plt.grid(True, which="both", ls=":", alpha=0.5)
+
+adjust_text(texts, arrowprops=dict(arrowstyle="-", color="gray", lw=0.5))
 plt.legend()
 plt.tight_layout()
 
