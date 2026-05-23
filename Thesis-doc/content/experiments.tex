@@ -5,63 +5,37 @@
 
 \begin{itemize}
     \item This chapter reports measurements along the four evaluation axes from \autoref{sec:EvalAxes}: efficiency, robustness, physical realism, flexibility.
-    \item Each axis bears on at least one of the hypotheses H1--H3 from \autoref{sec:Hypotheses}; synthesis is deferred to \autoref{chap:Discussion}.
-    \item All experiments use the shared scaffolding and fairness controls of \autoref{sec:Fairness}: matched gravity, $dt = 1/30$~s, matched Rayleigh damping, $\alpha_{\mathrm{XPBD}} = 1/k_{\mathrm{VBD}}$, Chebyshev and adaptive initialisation disabled in VBD for the core comparison.
+    \item All experiments use the shared scaffolding and fairness controls of \autoref{sec:Fairness}: matched gravity, $dt = 1/30$~s, no damping, $\alpha_{\mathrm{XPBD}} = 1/k_{\mathrm{VBD}}$, Chebyshev and adaptive initialisation disabled in VBD for the core comparison.
 \end{itemize}
 
 %----------------------------------------------------------------------------
-\section{Computational efficiency --- cloth}
+\section{Computational efficiency}
 \label{sec:EffResults}
 %----------------------------------------------------------------------------
 
+\subsection{Wall-clock}
+\label{ssec:ErrorVsMs}
+\begin{itemize}
+    \item Sweep through different substep and iteration configurations for each solver and plot their Pareto line (optimal solutions) based on avg ms/frame and avg??? Root Mean Squared position error from the Newton reference. Each diagram compares to a Newton with different substep counts
+    \item XPBD substep count $n_{\mathrm{sub}} \in \{1, 2, 4, 8, 16, 32\}$
+    \item VBD iteration count $n_{\mathrm{it}} \in \{1, 2, 4, 8, 16, 32\}$ 
+    \item The simulated problem: a chain with 10 nodes, one end fixed, the other having a weight of ??? (with bending???) . Both ends start from the same height, only gravity acting on it.
+    \item VBD reaches the same error value as XPBD with less iterations
+    \item VBD's iterations cost more than XPBD's
+    \item With this particular problem VBD's first guesses always seem to be closer to reference than XPBD's.
+    \item From Newton with 4 substeps graph: VBD with the reference Newton's substeps converges really good. XPBD reaches it's smallest error with relatively few iterations, turning it higher doesn't improve error, only increases compute time. 
+    \item From Newton with more substeps: iterations loose their value as with small time steps both solvers converge at 1 or 2 iterations. XPBD takes over because of its cheaper iterations.
+\end{itemize}
+\emph{TODO: add ss1, ss2, ss4, ss64}
+
 \subsection{Frame time vs.\ node count}
-\label{ssec:MsVsNodes}
+\label{ssec:NodeCountVsFPS}
 \begin{itemize}
-    \item Measure isolated solver time (ms/frame) over a hanging-cloth scene at mesh resolutions \emph{TODO: list resolutions, e.g.\ $10\times 10$ to $100\times 100$}, holding solver settings fixed at the \autoref{sec:Fairness} defaults.
+    \item Measure FPS over a hanging-cloth scene with wind interaction at mesh resolutions \emph{TODO: list resolutions, e.g.\ $8\times 8$ to $128\times 128$}, holding solver settings fixed at the \autoref{sec:Fairness} defaults.
+    \item Based on the diagrams in ssec:ErrorVsMs, I choose substep 4 iteration 4 for XPBD and substep 4 iteration 2 for VBD, as these sit at the middle point of "realistic vs. efficient" and are alway close to each other
 \end{itemize}
-\emph{TODO: Figure --- ms/frame vs.\ node count, XPBD and VBD curves.}
+\emph{TODO: Add figure + table}
 
-\subsection{Frame time vs.\ substep / iteration count}
-\label{ssec:MsVsCount}
-For a fixed mesh resolution I sweep:
-\begin{itemize}
-    \item XPBD substep count $n_{\mathrm{sub}} \in \{1, 2, 4, 8, 16, 32\}$ with a single inner iteration (the small-steps configuration),
-    \item VBD iteration count $n_{\mathrm{it}} \in \{1, 2, 4, 8, 16, 32\}$.
-\end{itemize}
-\emph{TODO: Figure --- ms/frame vs.\ work count, both solvers on common axis.}
-
-\subsection{Maximum node counts at 30 and 60~fps}
-\label{ssec:MaxNodes}
-\begin{itemize}
-    \item Following Ma et~al.~\cite{app142311072}, I report the largest mesh sustaining 30~fps and 60~fps for each solver at default settings.
-\end{itemize}
-\emph{TODO: Table --- max node count, two thresholds, two solvers.}
-
-\subsection{Convergence: residual vs.\ work}
-\label{ssec:ResidualConvergence}
-\begin{itemize}
-    \item For a moderately stretched cloth in isolation, measure the variational residual $\|\nabla G(\mathbf{x})\|$ as a function of iteration count and of wall-clock time, plotting both solvers against a Newton reference.
-    \item This is the analogue of Fig.~17 in \cite{Chen2024}.
-\end{itemize}
-\emph{TODO: Figure --- residual vs.\ iterations and residual vs.\ wall-clock.}
-
-\subsection{Equal-wall-clock quality frontier}
-\label{ssec:EqualWallClock}
-\begin{itemize}
-    \item The headline efficiency result.
-    \item Compute solution error (vs.\ Newton) at every combination of $n_{\mathrm{sub}}$ (XPBD) and $n_{\mathrm{it}}$ (VBD), and plot error against ms/frame on a log--log axis.
-    \item The lower envelope of the two clouds is each solver's quality frontier; the \emph{equal-wall-clock} comparison reads off which solver achieves lower error at a given ms/frame budget.
-\end{itemize}
-\emph{TODO: Figure --- error vs.\ ms/frame Pareto fronts.}
-
-\subsection{VBD with Chebyshev and adaptive initialisation (production mode)}
-\label{ssec:VBDChebyshev}
-\begin{itemize}
-    \item For completeness, re-run the equal-wall-clock experiment of \autoref{ssec:EqualWallClock} with VBD's Chebyshev acceleration and adaptive initialisation re-enabled.
-    \item This is the configuration a practitioner would deploy.
-    \item Reported separately because, per \autoref{ssec:DisableChebyshev}, it does not isolate the primal/dual distinction --- it measures VBD plus its accelerations against vanilla XPBD.
-\end{itemize}
-\emph{TODO: Figure / table --- accelerated VBD on the same axes as \autoref{ssec:EqualWallClock}.}
 
 %----------------------------------------------------------------------------
 \section{Robustness and stability}
