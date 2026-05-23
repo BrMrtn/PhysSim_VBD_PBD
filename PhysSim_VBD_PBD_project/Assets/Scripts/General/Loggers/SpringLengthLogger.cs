@@ -8,6 +8,7 @@ public class SpringLengthLogger : MonoBehaviour
 {
     public bool writeCsv = true;
     public bool showOverlay = true;
+    public bool writePerSpring = true; // false logs only the summary columns (cloth has too many springs to dump per-spring)
     public string label = "Sim";
     public float overlayY = 110f;
 
@@ -62,11 +63,12 @@ public class SpringLengthLogger : MonoBehaviour
     private void WriteSampleRow()
     {
         var sb = new StringBuilder();
-        sb.AppendFormat(Inv, "{0};{1:F6};{2:F6};{3:F6};{4:F6};{5:F6}",
-            frameNumber, simTime,
+        sb.AppendFormat(Inv, "{0};{1:F6};{2};{3:F6};{4:F6};{5:F6};{6:F6}",
+            frameNumber, simTime, latest.count,
             TotalCurrent(), TotalRest(), MaxStretchRatio(), AvgStretchRatio());
-        for (int i = 0; i < latest.count; i++)
-            sb.AppendFormat(Inv, ";{0:F6}", latest.currentLengths[i]);
+        if (writePerSpring)
+            for (int i = 0; i < latest.count; i++)
+                sb.AppendFormat(Inv, ";{0:F6}", latest.currentLengths[i]);
         csv.WriteLine(sb.ToString());
     }
 
@@ -133,8 +135,9 @@ public class SpringLengthLogger : MonoBehaviour
     private void WriteHeader()
     {
         var sb = new StringBuilder();
-        sb.Append("frame;time;totalCurrent;totalRest;maxStretchRatio;avgStretchRatio"); // lengths in meters, time in seconds
-        for (int i = 0; i < latest.count; i++) sb.AppendFormat(Inv, ";len{0}", i);
+        sb.Append("frame;time;springs;totalCurrent;totalRest;maxStretchRatio;avgStretchRatio"); // lengths in meters, time in seconds
+        if (writePerSpring)
+            for (int i = 0; i < latest.count; i++) sb.AppendFormat(Inv, ";len{0}", i);
         csv.WriteLine(sb.ToString());
 
         headerWritten = true;
