@@ -47,7 +47,7 @@
 \select@language {english} \contentsline {subsection}{\numberline {5.3.1}Stiffness $\leftrightarrow $ compliance mapping}{16}{subsection.5.3.1}%
 \select@language {english} \contentsline {subsection}{\numberline {5.3.2}Matched compute budget --- and the substep/iteration caveat}{16}{subsection.5.3.2}%
 \select@language {english} \contentsline {subsection}{\numberline {5.3.3}Matched gravity, $dt$, and damping}{17}{subsection.5.3.3}%
-\select@language {english} \contentsline {subsection}{\numberline {5.3.4}Disabling VBD's accelerations for the core comparison}{17}{subsection.5.3.4}%
+\select@language {english} \contentsline {subsection}{\numberline {5.3.4}Handling VBD's accelerations for the core comparison}{17}{subsection.5.3.4}%
 \select@language {english} \contentsline {section}{\numberline {5.4}Damping models}{17}{section.5.4}%
 \select@language {english} \contentsline {paragraph}{XPBD damping ($\gamma $-formulation).}{17}{section*.14}%
 \select@language {english} \contentsline {paragraph}{VBD damping (implicit Hessian).}{17}{section*.15}%
@@ -55,22 +55,21 @@
 \select@language {english} \contentsline {section}{\numberline {5.6}Parallelisation (forward-looking)}{18}{section.5.6}%
 \select@language {english} \contentsline {chapter}{\numberline {6}Experiments and results}{19}{chapter.6}%
 \select@language {english} \contentsline {section}{\numberline {6.1}Computational efficiency}{19}{section.6.1}%
-\select@language {english} \contentsline {subsection}{\numberline {6.1.1}Wall-clock}{19}{subsection.6.1.1}%
+\select@language {english} \contentsline {subsection}{\numberline {6.1.1}Influence of substep and iteration count on error and compute time}{19}{subsection.6.1.1}%
 \select@language {english} \contentsline {subsection}{\numberline {6.1.2}Frame time vs.\ node count}{20}{subsection.6.1.2}%
 \select@language {english} \contentsline {section}{\numberline {6.2}Robustness and stability}{20}{section.6.2}%
-\select@language {english} \contentsline {subsection}{\numberline {6.2.1}High mass ratio at the end of a pendulum}{20}{subsection.6.2.1}%
-\select@language {english} \contentsline {subsection}{\numberline {6.2.2}High stiffness ratio chain}{20}{subsection.6.2.2}%
-\select@language {english} \contentsline {subsection}{\numberline {6.2.3}Self-collision: cloth folded onto itself}{20}{subsection.6.2.3}%
-\select@language {english} \contentsline {section}{\numberline {6.3}Physical realism}{21}{section.6.3}%
-\select@language {english} \contentsline {subsection}{\numberline {6.3.1}Newton reference}{21}{subsection.6.3.1}%
+\select@language {english} \contentsline {subsection}{\numberline {6.2.1}Chain with heavy weight attached}{20}{subsection.6.2.1}%
+\select@language {english} \contentsline {subsection}{\numberline {6.2.2}Chain with high stiffness ratio}{20}{subsection.6.2.2}%
+\select@language {english} \contentsline {section}{\numberline {6.3}Physical realism}{20}{section.6.3}%
+\select@language {english} \contentsline {subsection}{\numberline {6.3.1}Newton reference}{20}{subsection.6.3.1}%
 \select@language {english} \contentsline {subsection}{\numberline {6.3.2}Harmonic oscillator}{21}{subsection.6.3.2}%
 \select@language {english} \contentsline {subsection}{\numberline {6.3.3}Energy tracking}{21}{subsection.6.3.3}%
 \select@language {english} \contentsline {subsection}{\numberline {6.3.4}Hanging cloth: stretched area vs.\ reference}{21}{subsection.6.3.4}%
-\select@language {english} \contentsline {subsection}{\numberline {6.3.5}Damping cross-check}{22}{subsection.6.3.5}%
-\select@language {english} \contentsline {section}{\numberline {6.4}Flexibility}{22}{section.6.4}%
-\select@language {english} \contentsline {subsection}{\numberline {6.4.1}Iteration-count independence of stiffness}{22}{subsection.6.4.1}%
-\select@language {english} \contentsline {subsection}{\numberline {6.4.2}Stiffness-ratio test}{23}{subsection.6.4.2}%
-\select@language {english} \contentsline {subsection}{\numberline {6.4.3}Ease of adding a new constraint or force}{23}{subsection.6.4.3}%
+\select@language {english} \contentsline {subsection}{\numberline {6.3.5}Damping cross-check}{21}{subsection.6.3.5}%
+\select@language {english} \contentsline {section}{\numberline {6.4}Flexibility}{21}{section.6.4}%
+\select@language {english} \contentsline {subsection}{\numberline {6.4.1}Iteration-count independence of stiffness}{21}{subsection.6.4.1}%
+\select@language {english} \contentsline {subsection}{\numberline {6.4.2}Stiffness-ratio test}{22}{subsection.6.4.2}%
+\select@language {english} \contentsline {subsection}{\numberline {6.4.3}Ease of adding a new constraint or force}{22}{subsection.6.4.3}%
 \select@language {english} \contentsline {chapter}{\numberline {7}Discussion}{24}{chapter.7}%
 \select@language {english} \contentsline {section}{\numberline {7.1}Synthesis across axes}{24}{section.7.1}%
 \select@language {english} \contentsline {section}{\numberline {7.2}Reading the results through the primal/dual lens}{24}{section.7.2}%

@@ -174,7 +174,7 @@ PrefabInstance:
     - target: {fileID: -5754084199372789682, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: -462981019419857548, guid: 786fc3002689a86499d0ccd2c8957c4c, type: 3}
+      objectReference: {fileID: -462981019419857548, guid: c197e5366b3e8e341b58850487197629, type: 3}
     - target: {fileID: 919132149155446097, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
       propertyPath: m_Name
       value: Plane64x64_XY
@@ -221,21 +221,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::XPBDCloth
   frameRate: 30
   numSubsteps: 1
-  numIterations: 40
-  stretchingCompliance: 0.001
-  shearCompliance: 0.01
-  bendingCompliance: 0.1
-  totalMass: 100
+  numIterations: 160
+  stretchingCompliance: 0.01
+  shearCompliance: 0.1
+  bendingCompliance: 1
+  totalMass: 10
   handleSelfCollisions: 0
   selfCollisionFriction: 0
   velCapPerFrame: 3
-  rayleighMassDamping: 0.2
-  rayleighStiffnessDamping: 0.005
+  rayleighMassDamping: 0
+  rayleighStiffnessDamping: 0
   addInitNoise: 0
   logMsPerFrame: 0
   logEnergy: 0
-  logArea: 1
-  logSpringLength: 1
+  logArea: 0
+  logSpringLength: 0
   numVerts: 0
   numX: 0
   numY: 0

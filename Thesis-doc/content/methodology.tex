@@ -92,13 +92,12 @@ For all experiments unless otherwise noted:
     \item particle mass $m_{i} = 1$~kg unless a mass-ratio sweep is in progress.
 \end{itemize}
 
-\subsection{Disabling VBD's accelerations for the core comparison}
+\subsection{Handling VBD's accelerations for the core comparison}
 \label{ssec:DisableChebyshev}
 \begin{itemize}
     \item The 2024 VBD paper~\cite{Chen2024} reports significant speedups from Chebyshev acceleration and adaptive initialisation.
-    \item These features are genuinely part of VBD, but they confound an apples-to-apples comparison: an XPBD with Chebyshev-style acceleration would be an entirely different solver (essentially Anderson-accelerated XPBD).
-    \item For the core comparison I therefore \textbf{disable Chebyshev acceleration and adaptive initialisation in VBD}, using only inertial initialisation.
-    \item Results \emph{with} the accelerations are reported separately in \autoref{ssec:VBDChebyshev}, framed as ``what VBD looks like in production'' rather than ``what VBD looks like in this controlled comparison''.
+    \item Adaptive init is VBD's own inertial prediction, that is also present in XPBD, so I keep it enabled.
+    \item Chabyshev-acceleration is also part of VBD, but it confounds an apples-to-apples comparison, as XPBD could also implement the same method (essentially Anderson-accelerated XPBD).
 \end{itemize}
 
 %----------------------------------------------------------------------------

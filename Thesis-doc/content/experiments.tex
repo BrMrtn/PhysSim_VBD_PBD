@@ -5,7 +5,7 @@
 
 \begin{itemize}
     \item This chapter reports measurements along the four evaluation axes from \autoref{sec:EvalAxes}: efficiency, robustness, physical realism, flexibility.
-    \item All experiments use the shared scaffolding and fairness controls of \autoref{sec:Fairness}: matched gravity, $dt = 1/30$~s, no damping, $\alpha_{\mathrm{XPBD}} = 1/k_{\mathrm{VBD}}$, Chebyshev and adaptive initialisation disabled in VBD for the core comparison.
+    \item All experiments use the shared scaffolding and fairness controls of \autoref{sec:Fairness}: matched gravity, $dt = 1/30$~s, no damping, $\alpha_{\mathrm{XPBD}} = 1/k_{\mathrm{VBD}}$, Chebyshev acceleration disabled in VBD for the core comparison.
 \end{itemize}
 
 %----------------------------------------------------------------------------
@@ -13,58 +13,62 @@
 \label{sec:EffResults}
 %----------------------------------------------------------------------------
 
-\subsection{Wall-clock}
+\subsection{Influence of substep and iteration count on error and compute time}
 \label{ssec:ErrorVsMs}
 \begin{itemize}
     \item Sweep through different substep and iteration configurations for each solver and plot their Pareto line (optimal solutions) based on avg ms/frame and avg??? Root Mean Squared position error from the Newton reference. Each diagram compares to a Newton with different substep counts
     \item XPBD substep count $n_{\mathrm{sub}} \in \{1, 2, 4, 8, 16, 32\}$
     \item VBD iteration count $n_{\mathrm{it}} \in \{1, 2, 4, 8, 16, 32\}$ 
     \item The simulated problem: a chain with 10 nodes, one end fixed, the other having a weight of ??? (with bending???) . Both ends start from the same height, only gravity acting on it.
-    \item VBD reaches the same error value as XPBD with less iterations
-    \item VBD's iterations cost more than XPBD's
-    \item With this particular problem VBD's first guesses always seem to be closer to reference than XPBD's.
-    \item From Newton with 4 substeps graph: VBD with the reference Newton's substeps converges really good. XPBD reaches it's smallest error with relatively few iterations, turning it higher doesn't improve error, only increases compute time. 
-    \item From Newton with more substeps: iterations loose their value as with small time steps both solvers converge at 1 or 2 iterations. XPBD takes over because of its cheaper iterations.
+    \item One VBD iteration apprióoximates the Newton solution better than one XPBD iteration, but are also more expensive.
+    \item From Newton with 4 substeps graph: VBD with the same substep count as the reference Newton converges really good.
+    \item From Newton with more substeps: iterations lose their value as with small time steps the problem becomes easy enough for both solvers to converge with 1 or 2 iterations. XPBD takes over because of its cheaper iteration cost.
 \end{itemize}
-\emph{TODO: add ss1, ss2, ss4, ss64}
+\emph{TODO: add 1ss, 2ss, 4ss, 64ss graphs next to each other}
 
 \subsection{Frame time vs.\ node count}
 \label{ssec:NodeCountVsFPS}
 \begin{itemize}
     \item Measure FPS over a hanging-cloth scene with wind interaction at mesh resolutions \emph{TODO: list resolutions, e.g.\ $8\times 8$ to $128\times 128$}, holding solver settings fixed at the \autoref{sec:Fairness} defaults.
+    \item Avg FPS in steady state.
     \item Based on the diagrams in ssec:ErrorVsMs, I choose substep 4 iteration 4 for XPBD and substep 4 iteration 2 for VBD, as these sit at the middle point of "realistic vs. efficient" and are alway close to each other
 \end{itemize}
-\emph{TODO: Add figure + table}
-
+\emph{TODO: add table containing FPS values:
+                8x8     16x16   32x32   64x64   128x128
+XPBD ss4it4     133.8   84.5    36.0    10.6    2.8  
+VBD ss4it2      136.0   92.4    42.8    13.6    3.7
+VBD ss4it4      124.7   73.4    29.2    8.1     2.1
+}
+\emph{TODO: Add visual images next to each other. Top row: 5 XPBD pictures, bottom row: 5 VBD pictures.}
 
 %----------------------------------------------------------------------------
 \section{Robustness and stability}
 \label{sec:Robustness}
 %----------------------------------------------------------------------------
-\subsection{High mass ratio at the end of a pendulum}
-\label{ssec:MassRatioPendulum}
+
+\subsection{Chain with heavy weight attached}
+\label{ssec:ChainWithHeavyWeight}
 \begin{itemize}
-    \item A single spring pendulum with a heavy weight at the free end and a light chain leading to the pivot.
-    \item Sweep the mass ratio $m_{\mathrm{tip}} / m_{\mathrm{chain}}$ from $1$ to $10^{4}$; report each solver's qualitative behaviour and quantitative position error vs.\ Newton.
+    \item A chain with a heavy weight attached to the free end. The weight of its last node is 1000 times the mass of the other nodes.
     \item This is the mass-disparity regime the primal/dual lens flags for XPBD's per-constraint updates.
 \end{itemize}
-\emph{TODO: Figure --- error vs.\ mass ratio.}
+\emph{TODO: the 3 images next to each other: Newton, XPBD then VBD}
 
-\subsection{High stiffness ratio chain}
+\subsection{Chain with high stiffness ratio}
 \label{ssec:StiffnessRatioChain}
 \begin{itemize}
-    \item A chain with alternating stiff and soft springs; sweep the stiffness ratio from $1$ to $10^{4}$.
+    \item A chain with alternating stiff and soft springs. The ratio of springs is 1:10000 to mirror the experiment in the original VBD paper~\cite{Chen2024}.
     \item This is the ill-conditioned-block regime the primal/dual lens flags for VBD's per-vertex update.
 \end{itemize}
-\emph{TODO: Figure --- error vs.\ stiffness ratio.}
+\emph{TODO: 3 images next to each other: Newton, XPBD then VBD}
 
-\subsection{Self-collision: cloth folded onto itself}
-\label{ssec:SelfCollResults}
-\begin{itemize}
-    \item A cloth dropped onto a small obstacle, folding onto itself.
-    \item Qualitative visual comparison, noting that the contact model differs (projection vs.\ penalty) per \autoref{sec:SelfCollision}.
-\end{itemize}
-\emph{TODO: Renders, qualitative description.}
+% \subsection{Self-collision: cloth folded onto itself}
+% \label{ssec:SelfCollisionDrop}
+% \begin{itemize}
+%     \item A cloth dropped on the ground, folding onto itself.
+%     \item A realistic cloth should exhibit.
+% \end{itemize}
+% \emph{TODO: Renders, qualitative description.}
 
 %----------------------------------------------------------------------------
 \section{Physical realism}
@@ -138,10 +142,10 @@
     \newcommand{\iterimg}[1]{\raisebox{-0.5\height}{\includegraphics[width=0.215\textwidth,keepaspectratio]{figures/IterationIndependence/#1}}}
     \begin{tabular}{c cccc}
         & {\small $n_{\mathrm{it}}=20$} & {\small $n_{\mathrm{it}}=40$} & {\small $n_{\mathrm{it}}=80$} & {\small $n_{\mathrm{it}}=160$} \\[0.2ex]
-        \raisebox{-0.5\height}{\rotatebox[origin=c]{90}{\small VBD}} &
-            \iterimg{VBD_i20.png} & \iterimg{VBD_i40.png} & \iterimg{VBD_i80.png} & \iterimg{VBD_i160.png} \\[10ex]
         \raisebox{-0.5\height}{\rotatebox[origin=c]{90}{\small XPBD}} &
-            \iterimg{XPBD_i20_16x16.png} & \iterimg{XPBD_i40_16x16.png} & \iterimg{XPBD_i80_16x16.png} & \iterimg{XPBD_i160_16x16.png} \\
+            \iterimg{XPBD_i20_16x16.png} & \iterimg{XPBD_i40_16x16.png} & \iterimg{XPBD_i80_16x16.png} & \iterimg{XPBD_i160_16x16.png} \\[10ex]
+        \raisebox{-0.5\height}{\rotatebox[origin=c]{90}{\small VBD}} &
+            \iterimg{VBD_i20.png} & \iterimg{VBD_i40.png} & \iterimg{VBD_i80.png} & \iterimg{VBD_i160.png} \\
     \end{tabular}
     \caption{Settled shape of a pinned cloth at increasing iteration counts ($n_{\mathrm{it}} = 20, 40, 80, 160$).
     Note that in this experiment the material parameters are different for the two solvers.}
