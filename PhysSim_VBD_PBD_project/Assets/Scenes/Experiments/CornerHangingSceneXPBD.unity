@@ -221,7 +221,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::XPBDCloth
   frameRate: 30
   numSubsteps: 1
-  numIterations: 10
+  numIterations: 40
   stretchingCompliance: 0.001
   shearCompliance: 0.01
   bendingCompliance: 0.1
@@ -229,8 +229,8 @@ MonoBehaviour:
   handleSelfCollisions: 0
   selfCollisionFriction: 0
   velCapPerFrame: 3
-  rayleighMassDamping: 0.5
-  rayleighStiffnessDamping: 0.01
+  rayleighMassDamping: 0.2
+  rayleighStiffnessDamping: 0.005
   addInitNoise: 0
   logMsPerFrame: 0
   logEnergy: 0

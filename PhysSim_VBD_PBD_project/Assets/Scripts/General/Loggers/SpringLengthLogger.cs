@@ -7,7 +7,7 @@ using UnityEngine;
 public class SpringLengthLogger : MonoBehaviour
 {
     public bool writeCsv = true;
-    public bool showOverlay = true;
+    public bool showOverlay = false;
     public bool writePerSpring = true; // false logs only the summary columns (cloth has too many springs to dump per-spring)
     public string label = "Sim";
     public float overlayY = 110f;

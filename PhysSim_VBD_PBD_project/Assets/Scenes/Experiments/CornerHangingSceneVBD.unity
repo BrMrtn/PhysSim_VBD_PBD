@@ -209,7 +209,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::VBDCloth
   frameRate: 30
   numSubsteps: 1
-  numIterations: 10
+  numIterations: 160
   useAcceleration: 0
   accelerationRho: 0.502
   stretchingStiffness: 1000

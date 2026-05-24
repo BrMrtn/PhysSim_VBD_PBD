@@ -409,7 +409,6 @@ GameObject:
   - component: {fileID: 1477842771}
   - component: {fileID: 1477842770}
   - component: {fileID: 1477842769}
-  - component: {fileID: 1477842772}
   m_Layer: 0
   m_Name: Chain
   m_TagString: Untagged
@@ -430,22 +429,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::XPBDChain
   frameRate: 30
-  numSubsteps: 15
-  numIterations: 1
-  numParticles: 20
+  numSubsteps: 1
+  numIterations: 100
+  numParticles: 5
   restLength: 1
-  bobStartPosition: {x: -19, y: 8, z: 8}
-  stretchingCompliance: 0.00001
-  alternatingStiffness: 0
+  bobStartPosition: {x: -4, y: 3, z: 8}
+  stretchingCompliance: 0.01
+  alternatingStiffness: 1
   stiffnessRatio: 10000
-  hasBendingConstraints: 1
+  hasBendingConstraints: 0
   bendingCompliance: 0.0001
   rayleighMassDamping: 0
   rayleighStiffnessDamping: 0
-  logMsPerFrame: 1
+  logMsPerFrame: 0
   logEnergy: 0
-  logSpringLength: 0
-  sphereMaterial: {fileID: 2100000, guid: 93ea19cb492d8914a9a1e2678ec6c8ba, type: 2}
+  logSpringLength: 1
+  sphereMaterial: {fileID: 0}
 --- !u!120 &1477842770
 LineRenderer:
   serializedVersion: 3
@@ -472,7 +471,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: bbcad39595315ce4f97a994c8990f658, type: 2}
+  - {fileID: 2100000, guid: 93ea19cb492d8914a9a1e2678ec6c8ba, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -565,25 +564,12 @@ Transform:
   m_GameObject: {fileID: 1477842767}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 8, z: 8}
+  m_LocalPosition: {x: 0, y: 3, z: 8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1477842772
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1477842767}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e106c665cc6cd324b9107a29429feaf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::XPBDEndWeight
-  mass: 1000
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

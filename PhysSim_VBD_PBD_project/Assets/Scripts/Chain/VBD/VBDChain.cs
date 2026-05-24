@@ -120,6 +120,14 @@ public class VBDChain : MonoBehaviour
         }
     }
 
+    // Scales the rendered sphere of a single vertex relative to its default
+    // size. Used by EndWeight to make the bob at the chain's end larger.
+    public void SetVertexSphereScale(int index, float multiplier)
+    {
+        if (vertexSpheres == null || index < 0 || index >= vertexSpheres.Length) return;
+        vertexSpheres[index].transform.localScale *= multiplier;
+    }
+
     void Update()
     {
         bool shouldLogPerformance = logMsPerFrame && Time.frameCount % logEveryNFrames == 0;
