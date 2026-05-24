@@ -56,39 +56,39 @@
 \select@language {english} \contentsline {chapter}{\numberline {6}Experiments and results}{19}{chapter.6}%
 \select@language {english} \contentsline {section}{\numberline {6.1}Computational efficiency}{19}{section.6.1}%
 \select@language {english} \contentsline {subsection}{\numberline {6.1.1}Influence of substep and iteration count on error and compute time}{19}{subsection.6.1.1}%
-\select@language {english} \contentsline {subsection}{\numberline {6.1.2}Frame time vs.\ node count}{20}{subsection.6.1.2}%
+\select@language {english} \contentsline {subsection}{\numberline {6.1.2}Frame time vs.\ node count}{19}{subsection.6.1.2}%
 \select@language {english} \contentsline {section}{\numberline {6.2}Robustness and stability}{20}{section.6.2}%
 \select@language {english} \contentsline {subsection}{\numberline {6.2.1}Chain with heavy weight attached}{20}{subsection.6.2.1}%
-\select@language {english} \contentsline {subsection}{\numberline {6.2.2}Chain with high stiffness ratio}{20}{subsection.6.2.2}%
-\select@language {english} \contentsline {subsection}{\numberline {6.2.3}Self-collision: cloth folded onto itself}{20}{subsection.6.2.3}%
-\select@language {english} \contentsline {section}{\numberline {6.3}Physical realism}{21}{section.6.3}%
-\select@language {english} \contentsline {subsection}{\numberline {6.3.1}Harmonic oscillator}{21}{subsection.6.3.1}%
-\select@language {english} \contentsline {subsection}{\numberline {6.3.2}Energy tracking}{21}{subsection.6.3.2}%
-\select@language {english} \contentsline {section}{\numberline {6.4}Flexibility}{22}{section.6.4}%
-\select@language {english} \contentsline {subsection}{\numberline {6.4.1}Iteration-count independence of stiffness}{22}{subsection.6.4.1}%
-\select@language {english} \contentsline {subsection}{\numberline {6.4.2}Ease of adding a new functionality}{22}{subsection.6.4.2}%
-\select@language {english} \contentsline {subsection}{\numberline {6.4.3}Coverage of different physical domains}{23}{subsection.6.4.3}%
-\select@language {english} \contentsline {chapter}{\numberline {7}Discussion}{24}{chapter.7}%
-\select@language {english} \contentsline {section}{\numberline {7.1}Synthesis across axes}{24}{section.7.1}%
-\select@language {english} \contentsline {section}{\numberline {7.2}Reading the results through the primal/dual lens}{24}{section.7.2}%
-\select@language {english} \contentsline {paragraph}{Mass-ratio regime.}{24}{section*.17}%
-\select@language {english} \contentsline {paragraph}{Stiffness-ratio regime.}{24}{section*.18}%
-\select@language {english} \contentsline {paragraph}{Per-iteration convergence under stiffness.}{25}{section*.19}%
-\select@language {english} \contentsline {paragraph}{Joint reading.}{25}{section*.20}%
-\select@language {english} \contentsline {section}{\numberline {7.3}Threats to validity}{25}{section.7.3}%
-\select@language {english} \contentsline {subsection}{\numberline {7.3.1}Single-threaded execution}{25}{subsection.7.3.1}%
-\select@language {english} \contentsline {subsection}{\numberline {7.3.2}Mass-spring discretisation only}{25}{subsection.7.3.2}%
-\select@language {english} \contentsline {subsection}{\numberline {7.3.3}Gauss--Seidel order dependence}{25}{subsection.7.3.3}%
-\select@language {english} \contentsline {subsection}{\numberline {7.3.4}Fixed $dt = 1/30$~s}{26}{subsection.7.3.4}%
-\select@language {english} \contentsline {section}{\numberline {7.4}Limitations}{26}{section.7.4}%
-\select@language {english} \contentsline {chapter}{\numberline {8}Conclusion and future work}{27}{chapter.8}%
-\select@language {english} \contentsline {section}{\numberline {8.1}Summary}{27}{section.8.1}%
-\select@language {english} \contentsline {section}{\numberline {8.2}Future work}{27}{section.8.2}%
-\select@language {english} \contentsline {subsection}{\numberline {8.2.1}Multithreaded and GPU comparison}{27}{subsection.8.2.1}%
-\select@language {english} \contentsline {subsection}{\numberline {8.2.2}Extend research to other dynamic types}{27}{subsection.8.2.2}%
-\select@language {english} \contentsline {subsection}{\numberline {8.2.3}FEM constraints}{28}{subsection.8.2.3}%
-\select@language {english} \contentsline {subsection}{\numberline {8.2.4}AVBD and post-2024 variants}{28}{subsection.8.2.4}%
-\select@language {english} \contentsline {chapter}{Acknowledgements}{29}{chapter*.21}%
-\select@language {english} \contentsline {chapter}{Bibliography}{30}{chapter*.21}%
-\select@language {english} \contentsline {chapter}{Appendix}{32}{appendix*.23}%
-\select@language {english} \contentsline {section}{\numberline {A.1}Declaration on the Use of Generative Artificial Intelligence}{33}{section.A.1}%
+\select@language {english} \contentsline {subsection}{\numberline {6.2.2}Chain with high stiffness ratio}{21}{subsection.6.2.2}%
+\select@language {english} \contentsline {subsection}{\numberline {6.2.3}Self-collision: cloth folded onto itself}{21}{subsection.6.2.3}%
+\select@language {english} \contentsline {section}{\numberline {6.3}Physical realism}{23}{section.6.3}%
+\select@language {english} \contentsline {subsection}{\numberline {6.3.1}Harmonic oscillator}{23}{subsection.6.3.1}%
+\select@language {english} \contentsline {subsection}{\numberline {6.3.2}Energy tracking}{23}{subsection.6.3.2}%
+\select@language {english} \contentsline {section}{\numberline {6.4}Flexibility}{24}{section.6.4}%
+\select@language {english} \contentsline {subsection}{\numberline {6.4.1}Iteration-count independence of stiffness}{24}{subsection.6.4.1}%
+\select@language {english} \contentsline {subsection}{\numberline {6.4.2}Ease of adding a new functionality}{24}{subsection.6.4.2}%
+\select@language {english} \contentsline {subsection}{\numberline {6.4.3}Coverage of different physical domains}{25}{subsection.6.4.3}%
+\select@language {english} \contentsline {chapter}{\numberline {7}Discussion}{27}{chapter.7}%
+\select@language {english} \contentsline {section}{\numberline {7.1}Synthesis across axes}{27}{section.7.1}%
+\select@language {english} \contentsline {section}{\numberline {7.2}Reading the results through the primal/dual lens}{27}{section.7.2}%
+\select@language {english} \contentsline {paragraph}{Mass-ratio regime.}{27}{section*.28}%
+\select@language {english} \contentsline {paragraph}{Stiffness-ratio regime.}{27}{section*.29}%
+\select@language {english} \contentsline {paragraph}{Per-iteration convergence under stiffness.}{28}{section*.30}%
+\select@language {english} \contentsline {paragraph}{Joint reading.}{28}{section*.31}%
+\select@language {english} \contentsline {section}{\numberline {7.3}Threats to validity}{28}{section.7.3}%
+\select@language {english} \contentsline {subsection}{\numberline {7.3.1}Single-threaded execution}{28}{subsection.7.3.1}%
+\select@language {english} \contentsline {subsection}{\numberline {7.3.2}Mass-spring discretisation only}{28}{subsection.7.3.2}%
+\select@language {english} \contentsline {subsection}{\numberline {7.3.3}Gauss--Seidel order dependence}{28}{subsection.7.3.3}%
+\select@language {english} \contentsline {subsection}{\numberline {7.3.4}Fixed $dt = 1/30$~s}{29}{subsection.7.3.4}%
+\select@language {english} \contentsline {section}{\numberline {7.4}Limitations}{29}{section.7.4}%
+\select@language {english} \contentsline {chapter}{\numberline {8}Conclusion and future work}{30}{chapter.8}%
+\select@language {english} \contentsline {section}{\numberline {8.1}Summary}{30}{section.8.1}%
+\select@language {english} \contentsline {section}{\numberline {8.2}Future work}{30}{section.8.2}%
+\select@language {english} \contentsline {subsection}{\numberline {8.2.1}Multithreaded and GPU comparison}{30}{subsection.8.2.1}%
+\select@language {english} \contentsline {subsection}{\numberline {8.2.2}Extend research to other dynamic types}{30}{subsection.8.2.2}%
+\select@language {english} \contentsline {subsection}{\numberline {8.2.3}FEM constraints}{31}{subsection.8.2.3}%
+\select@language {english} \contentsline {subsection}{\numberline {8.2.4}AVBD and post-2024 variants}{31}{subsection.8.2.4}%
+\select@language {english} \contentsline {chapter}{Acknowledgements}{32}{chapter*.32}%
+\select@language {english} \contentsline {chapter}{Bibliography}{33}{chapter*.32}%
+\select@language {english} \contentsline {chapter}{Appendix}{35}{appendix*.34}%
+\select@language {english} \contentsline {section}{\numberline {A.1}Declaration on the Use of Generative Artificial Intelligence}{36}{section.A.1}%

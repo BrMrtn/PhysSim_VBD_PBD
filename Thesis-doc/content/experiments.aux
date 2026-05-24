@@ -8,39 +8,61 @@
 \newlabel{sec:EffResults}{{6.1}{19}{Computational efficiency}{section.6.1}{}}
 \@writefile{toc}{\select@language{english} \contentsline {subsection}{\numberline {6.1.1}Influence of substep and iteration count on error and compute time}{19}{subsection.6.1.1}\protected@file@percent }
 \newlabel{ssec:ErrorVsMs}{{6.1.1}{19}{Influence of substep and iteration count on error and compute time}{subsection.6.1.1}{}}
+\@writefile{toc}{\select@language{english} \contentsline {subsection}{\numberline {6.1.2}Frame time vs.\ node count}{19}{subsection.6.1.2}\protected@file@percent }
+\newlabel{ssec:NodeCountVsFPS}{{6.1.2}{19}{Frame time vs.\ node count}{subsection.6.1.2}{}}
 \citation{Chen2024}
-\@writefile{toc}{\select@language{english} \contentsline {subsection}{\numberline {6.1.2}Frame time vs.\ node count}{20}{subsection.6.1.2}\protected@file@percent }
-\newlabel{ssec:NodeCountVsFPS}{{6.1.2}{20}{Frame time vs.\ node count}{subsection.6.1.2}{}}
+\@writefile{lof}{\select@language{english} \contentsline {figure}{\numberline {6.1}{\ignorespaces Pareto fronts of average ms/frame versus average RMS position error on the 10-node weighted chain. From top-left to bottom-right the Newton reference uses 1, 4, 8, and 64 substeps. As the reference is refined the problem becomes easy for both solvers and XPBD's cheaper iterations win.}}{20}{figure.caption.16}\protected@file@percent }
+\newlabel{fig:ErrorVsMs}{{6.1}{20}{Pareto fronts of average ms/frame versus average RMS position error on the 10-node weighted chain. From top-left to bottom-right the Newton reference uses 1, 4, 8, and 64 substeps. As the reference is refined the problem becomes easy for both solvers and XPBD's cheaper iterations win}{figure.caption.16}{}}
+\@writefile{lot}{\select@language{english} \contentsline {table}{\numberline {6.1}{\ignorespaces Steady-state average FPS on the wind-driven hanging cloth at increasing mesh resolutions.}}{20}{table.caption.17}\protected@file@percent }
+\newlabel{tab:NodeCountFPS}{{6.1}{20}{Steady-state average FPS on the wind-driven hanging cloth at increasing mesh resolutions}{table.caption.17}{}}
 \@writefile{toc}{\select@language{english} \contentsline {section}{\numberline {6.2}Robustness and stability}{20}{section.6.2}\protected@file@percent }
 \newlabel{sec:Robustness}{{6.2}{20}{Robustness and stability}{section.6.2}{}}
 \@writefile{toc}{\select@language{english} \contentsline {subsection}{\numberline {6.2.1}Chain with heavy weight attached}{20}{subsection.6.2.1}\protected@file@percent }
 \newlabel{ssec:ChainWithHeavyWeight}{{6.2.1}{20}{Chain with heavy weight attached}{subsection.6.2.1}{}}
-\@writefile{toc}{\select@language{english} \contentsline {subsection}{\numberline {6.2.2}Chain with high stiffness ratio}{20}{subsection.6.2.2}\protected@file@percent }
-\newlabel{ssec:StiffnessRatioChain}{{6.2.2}{20}{Chain with high stiffness ratio}{subsection.6.2.2}{}}
-\@writefile{toc}{\select@language{english} \contentsline {subsection}{\numberline {6.2.3}Self-collision: cloth folded onto itself}{20}{subsection.6.2.3}\protected@file@percent }
-\newlabel{ssec:SelfCollisionDrop}{{6.2.3}{20}{Self-collision: cloth folded onto itself}{subsection.6.2.3}{}}
 \citation{Chen2024}
 \citation{Giles2025}
+\@writefile{lof}{\select@language{english} \contentsline {figure}{\numberline {6.2}{\ignorespaces The wind-driven hanging cloth at the five mesh resolutions of \autoref {tab:NodeCountFPS}, for XPBD (top) and VBD (bottom).}}{21}{figure.caption.18}\protected@file@percent }
+\newlabel{fig:NodeCountVsFPS}{{6.2}{21}{The wind-driven hanging cloth at the five mesh resolutions of \autoref {tab:NodeCountFPS}, for XPBD (top) and VBD (bottom)}{figure.caption.18}{}}
+\@writefile{lof}{\select@language{english} \contentsline {figure}{\numberline {6.3}{\ignorespaces Chain with a $1000\times $ heavier node at the free end. Left to right: Newton reference, XPBD, VBD.}}{21}{figure.caption.19}\protected@file@percent }
+\newlabel{fig:ChainHeavyWeight}{{6.3}{21}{Chain with a $1000\times $ heavier node at the free end. Left to right: Newton reference, XPBD, VBD}{figure.caption.19}{}}
+\@writefile{toc}{\select@language{english} \contentsline {subsection}{\numberline {6.2.2}Chain with high stiffness ratio}{21}{subsection.6.2.2}\protected@file@percent }
+\newlabel{ssec:StiffnessRatioChain}{{6.2.2}{21}{Chain with high stiffness ratio}{subsection.6.2.2}{}}
+\@writefile{toc}{\select@language{english} \contentsline {subsection}{\numberline {6.2.3}Self-collision: cloth folded onto itself}{21}{subsection.6.2.3}\protected@file@percent }
+\newlabel{ssec:SelfCollisionDrop}{{6.2.3}{21}{Self-collision: cloth folded onto itself}{subsection.6.2.3}{}}
 \citation{10.1145/2994258.2994272}
-\@writefile{toc}{\select@language{english} \contentsline {section}{\numberline {6.3}Physical realism}{21}{section.6.3}\protected@file@percent }
-\newlabel{sec:Realism}{{6.3}{21}{Physical realism}{section.6.3}{}}
-\@writefile{toc}{\select@language{english} \contentsline {subsection}{\numberline {6.3.1}Harmonic oscillator}{21}{subsection.6.3.1}\protected@file@percent }
-\newlabel{ssec:Harmonic}{{6.3.1}{21}{Harmonic oscillator}{subsection.6.3.1}{}}
-\@writefile{toc}{\select@language{english} \contentsline {subsection}{\numberline {6.3.2}Energy tracking}{21}{subsection.6.3.2}\protected@file@percent }
-\newlabel{ssec:EnergyTracking}{{6.3.2}{21}{Energy tracking}{subsection.6.3.2}{}}
+\@writefile{lof}{\select@language{english} \contentsline {figure}{\numberline {6.4}{\ignorespaces Chain with alternating springs at a $1{:}10000$ stiffness ratio. Left to right: Newton reference, XPBD, VBD.}}{22}{figure.caption.20}\protected@file@percent }
+\newlabel{fig:StiffnessRatioChain}{{6.4}{22}{Chain with alternating springs at a $1{:}10000$ stiffness ratio. Left to right: Newton reference, XPBD, VBD}{figure.caption.20}{}}
+\@writefile{lof}{\select@language{english} \contentsline {figure}{\numberline {6.5}{\ignorespaces Cloth drop and self-collision at total mass~1, over time (left to right). Top: XPBD. Bottom: VBD.}}{22}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:SelfCollisionW1}{{6.5}{22}{Cloth drop and self-collision at total mass~1, over time (left to right). Top: XPBD. Bottom: VBD}{figure.caption.21}{}}
+\@writefile{lof}{\select@language{english} \contentsline {figure}{\numberline {6.6}{\ignorespaces The same cloth drop at total mass~10000, over time (left to right). Top: XPBD. Bottom: VBD. The larger vertex mass stabilises the VBD solve.}}{22}{figure.caption.22}\protected@file@percent }
+\newlabel{fig:SelfCollisionW1e4}{{6.6}{22}{The same cloth drop at total mass~10000, over time (left to right). Top: XPBD. Bottom: VBD. The larger vertex mass stabilises the VBD solve}{figure.caption.22}{}}
 \citation{10.1145/2994258.2994272}
-\@writefile{toc}{\select@language{english} \contentsline {section}{\numberline {6.4}Flexibility}{22}{section.6.4}\protected@file@percent }
-\newlabel{sec:FlexResults}{{6.4}{22}{Flexibility}{section.6.4}{}}
-\@writefile{toc}{\select@language{english} \contentsline {subsection}{\numberline {6.4.1}Iteration-count independence of stiffness}{22}{subsection.6.4.1}\protected@file@percent }
-\newlabel{ssec:IterIndepStiff}{{6.4.1}{22}{Iteration-count independence of stiffness}{subsection.6.4.1}{}}
-\@writefile{toc}{\select@language{english} \contentsline {subsection}{\numberline {6.4.2}Ease of adding a new functionality}{22}{subsection.6.4.2}\protected@file@percent }
-\newlabel{ssec:NewFunctionality}{{6.4.2}{22}{Ease of adding a new functionality}{subsection.6.4.2}{}}
-\@writefile{lof}{\select@language{english} \contentsline {figure}{\numberline {6.1}{\ignorespaces Settled shape of a pinned cloth at increasing iteration counts ($n_{\mathrm  {it}} = 20, 40, 80, 160$). Note that in this experiment the material parameters are different for the two solvers.}}{23}{figure.caption.16}\protected@file@percent }
-\newlabel{fig:IterIndep}{{6.1}{23}{Settled shape of a pinned cloth at increasing iteration counts ($n_{\mathrm {it}} = 20, 40, 80, 160$). Note that in this experiment the material parameters are different for the two solvers}{figure.caption.16}{}}
-\@writefile{toc}{\select@language{english} \contentsline {subsection}{\numberline {6.4.3}Coverage of different physical domains}{23}{subsection.6.4.3}\protected@file@percent }
-\newlabel{ssec:DomainCoverage}{{6.4.3}{23}{Coverage of different physical domains}{subsection.6.4.3}{}}
+\@writefile{toc}{\select@language{english} \contentsline {section}{\numberline {6.3}Physical realism}{23}{section.6.3}\protected@file@percent }
+\newlabel{sec:Realism}{{6.3}{23}{Physical realism}{section.6.3}{}}
+\@writefile{toc}{\select@language{english} \contentsline {subsection}{\numberline {6.3.1}Harmonic oscillator}{23}{subsection.6.3.1}\protected@file@percent }
+\newlabel{ssec:Harmonic}{{6.3.1}{23}{Harmonic oscillator}{subsection.6.3.1}{}}
+\@writefile{lof}{\select@language{english} \contentsline {figure}{\numberline {6.7}{\ignorespaces Harmonic-oscillator amplitude over time for both solvers against the analytic solution (dashed).}}{23}{figure.caption.23}\protected@file@percent }
+\newlabel{fig:Oscillator}{{6.7}{23}{Harmonic-oscillator amplitude over time for both solvers against the analytic solution (dashed)}{figure.caption.23}{}}
+\@writefile{toc}{\select@language{english} \contentsline {subsection}{\numberline {6.3.2}Energy tracking}{23}{subsection.6.3.2}\protected@file@percent }
+\newlabel{ssec:EnergyTracking}{{6.3.2}{23}{Energy tracking}{subsection.6.3.2}{}}
+\@writefile{lof}{\select@language{english} \contentsline {figure}{\numberline {6.8}{\ignorespaces Total mechanical energy over a long time window. Both solvers follow the same exponential decay.}}{24}{figure.caption.24}\protected@file@percent }
+\newlabel{fig:EnergyLong}{{6.8}{24}{Total mechanical energy over a long time window. Both solvers follow the same exponential decay}{figure.caption.24}{}}
+\@writefile{lof}{\select@language{english} \contentsline {figure}{\numberline {6.9}{\ignorespaces Early-time energy for low iteration counts. VBD~1 lies between XPBD~1 and XPBD~2; at 4 iterations both solvers match the reference.}}{24}{figure.caption.25}\protected@file@percent }
+\newlabel{fig:EnergyShort}{{6.9}{24}{Early-time energy for low iteration counts. VBD~1 lies between XPBD~1 and XPBD~2; at 4 iterations both solvers match the reference}{figure.caption.25}{}}
+\@writefile{toc}{\select@language{english} \contentsline {section}{\numberline {6.4}Flexibility}{24}{section.6.4}\protected@file@percent }
+\newlabel{sec:FlexResults}{{6.4}{24}{Flexibility}{section.6.4}{}}
+\@writefile{toc}{\select@language{english} \contentsline {subsection}{\numberline {6.4.1}Iteration-count independence of stiffness}{24}{subsection.6.4.1}\protected@file@percent }
+\newlabel{ssec:IterIndepStiff}{{6.4.1}{24}{Iteration-count independence of stiffness}{subsection.6.4.1}{}}
+\@writefile{toc}{\select@language{english} \contentsline {subsection}{\numberline {6.4.2}Ease of adding a new functionality}{24}{subsection.6.4.2}\protected@file@percent }
+\newlabel{ssec:NewFunctionality}{{6.4.2}{24}{Ease of adding a new functionality}{subsection.6.4.2}{}}
+\@writefile{lof}{\select@language{english} \contentsline {figure}{\numberline {6.10}{\ignorespaces Settled shape of a pinned cloth at increasing iteration counts ($n_{\mathrm  {it}} = 20, 40, 80, 160$). Note that in this experiment the material parameters are different for the two solvers.}}{25}{figure.caption.26}\protected@file@percent }
+\newlabel{fig:IterIndep}{{6.10}{25}{Settled shape of a pinned cloth at increasing iteration counts ($n_{\mathrm {it}} = 20, 40, 80, 160$). Note that in this experiment the material parameters are different for the two solvers}{figure.caption.26}{}}
+\@writefile{lot}{\select@language{english} \contentsline {table}{\numberline {6.2}{\ignorespaces Cost of adding dihedral bending constraints to each solver.}}{25}{table.caption.27}\protected@file@percent }
+\newlabel{tab:Extension}{{6.2}{25}{Cost of adding dihedral bending constraints to each solver}{table.caption.27}{}}
+\@writefile{toc}{\select@language{english} \contentsline {subsection}{\numberline {6.4.3}Coverage of different physical domains}{25}{subsection.6.4.3}\protected@file@percent }
+\newlabel{ssec:DomainCoverage}{{6.4.3}{25}{Coverage of different physical domains}{subsection.6.4.3}{}}
 \@setckpt{content/experiments}{
-\setcounter{page}{24}
+\setcounter{page}{27}
 \setcounter{equation}{0}
 \setcounter{enumi}{3}
 \setcounter{enumii}{0}
@@ -55,8 +77,8 @@
 \setcounter{subsubsection}{0}
 \setcounter{paragraph}{0}
 \setcounter{subparagraph}{0}
-\setcounter{figure}{1}
-\setcounter{table}{0}
+\setcounter{figure}{10}
+\setcounter{table}{2}
 \setcounter{footnote@add}{0}
 \setcounter{footnote@ch}{0}
 \setcounter{parentequation}{0}
@@ -66,7 +88,7 @@
 \setcounter{Hy@AnnotLevel}{0}
 \setcounter{bookmark@seq@number}{60}
 \setcounter{lstnumber}{14}
-\setcounter{endNonectr}{94}
+\setcounter{endNonectr}{81}
 \setcounter{currNonectr}{0}
 \setcounter{caption@flags}{2}
 \setcounter{continuedfloat}{0}

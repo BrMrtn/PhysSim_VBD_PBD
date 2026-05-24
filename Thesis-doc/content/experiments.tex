@@ -3,10 +3,12 @@
 \label{chap:Experiments}
 %----------------------------------------------------------------------------
 
-\begin{itemize}
-    \item This chapter reports measurements along the four evaluation axes from \autoref{sec:EvalAxes}: efficiency, robustness, physical realism, flexibility.
-    \item All experiments use the shared scaffolding and fairness controls of \autoref{sec:Fairness}: matched gravity, $dt = 1/30$~s, no damping, $\alpha_{\mathrm{XPBD}} = 1/k_{\mathrm{VBD}}$, Chebyshev acceleration disabled in VBD for the core comparison.
-\end{itemize}
+This chapter reports measurements along the four evaluation axes introduced in
+\autoref{sec:EvalAxes}: efficiency, robustness, physical realism, and
+flexibility. Unless stated otherwise, every experiment uses the shared
+scaffolding and fairness controls of \autoref{sec:Fairness}: matched gravity,
+$dt = 1/30$~s, no damping, $\alpha_{\mathrm{XPBD}} = 1/k_{\mathrm{VBD}}$, and
+Chebyshev acceleration disabled in VBD for the core comparison.
 
 %----------------------------------------------------------------------------
 \section{Computational efficiency}
@@ -15,31 +17,96 @@
 
 \subsection{Influence of substep and iteration count on error and compute time}
 \label{ssec:ErrorVsMs}
-\begin{itemize}
-    \item Sweep through different substep and iteration configurations for each solver and plot their Pareto line (optimal solutions) based on avg ms/frame and avg??? Root Mean Squared position error from the Newton reference. Each diagram compares to a Newton with different substep counts
-    \item XPBD substep count $n_{\mathrm{sub}} \in \{1, 2, 4, 8, 16, 32\}$
-    \item VBD iteration count $n_{\mathrm{it}} \in \{1, 2, 4, 8, 16, 32\}$ 
-    \item The simulated problem: a chain with 10 nodes, one end fixed, the other having a weight of ??? (with bending???) . Both ends start from the same height, only gravity acting on it.
-    \item One VBD iteration apprióoximates the Newton solution better than one XPBD iteration, but are also more expensive.
-    \item From Newton with 4 substeps graph: VBD with the same substep count as the reference Newton converges really good.
-    \item From Newton with more substeps: iterations lose their value as with small time steps the problem becomes easy enough for both solvers to converge with 1 or 2 iterations. XPBD takes over because of its cheaper iteration cost.
-\end{itemize}
-\emph{TODO: add 1ss, 2ss, 4ss, 64ss graphs next to each other}
+
+For each solver I sweep over a range of substep and iteration configurations and
+plot the Pareto front of the resulting runs --- the configurations that are not
+dominated on both axes --- using average ms/frame against the average
+root-mean-squared position error measured from a Newton reference. XPBD is swept
+over substep counts $n_{\mathrm{sub}} \in \{1, 2, 4, 8, 16, 32\}$ and VBD over
+iteration counts $n_{\mathrm{it}} \in \{1, 2, 4, 8, 16, 32\}$. Each diagram in
+\autoref{fig:ErrorVsMs} uses a Newton reference computed with a different number
+of substeps.
+
+The test problem is a chain of 10 nodes with one end pinned and a weight at the
+free end. Both ends start at the same height and only gravity acts on the chain.
+
+A single VBD iteration approximates the Newton solution more closely than a
+single XPBD iteration, but it is also more expensive. Against the four-substep
+Newton reference, VBD run with the same substep count as the reference converges
+very well. As the reference is given more substeps, however, iterations lose
+their value: with a small enough time step the problem becomes easy enough for
+both solvers to converge in one or two iterations, at which point XPBD takes
+over thanks to its cheaper per-iteration cost.
+
+\begin{figure}[ht]
+    \centering
+    \newcommand{\evmimg}[1]{\includegraphics[width=0.48\textwidth,keepaspectratio]{figures/ErrorVsMs/#1}}
+    \begin{tabular}{cc}
+        \evmimg{WallClock_fair_base_clean_newton1ss.png} &
+        \evmimg{WallClock_fair_base_clean_newton4ss.png} \\
+        \evmimg{WallClock_fair_base_clean_newton8ss.png} &
+        \evmimg{WallClock_fair_base_clean_newton64ss.png} \\
+    \end{tabular}
+    \caption{Pareto fronts of average ms/frame versus average RMS position error
+    on the 10-node weighted chain. From top-left to bottom-right the Newton
+    reference uses 1, 4, 8, and 64 substeps. As the reference is refined the
+    problem becomes easy for both solvers and XPBD's cheaper iterations win.}
+    \label{fig:ErrorVsMs}
+\end{figure}
 
 \subsection{Frame time vs.\ node count}
 \label{ssec:NodeCountVsFPS}
-\begin{itemize}
-    \item Measure FPS over a hanging-cloth scene with wind interaction at mesh resolutions \emph{TODO: list resolutions, e.g.\ $8\times 8$ to $128\times 128$}, holding solver settings fixed at the \autoref{sec:Fairness} defaults.
-    \item Avg FPS in steady state.
-    \item Based on the diagrams in ssec:ErrorVsMs, I choose substep 4 iteration 4 for XPBD and substep 4 iteration 2 for VBD, as these sit at the middle point of "realistic vs. efficient" and are alway close to each other
-\end{itemize}
-\emph{TODO: add table containing FPS values:
-                8x8     16x16   32x32   64x64   128x128
-XPBD ss4it4     133.8   84.5    36.0    10.6    2.8  
-VBD ss4it2      136.0   92.4    42.8    13.6    3.7
-VBD ss4it4      124.7   73.4    29.2    8.1     2.1
-}
-\emph{TODO: Add visual images next to each other. Top row: 5 XPBD pictures, bottom row: 5 VBD pictures.}
+
+To measure how each solver scales with problem size, I record the steady-state
+average frames per second on a hanging-cloth scene with wind interaction, at
+mesh resolutions from $8\times 8$ to $128\times 128$, holding solver settings
+fixed at the \autoref{sec:Fairness} defaults. Based on the Pareto fronts of
+\autoref{ssec:ErrorVsMs} I use substep~4 / iteration~4 for XPBD and substep~4 /
+iteration~2 for VBD, since these sit near the midpoint between ``realistic'' and
+``efficient'' and stay close to each other in cost. \autoref{tab:NodeCountFPS}
+reports the measured frame rates and \autoref{fig:NodeCountVsFPS} shows the
+corresponding cloth at each resolution.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{l ccccc}
+        \toprule
+        Configuration & $8\times 8$ & $16\times 16$ & $32\times 32$ & $64\times 64$ & $128\times 128$ \\
+        \midrule
+        XPBD ss4 it4 & 133.8 & 84.5 & 36.0 & 10.6 & 2.8 \\
+        VBD ss4 it2  & 136.0 & 92.4 & 42.8 & 13.6 & 3.7 \\
+        VBD ss4 it4  & 124.7 & 73.4 & 29.2 &  8.1 & 2.1 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Steady-state average FPS on the wind-driven hanging cloth at
+    increasing mesh resolutions.}
+    \label{tab:NodeCountFPS}
+\end{table}
+
+\begin{figure}[ht]
+    \centering
+    \setlength{\tabcolsep}{1.5pt}
+    \renewcommand{\arraystretch}{0.4}
+    \newcommand{\fpsimg}[1]{\raisebox{-0.5\height}{\includegraphics[width=0.18\textwidth,keepaspectratio]{#1}}}
+    \begin{tabular}{c ccccc}
+        & {\small $8\times 8$} & {\small $16\times 16$} & {\small $32\times 32$} & {\small $64\times 64$} & {\small $128\times 128$} \\[0.2ex]
+        \raisebox{-0.5\height}{\rotatebox[origin=c]{90}{\small XPBD}} &
+            \fpsimg{figures/NodeCountVsFPS/XPBD/frame_0.png} &
+            \fpsimg{figures/NodeCountVsFPS/XPBD/frame_1.png} &
+            \fpsimg{figures/NodeCountVsFPS/XPBD/frame_2.png} &
+            \fpsimg{figures/NodeCountVsFPS/XPBD/frame_3.png} &
+            \fpsimg{figures/NodeCountVsFPS/XPBD/frame_4.png} \\[6ex]
+        \raisebox{-0.5\height}{\rotatebox[origin=c]{90}{\small VBD}} &
+            \fpsimg{figures/NodeCountVsFPS/VBD/frame_0.png} &
+            \fpsimg{figures/NodeCountVsFPS/VBD/frame_1.png} &
+            \fpsimg{figures/NodeCountVsFPS/VBD/frame_2.png} &
+            \fpsimg{figures/NodeCountVsFPS/VBD/frame_3.png} &
+            \fpsimg{figures/NodeCountVsFPS/VBD/frame_4.png} \\
+    \end{tabular}
+    \caption{The wind-driven hanging cloth at the five mesh resolutions of
+    \autoref{tab:NodeCountFPS}, for XPBD (top) and VBD (bottom).}
+    \label{fig:NodeCountVsFPS}
+\end{figure}
 
 %----------------------------------------------------------------------------
 \section{Robustness and stability}
@@ -48,36 +115,129 @@ VBD ss4it4      124.7   73.4    29.2    8.1     2.1
 
 \subsection{Chain with heavy weight attached}
 \label{ssec:ChainWithHeavyWeight}
-\begin{itemize}
-    \item A chain with a heavy weight attached to the free end. The weight of its last node is 1000 times the mass of the other nodes.
-    \item This is the mass-disparity regime the primal/dual lens flags for XPBD's per-constraint updates.
-\end{itemize}
-\emph{TODO: the 3 images next to each other: Newton, XPBD then VBD}
+
+This scene is a chain whose free end carries a heavy weight: the last node has
+1000 times the mass of the others. This is the mass-disparity regime that the
+primal/dual lens flags for XPBD's per-constraint updates.
+\autoref{fig:ChainHeavyWeight} compares the Newton reference with XPBD and VBD.
+
+\begin{figure}[ht]
+    \centering
+    \newcommand{\hwimg}[1]{\includegraphics[width=0.32\textwidth,keepaspectratio]{figures/ChainWithHeavyWeight/#1}}
+    \hwimg{NewtonMassRatio.png}\hfill
+    \hwimg{XPBDMassRatio.png}\hfill
+    \hwimg{VBDMassRatio.png}
+    \caption{Chain with a $1000\times$ heavier node at the free end. Left to
+    right: Newton reference, XPBD, VBD.}
+    \label{fig:ChainHeavyWeight}
+\end{figure}
 
 \subsection{Chain with high stiffness ratio}
 \label{ssec:StiffnessRatioChain}
-\begin{itemize}
-    \item A chain with alternating stiff and soft springs. The ratio of springs is 1:10000 to mirror the experiment in the original VBD paper~\cite{Chen2024}.
-    \item This is the ill-conditioned-block regime the primal/dual lens flags for VBD's per-vertex update.
-\end{itemize}
-\emph{TODO: 3 images next to each other: Newton, XPBD then VBD}
+
+This scene is a chain of alternating stiff and soft springs, with a stiffness
+ratio of $1{:}10000$ to mirror the experiment in the original VBD
+paper~\cite{Chen2024}. This is the ill-conditioned-block regime that the
+primal/dual lens flags for VBD's per-vertex update.
+\autoref{fig:StiffnessRatioChain} compares the Newton reference with XPBD and
+VBD.
+
+\begin{figure}[ht]
+    \centering
+    \newcommand{\srimg}[1]{\includegraphics[width=0.32\textwidth,keepaspectratio]{figures/StiffnessRatioChain/#1}}
+    \srimg{NewtonStiffnessRatio.png}\hfill
+    \srimg{XPBDStiffnessRatio.png}\hfill
+    \srimg{VBDStiffnessRatio.png}
+    \caption{Chain with alternating springs at a $1{:}10000$ stiffness ratio.
+    Left to right: Newton reference, XPBD, VBD.}
+    \label{fig:StiffnessRatioChain}
+\end{figure}
 
 \subsection{Self-collision: cloth folded onto itself}
 \label{ssec:SelfCollisionDrop}
-\begin{itemize}
-    \item A cloth dropped on the ground, folding onto itself.
-    \item Both solvers can be used to simulate cloth, soft-bodies, rigid-bodies; a lot of constraints, and of course collisions.
-    \item For a system to simulate physically accurate cloth, the handling of stiff constraints is needed, as some materials, like Woven fabrics only stretch up to around 5-10\%.
-    \item The cloth model used by me requires a central node to have 12 springs attatched with 3 different stiffness values.
-    \item This, seen from the stiffness ratio experiment above creates a huge disadvantage for VBD.
-    \item This results in a very unstable behaviour, where even if the simulation doesn't blow up, the cloth overshoots most problems (initial noise to the vertices on the scale of 0.001 results in big movements).
-    \item This is because of the extra energy in the system
-    \item This can be handled by giving vertices a big enough mass (needs to be 2-3 orders of magnitude smaller than the maximum stiffness based on practical experiments).
-    \item This is the exact reason why the original VBD paper~\cite{Chen2024} uses a different cloth model.
-    \item This shows that for some situations VBD needs to be fine-tuned with parameters to be stable - AVBD~\cite{Giles2025} improves on this axis largely.
-    \item The top row shows the cloth with a total mass of 1, the bottom row shows the same cloth with a total mass of 10000.
-\end{itemize}
-\emph{TODO: Insert pictures. Two 2x8 grids under each other. Top row XPBD, bottom row VBD. First grid is mass 1, second grid is mass 10000.}
+
+This scene drops a cloth onto the ground so that it folds onto itself. Both
+solvers can simulate cloth, soft bodies, and rigid bodies under many constraints
+and collisions, but physically accurate cloth requires handling stiff
+constraints: woven fabrics, for instance, only stretch by about 5--10\%.
+
+My cloth model attaches 12 springs with three different stiffness values to each
+interior node. As the stiffness-ratio experiment above shows, this is a serious
+disadvantage for VBD. The result is very unstable behaviour: even when the
+simulation does not blow up, the cloth overshoots most configurations, with
+initial vertex noise on the scale of $0.001$ producing large movements. This is
+caused by the extra energy that the under-converged solve injects into the
+system.
+
+The instability can be tamed by giving the vertices a large enough mass ---
+practical experiments suggest it needs to be 2--3 orders of magnitude smaller
+than the maximum stiffness. This is exactly why the original VBD
+paper~\cite{Chen2024} uses a different cloth model, and it shows that VBD
+sometimes has to be hand-tuned to stay stable; AVBD~\cite{Giles2025} improves
+substantially on this axis. \autoref{fig:SelfCollisionW1} and
+\autoref{fig:SelfCollisionW1e4} show the drop at a total cloth mass of 1 and of
+10000 respectively; in each, the top row is XPBD and the bottom row is VBD.
+
+\begin{figure}[ht]
+    \centering
+    \setlength{\tabcolsep}{1pt}
+    \renewcommand{\arraystretch}{0.4}
+    \newcommand{\scimg}[1]{\raisebox{-0.5\height}{\includegraphics[width=0.115\textwidth,keepaspectratio]{#1}}}
+    \begin{tabular}{c cccccccc}
+        \raisebox{-0.5\height}{\rotatebox[origin=c]{90}{\small XPBD}} &
+            \scimg{figures/SelfCollisionDrop/XPBD-w1/frame_0.png} &
+            \scimg{figures/SelfCollisionDrop/XPBD-w1/frame_1.png} &
+            \scimg{figures/SelfCollisionDrop/XPBD-w1/frame_2.png} &
+            \scimg{figures/SelfCollisionDrop/XPBD-w1/frame_3.png} &
+            \scimg{figures/SelfCollisionDrop/XPBD-w1/frame_4.png} &
+            \scimg{figures/SelfCollisionDrop/XPBD-w1/frame_5.png} &
+            \scimg{figures/SelfCollisionDrop/XPBD-w1/frame_6.png} &
+            \scimg{figures/SelfCollisionDrop/XPBD-w1/frame_7.png} \\[1ex]
+        \raisebox{-0.5\height}{\rotatebox[origin=c]{90}{\small VBD}} &
+            \scimg{figures/SelfCollisionDrop/VBD-w1/frame_0.png} &
+            \scimg{figures/SelfCollisionDrop/VBD-w1/frame_1.png} &
+            \scimg{figures/SelfCollisionDrop/VBD-w1/frame_2.png} &
+            \scimg{figures/SelfCollisionDrop/VBD-w1/frame_3.png} &
+            \scimg{figures/SelfCollisionDrop/VBD-w1/frame_4.png} &
+            \scimg{figures/SelfCollisionDrop/VBD-w1/frame_5.png} &
+            \scimg{figures/SelfCollisionDrop/VBD-w1/frame_6.png} &
+            \scimg{figures/SelfCollisionDrop/VBD-w1/frame_7.png} \\
+    \end{tabular}
+    \caption{Cloth drop and self-collision at total mass~1, over time
+    (left to right). Top: XPBD. Bottom: VBD.}
+    \label{fig:SelfCollisionW1}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \setlength{\tabcolsep}{1pt}
+    \renewcommand{\arraystretch}{0.4}
+    \newcommand{\scimg}[1]{\raisebox{-0.5\height}{\includegraphics[width=0.115\textwidth,keepaspectratio]{#1}}}
+    \begin{tabular}{c cccccccc}
+        \raisebox{-0.5\height}{\rotatebox[origin=c]{90}{\small XPBD}} &
+            \scimg{figures/SelfCollisionDrop/XPBD-w1e4/frame_0.png} &
+            \scimg{figures/SelfCollisionDrop/XPBD-w1e4/frame_1.png} &
+            \scimg{figures/SelfCollisionDrop/XPBD-w1e4/frame_2.png} &
+            \scimg{figures/SelfCollisionDrop/XPBD-w1e4/frame_3.png} &
+            \scimg{figures/SelfCollisionDrop/XPBD-w1e4/frame_4.png} &
+            \scimg{figures/SelfCollisionDrop/XPBD-w1e4/frame_5.png} &
+            \scimg{figures/SelfCollisionDrop/XPBD-w1e4/frame_6.png} &
+            \scimg{figures/SelfCollisionDrop/XPBD-w1e4/frame_7.png} \\[1ex]
+        \raisebox{-0.5\height}{\rotatebox[origin=c]{90}{\small VBD}} &
+            \scimg{figures/SelfCollisionDrop/VBD-w1e4/frame_0.png} &
+            \scimg{figures/SelfCollisionDrop/VBD-w1e4/frame_1.png} &
+            \scimg{figures/SelfCollisionDrop/VBD-w1e4/frame_2.png} &
+            \scimg{figures/SelfCollisionDrop/VBD-w1e4/frame_3.png} &
+            \scimg{figures/SelfCollisionDrop/VBD-w1e4/frame_4.png} &
+            \scimg{figures/SelfCollisionDrop/VBD-w1e4/frame_5.png} &
+            \scimg{figures/SelfCollisionDrop/VBD-w1e4/frame_6.png} &
+            \scimg{figures/SelfCollisionDrop/VBD-w1e4/frame_7.png} \\
+    \end{tabular}
+    \caption{The same cloth drop at total mass~10000, over time
+    (left to right). Top: XPBD. Bottom: VBD. The larger vertex mass stabilises
+    the VBD solve.}
+    \label{fig:SelfCollisionW1e4}
+\end{figure}
 
 %----------------------------------------------------------------------------
 \section{Physical realism}
@@ -86,28 +246,63 @@ VBD ss4it4      124.7   73.4    29.2    8.1     2.1
 
 \subsection{Harmonic oscillator}
 \label{ssec:Harmonic}
-\begin{itemize}
-    \item A harmonic oscillator implemented as a single distance constraint between the pinned top and free bottom node.
-    \item Measure amplitude over time.
-    \item To compare to the XPBD paper~\cite{10.1145/2994258.2994272} Fig.~2, I used the same parameters (just with reversed direction): rest length 1, compliance $\alpha = 10^{-3}$, rest position $x = -1$, initial position $x_0 = -0.5$, mass $m = 1$.
-    \item Regardless of dt, both solvers converge in 1 iteration and follow the same curve.
-    \item Analytic solution $x(t) = x_0\cos(\omega t)$, $\omega = \sqrt{k/m} = 31.62 \mathrm{s}^{-1}$ shown with dashed lines.
-    \item Just as with the XPBD example, all damping is the side-effect of implicit discretization of the equations of motion.
-\end{itemize}
-\emph{TODO: Insert oscillator\_amplitude png}
+
+The harmonic oscillator is implemented as a single distance constraint between a
+pinned top node and a free bottom node, and I measure its amplitude over time.
+To compare against Fig.~2 of the XPBD paper~\cite{10.1145/2994258.2994272} I use
+the same parameters, only with the direction reversed: rest length 1, compliance
+$\alpha = 10^{-3}$, rest position $x = -1$, initial position $x_0 = -0.5$, and
+mass $m = 1$.
+
+Regardless of $dt$, both solvers converge in a single iteration and follow the
+same curve. \autoref{fig:Oscillator} also shows the analytic solution
+$x(t) = x_0\cos(\omega t)$ with $\omega = \sqrt{k/m} = 31.62~\mathrm{s}^{-1}$ as
+dashed lines. As in the XPBD example, all of the visible damping is a
+side-effect of the implicit discretisation of the equations of motion.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth,keepaspectratio]{figures/oscillator_amplitude.png}
+    \caption{Harmonic-oscillator amplitude over time for both solvers against
+    the analytic solution (dashed).}
+    \label{fig:Oscillator}
+\end{figure}
 
 \subsection{Energy tracking}
 \label{ssec:EnergyTracking}
-\begin{itemize}
-    \item Plotting total mechanical energy over time for an undamped swinging 16x16 cloth released at 20 degrees.
-    \item Identify systematic energy gain (instability) or loss (numerical damping) for each solver.
-    \item We use VBD with 64 iterations as the reference solution, as it is very close to the Newton solution with 64 substeps.
-    \item Over a longer time frame we can see how both solvers lose energy, following the same exponential decay curve. VBD 
-    \item The oscillations are only due to convergence error - the solver over- and undershoots with the gradient estimation.
-    \item VBD with 1 iteration sits between XPBD 1 iter and XPBD 2 iter. Both VBD 1 and XPBD 2 already approach the reference solution really well, but still exhibit overshoots.
-    \item With 4 iterations both solver are extremely close to the reference.
-\end{itemize}
-\emph{TODO: energy\_dissipation\_s0\_e80.png under the "overall observations" than the other text about VBD 1 XPBD 1 and XPBD 2, 4 iterations than the other two diagrams in the EnergyTracking folder.}
+
+Here I plot the total mechanical energy over time for an undamped $16\times 16$
+cloth released from 20 degrees, in order to identify systematic energy gain
+(instability) or loss (numerical damping) for each solver. I use VBD with 64
+iterations as the reference solution, since it is very close to the Newton
+solution with 64 substeps.
+
+Over a longer time frame, \autoref{fig:EnergyLong} shows that both solvers lose
+energy along the same exponential decay curve. The oscillations around that
+curve are purely a convergence artefact: the solver over- and undershoots
+because of its gradient estimate.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth,keepaspectratio]{figures/EnergyTracking/energy_dissipation_s0_e80.png}
+    \caption{Total mechanical energy over a long time window. Both solvers
+    follow the same exponential decay.}
+    \label{fig:EnergyLong}
+\end{figure}
+
+Looking more closely (\autoref{fig:EnergyShort}), VBD with 1 iteration sits
+between XPBD with 1 and XPBD with 2 iterations. Both VBD~1 and XPBD~2 already
+track the reference well but still overshoot. With 4 iterations both solvers are
+extremely close to the reference.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.49\textwidth,keepaspectratio]{figures/EnergyTracking/energy_dissipation_s0_e5.png}\hfill
+    \includegraphics[width=0.49\textwidth,keepaspectratio]{figures/EnergyTracking/energy_dissipation_s0_e10.png}
+    \caption{Early-time energy for low iteration counts. VBD~1 lies between
+    XPBD~1 and XPBD~2; at 4 iterations both solvers match the reference.}
+    \label{fig:EnergyShort}
+\end{figure}
 
 %----------------------------------------------------------------------------
 \section{Flexibility}
@@ -116,12 +311,15 @@ VBD ss4it4      124.7   73.4    29.2    8.1     2.1
 
 \subsection{Iteration-count independence of stiffness}
 \label{ssec:IterIndepStiff}
-\begin{itemize}
-    \item For each solver, sweep stiffness $k$ over several decades and measure how many iterations / substeps are needed to reach a fixed error threshold.
-    \item In the compliance formulation, XPBD's per-iteration behaviour is roughly stiffness-independent (Fig.~6 in \cite{10.1145/2994258.2994272}).
-    \item \autoref{fig:IterIndep} shows the settled shape of a pinned cloth at four iteration / substep counts for both solvers. For both methods the resting shape is essentially unchanged as the iteration count grows, so the converged configuration does not depend on how many iterations are spent.
-    \item For both solvers the resting configuration is essentially unchanged across the sweep, indicating that the converged shape is independent of the iteration count.
-\end{itemize}
+
+For each solver I sweep the stiffness $k$ over several decades and measure how
+many iterations or substeps are needed to reach a fixed error threshold. In the
+compliance formulation, XPBD's per-iteration behaviour is roughly
+stiffness-independent (Fig.~6 in \cite{10.1145/2994258.2994272}).
+\autoref{fig:IterIndep} shows the settled shape of a pinned cloth at four
+iteration/substep counts for both solvers. For both methods the resting
+configuration is essentially unchanged as the count grows, so the converged
+shape does not depend on how many iterations are spent.
 
 \begin{figure}[ht]
     \centering
@@ -142,30 +340,62 @@ VBD ss4it4      124.7   73.4    29.2    8.1     2.1
 
 \subsection{Ease of adding a new functionality}
 \label{ssec:NewFunctionality}
-I made Claude Code implement dihedral bending constraints in both solvers to compare the ease of adding a new functionality.
-\begin{itemize}
-    \item Both solvers have it implemented in their original papers - I follow this route
-    \item Current bending constraint: a distance constraint as a skip-spring between two non-adjacent nodes. The task was to implement the new constraint and make it toggleable (bending as dihedral vs distance).
-    \item Lines of code added:
-        \begin{itemize}
-            \item Shared: 70 lines
-            \item Solver core: XPBD +39
-            \item XPBD: 100 lines of code, no change to the core algorithm, just a new constraint type.
-            \item VBD: 200 lines of code, including changes to the core algorithm to handle the new Hessian contribution.
-        \end{itemize}
-    \item whether a Hessian derivation was required (VBD: yes; XPBD: no, a gradient suffices),
-    \item time to first correct simulation.
-\end{itemize}
-\begin{itemize}
-    \item The metric is admittedly subjective but captures a real practitioner cost that the more quantitative experiments above do not.
-\end{itemize}
-\emph{TODO: Table --- LOC, derivation effort, time-to-correct.}
+
+To compare how easily each solver can be extended, I had Claude Code implement
+dihedral bending constraints in both. Both methods already include this
+constraint in their original papers, so I follow that route. The existing
+bending constraint is a distance constraint acting as a skip-spring between two
+non-adjacent nodes; the task was to implement the dihedral version and make
+bending toggleable between the dihedral and distance formulations.
+\autoref{tab:Extension} summarises the effort.
+
+The two implementations share a new 30-LOC file that computes the gradients from
+the four hinge node positions, and the in-solver addition that solves the new
+constraint is about 28 LOC and essentially identical in both. XPBD was easier to
+extend: the new constraint resembles the existing distance constraint (four
+particles instead of two), introduces no new concept, and plugs in with a single
+extra \texttt{SolveDihedralConstraints} call without changing any existing code.
+Each hinge is visited once per iteration. VBD needed more setup code because it
+is vertex-based, so each hinge has to be stored four times --- once per
+incident vertex --- and its data type carries an extra parameter naming which of
+the four vertices is currently being processed. The hinge Hessian block is
+therefore recomputed four times per iteration. Mathematically, XPBD needs only
+the first derivative of the constraint, whereas VBD needs the second derivative,
+which is harder to derive and implement.
+
+In general, for scalar constraints XPBD is the easier solver to extend. For
+tensor-valued energies (FEM, Neo-Hookean, StVK), it is XPBD that has to do the
+extra work.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{l l l}
+        \toprule
+                              & XPBD                                  & VBD \\
+        \midrule
+        Shared gradient file  & \multicolumn{2}{c}{30 LOC (4-node gradients)} \\
+        Solver addition       & $\approx$28 LOC                       & $\approx$28 LOC (essentially the same) \\
+        Setup code            & 45 LOC                                & 58 LOC \\
+        New data type         & 4 vertices, rest angle, compliance    & + index of vertex being processed \\
+        Structural change     & purely additive; hinge visited once/iter & per-vertex; hinge recomputed $4\times$/iter \\
+        Derivative order      & first derivative only                 & first and second derivative \\
+        \bottomrule
+    \end{tabular}
+    \caption{Cost of adding dihedral bending constraints to each solver.}
+    \label{tab:Extension}
+\end{table}
 
 \subsection{Coverage of different physical domains}
 \label{ssec:DomainCoverage}
-\begin{itemize}
-    \item As PBD had already been around for almost 20, and PBD for 10 years, they also became industry standards for in-game physics. They have been implemented and used with many different domains (cloth, soft-bodies, rigid-bodies, fluids, hair) with a lot of different constraint types and forces. XPBD can handle a huge variety of parameters and value-imbalances, so it is a very flexible solver.
-    \item VBD on the other hand is a very new method published in 2024. It is not yet widely used. In it's original paper it is mostly used for elastic body dynamics.
-    \item I saw how it's not suitable for handling very hard constraints (infinite stiffness) - this issue is fixed in AVBD, introducing rigid-bodies to the method.
-\end{itemize}
-\emph{TODO: This part should probably not be under experiments section}
+
+PBD has been around for almost 20 years and XPBD for about 10, and both have
+become industry standards for in-game physics. They have been implemented across
+many domains --- cloth, soft bodies, rigid bodies, fluids, hair --- with a wide
+range of constraint types and forces. XPBD copes with a large variety of
+parameters and value imbalances, which makes it a very flexible solver.
+
+VBD, by contrast, is a very new method, published in 2024, and is not yet widely
+used; its original paper applies it mostly to elastic body dynamics. As the
+self-collision experiment showed, it is not well suited to very hard (effectively
+infinite-stiffness) constraints --- an issue that AVBD addresses by bringing
+rigid bodies into the method.
