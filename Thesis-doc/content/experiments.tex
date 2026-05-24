@@ -142,11 +142,17 @@ VBD ss4it4      124.7   73.4    29.2    8.1     2.1
 
 \subsection{Ease of adding a new functionality}
 \label{ssec:NewFunctionality}
-I implement a representative additional constraint/force --- \emph{TODO: choose, e.g.\
-bending-angle constraint or area-preservation force} --- in both solvers
-and report:
+I made Claude Code implement dihedral bending constraints in both solvers to compare the ease of adding a new functionality.
 \begin{itemize}
-    \item lines of code added,
+    \item Both solvers have it implemented in their original papers - I follow this route
+    \item Current bending constraint: a distance constraint as a skip-spring between two non-adjacent nodes. The task was to implement the new constraint and make it toggleable (bending as dihedral vs distance).
+    \item Lines of code added:
+        \begin{itemize}
+            \item Shared: 70 lines
+            \item Solver core: XPBD +39
+            \item XPBD: 100 lines of code, no change to the core algorithm, just a new constraint type.
+            \item VBD: 200 lines of code, including changes to the core algorithm to handle the new Hessian contribution.
+        \end{itemize}
     \item whether a Hessian derivation was required (VBD: yes; XPBD: no, a gradient suffices),
     \item time to first correct simulation.
 \end{itemize}
@@ -159,6 +165,7 @@ and report:
 \label{ssec:DomainCoverage}
 \begin{itemize}
     \item As PBD had already been around for almost 20, and PBD for 10 years, they also became industry standards for in-game physics. They have been implemented and used with many different domains (cloth, soft-bodies, rigid-bodies, fluids, hair) with a lot of different constraint types and forces. XPBD can handle a huge variety of parameters and value-imbalances, so it is a very flexible solver.
-    \item VBD on the other hand is a very new method
+    \item VBD on the other hand is a very new method published in 2024. It is not yet widely used. In it's original paper it is mostly used for elastic body dynamics.
+    \item I saw how it's not suitable for handling very hard constraints (infinite stiffness) - this issue is fixed in AVBD, introducing rigid-bodies to the method.
 \end{itemize}
 \emph{TODO: This part should probably not be under experiments section}
