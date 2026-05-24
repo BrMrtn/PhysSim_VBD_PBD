@@ -111,6 +111,18 @@ public class VBDCloth : MonoBehaviour
         };
 
         BuildSimulationGrid(xCoords, yCoords);
+
+        // The spatial hash and contact thickness operate on WORLD positions, so
+        // the cell size must be the world spacing, not the local mesh spacing.
+        // Imported FBX meshes carry a non-unit import scale, which makes those
+        // two differ and would collapse every particle into a few hash cells.
+        if (numX > 1)
+        {
+            spacing = (Solver.positions[1] - Solver.positions[0]).magnitude;
+            thickness = spacing;
+            Solver.thickness = thickness;
+        }
+
         AssignMasses();
         Array.Copy(Solver.positions, Solver.restPositions, numVerts);
 

@@ -7,7 +7,7 @@ public class SpatialHash
     private readonly int tableSize;
     private readonly int[] cellStart; // cellStart[i] is the index in cellEntries where the entries for cell i start
     private readonly int[] cellEntries;
-    private readonly int[] queryIds; // array for the results of a single neighborhood query
+    private int[] queryIds; // array for the results of a single neighborhood query (grown on overflow)
     private int querySize;
 
     public int maxNumObjects;
@@ -92,8 +92,16 @@ public class SpatialHash
                     int start = cellStart[h];
                     int end = cellStart[h + 1];
 
+                    // The same table bucket can be reached by several grid
+                    // coordinates in this block (modular hash collisions), and
+                    // a single dense bucket can hold many particles, so the raw
+                    // entry count may exceed maxNumObjects. Grow as needed.
                     for (int i = start; i < end; i++)
+                    {
+                        if (querySize >= queryIds.Length)
+                            Array.Resize(ref queryIds, queryIds.Length * 2);
                         queryIds[querySize++] = cellEntries[i];
+                    }
                 }
             }
         }
