@@ -79,8 +79,7 @@
 \select@language {english} \contentsline {subsection}{\numberline {7.3.1}Single-threaded execution}{25}{subsection.7.3.1}%
 \select@language {english} \contentsline {subsection}{\numberline {7.3.2}Mass-spring discretisation only}{25}{subsection.7.3.2}%
 \select@language {english} \contentsline {subsection}{\numberline {7.3.3}Gauss--Seidel order dependence}{25}{subsection.7.3.3}%
-\select@language {english} \contentsline {subsection}{\numberline {7.3.4}Mismatched collision models}{26}{subsection.7.3.4}%
-\select@language {english} \contentsline {subsection}{\numberline {7.3.5}Fixed $dt = 1/30$~s}{26}{subsection.7.3.5}%
+\select@language {english} \contentsline {subsection}{\numberline {7.3.4}Fixed $dt = 1/30$~s}{26}{subsection.7.3.4}%
 \select@language {english} \contentsline {section}{\numberline {7.4}Limitations}{26}{section.7.4}%
 \select@language {english} \contentsline {chapter}{\numberline {8}Conclusion and future work}{27}{chapter.8}%
 \select@language {english} \contentsline {section}{\numberline {8.1}Summary}{27}{section.8.1}%

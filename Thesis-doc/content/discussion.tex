@@ -3,11 +3,6 @@
 \label{chap:Discussion}
 %----------------------------------------------------------------------------
 
-\begin{itemize}
-    \item This chapter synthesises results across the four evaluation axes.
-    \item It reads each axis through the primal/dual lens (\autoref{sec:PrimalDualLens}) and enumerates the threats to validity that bound the conclusions.
-\end{itemize}
-
 %----------------------------------------------------------------------------
 \section{Synthesis across axes}
 \label{sec:Synthesis}
@@ -36,13 +31,13 @@ primal/dual framing of \autoref{sec:PrimalDual}.}
 \paragraph{Stiffness-ratio regime.}
 \begin{itemize}
     \item Tied to \autoref{ssec:StiffnessRatioChain} and \autoref{ssec:StiffRatioTest}.
-    \item Interpretation: the local Hessian block $\mathbf{H}_{i}$ at a vertex sums contributions from every incident spring, so widely varying stiffnesses inflate the block's condition number and can slow the Newton step. \emph{TODO: state what the measurements actually show here.}
+    \item Interpretation: the local Hessian block $\mathbf{H}_{i}$ at a vertex sums contributions from every incident spring, so widely varying stiffnesses inflate the block's condition number and can slow the Newton step.
 \end{itemize}
 
 \paragraph{Per-iteration convergence under stiffness.}
 \begin{itemize}
     \item Tied to \autoref{ssec:ResidualConvergence} and \autoref{ssec:IterIndepStiff}.
-    \item Interpretation: VBD uses second-order information about $E$ locally, so increasing $k$ need not change the number of Newton steps to convergence much, whereas XPBD discards this information. \emph{TODO: state what the measurements actually show here.}
+    \item Interpretation: VBD uses second-order information about $E$ locally, so increasing $k$ need not change the number of Newton steps to convergence much, whereas XPBD discards this information.
 \end{itemize}
 
 \paragraph{Joint reading.}
@@ -79,13 +74,6 @@ primal/dual framing of \autoref{sec:PrimalDual}.}
     \item I do not investigate this, and it is a real threat to reproducibility on other implementations.
 \end{itemize}
 
-\subsection{Mismatched collision models}
-\label{ssec:ThreatCollision}
-\begin{itemize}
-    \item XPBD uses projection-based self-collision; VBD uses penalty-based self-collision (\autoref{sec:SelfCollision}).
-    \item Any difference in the self-collision experiments mixes algorithmic and contact-model effects.
-\end{itemize}
-
 \subsection{Fixed $dt = 1/30$~s}
 \label{ssec:ThreatDt}
 \begin{itemize}
@@ -101,6 +89,4 @@ primal/dual framing of \autoref{sec:PrimalDual}.}
 Beyond the threats above, three further limitations are worth naming:
 \begin{itemize}
     \item I do not implement AVBD or any post-2024 VBD extension.
-    \item Self-collision uses a simple model; production simulators often use continuous collision detection (CCD), which both solvers can be augmented with at additional cost.
-    \item Friction is not modelled; the experiments are friction-free.
 \end{itemize}

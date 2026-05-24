@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  24 MAY 2026 23:25
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  24 MAY 2026 23:39
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -869,13 +869,16 @@ File: figures/IterationIndependence/VBD_i160.png Graphic file (type bmp)
  (./content/discussion.tex
 Chapter 7.
 
-LaTeX Warning: Reference `ssec:MassRatioPendulum' on page 24 undefined on input line 32.
+LaTeX Warning: Reference `ssec:MassRatioPendulum' on page 24 undefined on input line 27.
 
 
-LaTeX Warning: Reference `ssec:MassRatioChain' on page 24 undefined on input line 32.
+LaTeX Warning: Reference `ssec:MassRatioChain' on page 24 undefined on input line 27.
 
 
-LaTeX Warning: Reference `ssec:StiffRatioTest' on page 24 undefined on input line 38.
+LaTeX Warning: Reference `ssec:StiffRatioTest' on page 24 undefined on input line 33.
+
+
+LaTeX Warning: Reference `ssec:ResidualConvergence' on page 24 undefined on input line 39.
 
 [24
 
@@ -884,19 +887,16 @@ LaTeX Warning: Reference `ssec:StiffRatioTest' on page 24 undefined on input lin
 
 ]
 
-LaTeX Warning: Reference `ssec:ResidualConvergence' on page 25 undefined on input line 44.
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 77.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 77.
 
 [25]
 
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 89.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 89.
-
-
-LaTeX Warning: Reference `ssec:StabilityMap' on page 26 undefined on input line 94.
+LaTeX Warning: Reference `ssec:StabilityMap' on page 26 undefined on input line 82.
 
 ) [26]
 \openout2 = `content/conclusion.aux'.
@@ -973,13 +973,13 @@ L3 programming layer <2026-01-19>
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 901960D65A340EF80D839CEACA16E31A;15422.
+(rerunfilecheck)             Checksum: 07B71673D32FA471343597C666D67BE8;15219.
  ) 
 Here is how much of TeX's memory you used:
- 18634 strings out of 469581
- 355525 string characters out of 5461843
- 1169131 words of memory out of 5000000
- 46887 multiletter control sequences out of 15000+600000
+ 18633 strings out of 469581
+ 355503 string characters out of 5461843
+ 1168069 words of memory out of 5000000
+ 46886 multiletter control sequences out of 15000+600000
  642381 words of font info for 126 fonts, out of 8000000 for 9000
  376 hyphenation exceptions out of 8191
  78i,14n,82p,913b,1983s stack positions out of 10000i,1000n,20000p,200000b,200000s
