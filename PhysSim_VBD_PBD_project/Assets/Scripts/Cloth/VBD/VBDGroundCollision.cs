@@ -47,7 +47,7 @@ public class VBDGroundCollision : MonoBehaviour
     private void CacheGround()
     {
         if (ground == null) return;
-        cachedGroundY = ground.position.y + 0.1f;
+        cachedGroundY = ground.position.y + 0.2f;
     }
 
     void HandleVertexSolve(int i, Vector3 pos, ref Vector3 f,

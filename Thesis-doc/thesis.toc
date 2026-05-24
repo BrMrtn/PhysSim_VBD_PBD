@@ -60,16 +60,14 @@
 \select@language {english} \contentsline {section}{\numberline {6.2}Robustness and stability}{20}{section.6.2}%
 \select@language {english} \contentsline {subsection}{\numberline {6.2.1}Chain with heavy weight attached}{20}{subsection.6.2.1}%
 \select@language {english} \contentsline {subsection}{\numberline {6.2.2}Chain with high stiffness ratio}{20}{subsection.6.2.2}%
-\select@language {english} \contentsline {section}{\numberline {6.3}Physical realism}{20}{section.6.3}%
-\select@language {english} \contentsline {subsection}{\numberline {6.3.1}Newton reference}{20}{subsection.6.3.1}%
-\select@language {english} \contentsline {subsection}{\numberline {6.3.2}Harmonic oscillator}{21}{subsection.6.3.2}%
-\select@language {english} \contentsline {subsection}{\numberline {6.3.3}Energy tracking}{21}{subsection.6.3.3}%
-\select@language {english} \contentsline {subsection}{\numberline {6.3.4}Hanging cloth: stretched area vs.\ reference}{21}{subsection.6.3.4}%
-\select@language {english} \contentsline {subsection}{\numberline {6.3.5}Damping cross-check}{21}{subsection.6.3.5}%
-\select@language {english} \contentsline {section}{\numberline {6.4}Flexibility}{21}{section.6.4}%
-\select@language {english} \contentsline {subsection}{\numberline {6.4.1}Iteration-count independence of stiffness}{21}{subsection.6.4.1}%
-\select@language {english} \contentsline {subsection}{\numberline {6.4.2}Stiffness-ratio test}{22}{subsection.6.4.2}%
-\select@language {english} \contentsline {subsection}{\numberline {6.4.3}Ease of adding a new constraint or force}{22}{subsection.6.4.3}%
+\select@language {english} \contentsline {subsection}{\numberline {6.2.3}Self-collision: cloth folded onto itself}{20}{subsection.6.2.3}%
+\select@language {english} \contentsline {section}{\numberline {6.3}Physical realism}{21}{section.6.3}%
+\select@language {english} \contentsline {subsection}{\numberline {6.3.1}Harmonic oscillator}{21}{subsection.6.3.1}%
+\select@language {english} \contentsline {subsection}{\numberline {6.3.2}Energy tracking}{21}{subsection.6.3.2}%
+\select@language {english} \contentsline {section}{\numberline {6.4}Flexibility}{22}{section.6.4}%
+\select@language {english} \contentsline {subsection}{\numberline {6.4.1}Iteration-count independence of stiffness}{22}{subsection.6.4.1}%
+\select@language {english} \contentsline {subsection}{\numberline {6.4.2}Ease of adding a new functionality}{22}{subsection.6.4.2}%
+\select@language {english} \contentsline {subsection}{\numberline {6.4.3}Coverage of different physical domains}{23}{subsection.6.4.3}%
 \select@language {english} \contentsline {chapter}{\numberline {7}Discussion}{24}{chapter.7}%
 \select@language {english} \contentsline {section}{\numberline {7.1}Synthesis across axes}{24}{section.7.1}%
 \select@language {english} \contentsline {section}{\numberline {7.2}Reading the results through the primal/dual lens}{24}{section.7.2}%

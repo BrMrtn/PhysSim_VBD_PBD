@@ -252,19 +252,20 @@ MonoBehaviour:
   frameRate: 30
   numSubsteps: 12
   numIterations: 1
-  stretchingCompliance: 0
+  stretchingCompliance: 0.000001
   shearCompliance: 0.0001
   bendingCompliance: 0.001
-  totalMass: 1
+  totalMass: 10000
   handleSelfCollisions: 1
   selfCollisionFriction: 0
-  velCapPerFrame: 3
+  velCapPerFrame: 2
   rayleighMassDamping: 0
   rayleighStiffnessDamping: 0
   addInitNoise: 1
   logMsPerFrame: 0
   logEnergy: 0
   logArea: 0
+  logSpringLength: 0
   numVerts: 0
   numX: 0
   numY: 0
@@ -616,7 +617,7 @@ PrefabInstance:
     - target: {fileID: -5754084199372789682, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: -462981019419857548, guid: 786fc3002689a86499d0ccd2c8957c4c, type: 3}
+      objectReference: {fileID: -462981019419857548, guid: c197e5366b3e8e341b58850487197629, type: 3}
     - target: {fileID: 919132149155446097, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
       propertyPath: m_Name
       value: Plane64x64_XY

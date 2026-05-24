@@ -14,13 +14,24 @@ MASS = 1.0          # kg
 OMEGA = math.sqrt(STIFFNESS / MASS)
 
 
+def solver_name(name):
+    """Get the base solver name from the file name."""
+    if name.startswith("XPBD"):
+        return "XPBD"
+    if name.startswith("VBD"):
+        return "VBD"
+    if name.startswith("Newton"):
+        return "Newton"
+    return name
+
 def solver_color(name):
     """Color a series by its solver name: XPBD->green, VBD->red, Newton->blue."""
-    if name.startswith("XPBD"):
+    name = solver_name(name)
+    if name == "XPBD":
         return "green"
-    if name.startswith("VBD"):
+    if name == "VBD":
         return "red"
-    if name.startswith("Newton"):
+    if name == "Newton":
         return "blue"
     return None
 
@@ -33,6 +44,10 @@ paths = sorted(glob.glob(os.path.join(log_dir, "*.csv")))
 if not paths:
     raise SystemExit(f"No CSV files found in {os.path.abspath(log_dir)}")
 
+# Sort paths to draw Newton last so it appears on top of the others.
+order_map = {"XPBD": 0, "VBD": 1, "Newton": 2}
+paths.sort(key=lambda p: order_map.get(solver_name(os.path.basename(p)), 99))
+
 MAX_FRAMES = 200
 
 plt.figure(figsize=(9, 6))
@@ -40,8 +55,8 @@ dt = None
 offset0 = None
 # Solver curves overlap almost exactly, so draw each successive one thinner
 # than the last: the earlier (thicker) lines stay visible underneath.
-base_lw = 8.0
-lw_step = 3.0
+base_lw = 6.0
+lw_step = 2.2
 for idx, path in enumerate(paths):
     frames = []
     offsets = []
@@ -69,7 +84,8 @@ for idx, path in enumerate(paths):
     if offset0 is None and offsets:
         offset0 = offsets[0]
 
-    label = os.path.basename(path).replace(".csv", "")
+    raw_label = os.path.basename(path).replace(".csv", "")
+    label = solver_name(raw_label)
     lw = max(base_lw - idx * lw_step, 0.8)
     plt.plot(frames, offsets, "-", label=label, alpha=0.8,
              color=solver_color(label), lw=lw)
@@ -81,21 +97,19 @@ if dt is not None and offset0 is not None:
     analytical = offset0 * np.cos(OMEGA * t)
     plt.plot(n, analytical, "k--", lw=1.5, alpha=0.9,
              label="analytical (undamped)")
-    plt.annotate(
-        r"$x(t) = x_0\,\cos(\omega t),\quad \omega=\sqrt{k/m}="
-        + f"{OMEGA:.2f}" + r"\,\mathrm{s^{-1}}$",
-        xy=(0.02, 0.02), xycoords="axes fraction",
-        fontsize=11, va="bottom", ha="left",
-        bbox=dict(boxstyle="round", fc="white", ec="0.7", alpha=0.85))
 
 plt.axhline(0.0, color="black", ls=":", alpha=0.5)
 plt.xlabel("frame number", fontsize=14)
 plt.ylabel("offset [m]", fontsize=14)
-plt.title("Harmonic oscillator: displacement over time")
 plt.grid(True, which="both", ls=":", alpha=0.5)
-plt.legend()
-plt.tight_layout()
 
+# Reorder legend so it displays Newton, XPBD, VBD, then analytical
+handles, labels = plt.gca().get_legend_handles_labels()
+legend_order = {"Newton": 0, "XPBD": 1, "VBD": 2, "analytical (undamped)": 3}
+hl = sorted(zip(handles, labels), key=lambda x: legend_order.get(x[1], 99))
+if hl:
+    handles, labels = zip(*hl)
+    plt.legend(handles, labels, loc="upper right")
 out_dir = r"..\Visuals\SpringLength"
 os.makedirs(out_dir, exist_ok=True)
 out_path = os.path.join(out_dir, "oscillator_amplitude.png")

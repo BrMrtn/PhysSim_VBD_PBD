@@ -96,8 +96,8 @@ For all experiments unless otherwise noted:
 \label{ssec:DisableChebyshev}
 \begin{itemize}
     \item The 2024 VBD paper~\cite{Chen2024} reports significant speedups from Chebyshev acceleration and adaptive initialisation.
-    \item Adaptive init is VBD's own inertial prediction, that is also present in XPBD, so I keep it enabled.
-    \item Chabyshev-acceleration is also part of VBD, but it confounds an apples-to-apples comparison, as XPBD could also implement the same method (essentially Anderson-accelerated XPBD).
+    \item Adaptive init is VBD's own inertial prediction, that is also present in XPBD (it guesses with explicit euler), so I keep it enabled.
+    \item Chebyshev-acceleration is also part of VBD, but it confounds an apples-to-apples comparison, as XPBD could also implement the same method (essentially Anderson-accelerated XPBD).
 \end{itemize}
 
 %----------------------------------------------------------------------------

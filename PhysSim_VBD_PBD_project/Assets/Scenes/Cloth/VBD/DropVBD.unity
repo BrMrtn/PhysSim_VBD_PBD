@@ -252,7 +252,7 @@ MonoBehaviour:
   mode: 0
   ground: {fileID: 124310501}
   stiffness: 1000000
-  friction: 0.3
+  friction: 1
   frictionEpsDisp: 0.0001
 --- !u!114 &150870334
 MonoBehaviour:
@@ -274,19 +274,20 @@ MonoBehaviour:
   stretchingStiffness: 1000000
   shearStiffness: 10000
   bendingStiffness: 1000
-  totalMass: 1
+  totalMass: 10000
   handleSelfCollisions: 1
-  selfCollisionStiffness: 10000000
+  selfCollisionStiffness: 100000
   velCapPerFrame: 2
-  rayleighMassDamping: 0.5
-  rayleighStiffnessDamping: 0.01
-  useLineSearch: 1
+  rayleighMassDamping: 0
+  rayleighStiffnessDamping: 0
+  useLineSearch: 0
   maxLineSearchIters: 8
   addInitNoise: 1
   logMsPerFrame: 0
   logEnergy: 0
   logArea: 0
   logResidual: 0
+  logSpringLength: 0
   numVerts: 0
   numX: 0
   numY: 0

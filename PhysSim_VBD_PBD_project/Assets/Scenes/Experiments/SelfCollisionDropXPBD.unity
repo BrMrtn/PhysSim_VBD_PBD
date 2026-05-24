@@ -170,7 +170,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 6437d85fda830fa48a901592e304173b, type: 2}
+      objectReference: {fileID: 2100000, guid: 93ea19cb492d8914a9a1e2678ec6c8ba, type: 2}
     - target: {fileID: -5754084199372789682, guid: 94b51a26a3072c64e9ed1f58e8450e42, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -233,10 +233,11 @@ MonoBehaviour:
   velCapPerFrame: 3
   rayleighMassDamping: 0
   rayleighStiffnessDamping: 0
-  addInitNoise: 0
+  addInitNoise: 1
   logMsPerFrame: 0
   logEnergy: 0
   logArea: 0
+  logSpringLength: 0
   numVerts: 0
   numX: 0
   numY: 0

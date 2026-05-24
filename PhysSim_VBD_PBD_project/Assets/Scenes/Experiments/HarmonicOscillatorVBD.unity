@@ -151,6 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VBDEndWeight
   mass: 1
+  bobSize: 1
 --- !u!114 &368628023
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -164,7 +165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VBDChain
   frameRate: 120
-  numSubsteps: 2
+  numSubsteps: 1
   numIterations: 1
   useAcceleration: 0
   accelerationRho: 0.5

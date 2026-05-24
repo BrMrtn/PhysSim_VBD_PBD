@@ -150,9 +150,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a60857b7c3bb1749b34ac5378b67859, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::XPBDChain
-  frameRate: 120
-  numSubsteps: 2
-  numIterations: 30
+  frameRate: 60
+  numSubsteps: 1
+  numIterations: 1
   numParticles: 2
   restLength: 1
   bobStartPosition: {x: 0, y: -0.5, z: 0}
@@ -164,8 +164,8 @@ MonoBehaviour:
   rayleighMassDamping: 0
   rayleighStiffnessDamping: 0
   logMsPerFrame: 0
-  logEnergy: 1
-  logSpringLength: 0
+  logEnergy: 0
+  logSpringLength: 1
   sphereMaterial: {fileID: 2100000, guid: bbcad39595315ce4f97a994c8990f658, type: 2}
 --- !u!120 &694411863
 LineRenderer:
@@ -305,6 +305,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::XPBDEndWeight
   mass: 1
+  bobSize: 1
 --- !u!1 &1039876911
 GameObject:
   m_ObjectHideFlags: 0

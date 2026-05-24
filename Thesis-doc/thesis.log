@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  24 MAY 2026 18:15
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  24 MAY 2026 22:41
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -828,7 +828,11 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 85.
 
-[16] [17]
+[16]
+
+LaTeX Warning: Reference `ssec:DampingCheck' on page 17 undefined on input line 133.
+
+[17]
 
 LaTeX Warning: Reference `ssec:SelfCollResults' on page 18 undefined on input line 147.
 
@@ -869,6 +873,9 @@ LaTeX Warning: Reference `ssec:MassRatioPendulum' on page 24 undefined on input 
 
 
 LaTeX Warning: Reference `ssec:MassRatioChain' on page 24 undefined on input line 32.
+
+
+LaTeX Warning: Reference `ssec:StiffRatioTest' on page 24 undefined on input line 38.
 
 [24
 
@@ -966,12 +973,12 @@ L3 programming layer <2026-01-19>
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: BAC944ECCF5206F3803D99EA36457BDB;15682.
+(rerunfilecheck)             Checksum: 901960D65A340EF80D839CEACA16E31A;15422.
  ) 
 Here is how much of TeX's memory you used:
  18634 strings out of 469581
- 355512 string characters out of 5461843
- 1169227 words of memory out of 5000000
+ 355525 string characters out of 5461843
+ 1169131 words of memory out of 5000000
  46887 multiletter control sequences out of 15000+600000
  642381 words of font info for 126 fonts, out of 8000000 for 9000
  376 hyphenation exceptions out of 8191
