@@ -13,13 +13,13 @@
     \begin{itemize}
         \item a shared Unity codebase implementing both solvers under matched material parameters and compute budget;
         \item a Newton ground-truth reference, enabling reporting of solution error rather than only relative performance;
-        \item an experimental design driven by the primal/dual theory of \cite{10.1111/cgf.14104}, organised around three falsifiable hypotheses (H1--H3).
+        \item an experimental design that uses the primal/dual distinction of \cite{10.1111/cgf.14104} as a lens to choose which regimes to stress-test.
     \end{itemize}
 \end{itemize}
 \emph{TODO: once results are finalised, a single paragraph summary of
-\autoref{sec:Verdicts} goes here: which hypotheses hold, what the
-equal-wall-clock frontier looks like, and the regime-based recommendation
-for practitioners.}
+\autoref{sec:Verdicts} goes here: how each solver behaves in the regimes the
+primal/dual lens flags, what the equal-wall-clock frontier looks like, and the
+regime-based recommendation for practitioners.}
 
 %----------------------------------------------------------------------------
 \section{Future work}
@@ -44,13 +44,12 @@ for practitioners.}
 \subsection{FEM constraints}
 \label{ssec:FWFEM}
 \begin{itemize}
-    \item Replacing mass-spring with FEM-based stretch and bending energies would lift the realism ceiling and test whether the H1--H3 effects survive the change of discretisation.
-    \item The primal/dual framing predicts they should, but only experiments can confirm.
+    \item Replacing mass-spring with FEM-based stretch and bending energies would lift the realism ceiling and show whether the regime-dependent behaviour observed here survives the change of discretisation.
 \end{itemize}
 
 \subsection{AVBD and post-2024 variants}
 \label{ssec:FWAVBD}
 \begin{itemize}
     \item Augmented VBD~\cite{Giles2025} reportedly handles wide stiffness ratios substantially better than canonical VBD.
-    \item Re-running the H2 and stiffness-ratio experiments with AVBD would clarify whether the gap I observe is intrinsic to the primal approach or specific to the canonical 2024 implementation.
+    \item Re-running the stiffness-ratio experiments with AVBD would clarify whether the gap I observe is intrinsic to the primal approach or specific to the canonical 2024 implementation.
 \end{itemize}

@@ -83,18 +83,14 @@ I distinguish this work by:
 \end{enumerate}
 
 %----------------------------------------------------------------------------
-\section{Hypotheses}
-\label{sec:Hypotheses}
+\section{The primal/dual lens}
+\label{sec:PrimalDualLens}
 %----------------------------------------------------------------------------
 \begin{itemize}
-    \item The primal/dual theory in \autoref{chap:Background} predicts XPBD and VBD fail in characteristically different regimes.
-    \item Three testable hypotheses are stated up front; the experiments in \autoref{chap:Experiments} are designed to confirm or refute them.
+    \item XPBD and VBD sit on opposite sides of the primal/dual split developed in \autoref{chap:Background}: XPBD updates dual variables one constraint at a time, VBD updates primal positions one vertex at a time.
+    \item This split is the lens I use to decide what is worth measuring. A dual solver is sensitive to how information propagates along chains of coupled constraints, so mass disparities along such a chain are a natural stress; a primal solver is sensitive to the conditioning of each per-vertex block, so a wide spread of stiffnesses meeting at one vertex is a natural stress. The experiments in \autoref{chap:Experiments} are organised around exactly these regimes.
+    \item The goal is to map where each solver is accurate, stable, and cheap, and where it is brittle --- not to argue for the primal/dual framing itself, which I take as given from \cite{10.1111/cgf.14104}.
 \end{itemize}
-\begin{description}
-    \item[H1.] \emph{XPBD degrades under high mass ratios.} Because XPBD solves dual variables one constraint at a time, large mass disparities along a constraint chain amplify the local update error and propagate slowly.
-    \item[H2.] \emph{VBD degrades under high stiffness ratios.} VBD's primal block-coordinate update relies on a locally well-conditioned Hessian; a wide range of stiffnesses meeting at a single vertex produces an ill-conditioned block and slows convergence.
-    \item[H3.] \emph{VBD's per-iteration convergence is more stiffness-robust.} Because the primal update sees the true elastic Hessian rather than a linearised constraint, raising material stiffness should not slow VBD as much as it slows XPBD.
-\end{description}
 
 %----------------------------------------------------------------------------
 \section{Evaluation axes}
@@ -118,6 +114,6 @@ I evaluate both solvers along four axes that together capture the trade-offs a p
     \item \autoref{chap:Algorithms}: states the two algorithms in canonical form.
     \item \autoref{chap:Methodology}: the Unity implementation and the design decisions that keep the comparison fair.
     \item \autoref{chap:Experiments}: results along the four axes.
-    \item \autoref{chap:Discussion}: synthesis across axes, verdicts on H1--H3, threats to validity.
+    \item \autoref{chap:Discussion}: synthesis across axes through the primal/dual lens, threats to validity.
     \item \autoref{chap:Conclusion}: closing with future-work directions.
 \end{itemize}

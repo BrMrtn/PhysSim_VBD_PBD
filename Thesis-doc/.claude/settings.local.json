@@ -3,7 +3,8 @@
     "allow": [
       "Bash(xelatex -interaction=nonstopmode thesis.tex)",
       "Bash(latexmk -xelatex -interaction=nonstopmode -g thesis.tex)",
-      "Bash(echo \"EXIT=$?\")"
+      "Bash(echo \"EXIT=$?\")",
+      "PowerShell(latexmk -xelatex -interaction=nonstopmode -halt-on-error thesis.tex 2>&1 | Select-String -Pattern \"error|Error|Undefined|Warning: Reference|! \" | Select-Object -First 40; \"EXIT: $LASTEXITCODE\")"
     ]
   }
 }

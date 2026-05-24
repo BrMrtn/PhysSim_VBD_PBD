@@ -71,7 +71,7 @@ My work differs in three substantial ways:
 \begin{enumerate}
     \item \textbf{XPBD, not PBD.} Plain PBD has the stiffness-coupling flaw that XPBD was designed to fix, so a PBD-vs-VBD comparison conflates algorithmic differences with this known bug. Using XPBD isolates the primal/dual distinction.
     \item \textbf{Canonical VBD.} Ma et~al.'s pseudocode departs in details (initialisation, Chebyshev handling) from \cite{Chen2024}. I follow canonical VBD and disable Chebyshev / adaptive init for the core comparison, so I read off algorithm properties, not acceleration tricks.
-    \item \textbf{Beyond frame rate.} Ma et~al.\ report fps and node counts. I add a Newton ground truth, an equal-wall-clock quality frontier, and targeted stress tests (mass ratio, stiffness ratio, large $dt$) keyed to the primal/dual hypotheses.
+    \item \textbf{Beyond frame rate.} Ma et~al.\ report fps and node counts. I add a Newton ground truth, an equal-wall-clock quality frontier, and targeted stress tests (mass ratio, stiffness ratio, large $dt$) keyed to the primal/dual distinction.
 \end{enumerate}
 \begin{itemize}
     \item In short, this thesis answers a question Ma et~al.\ explicitly left as future work: how does VBD compare to \emph{XPBD}, and at \emph{matched quality} rather than only at matched node counts?

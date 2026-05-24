@@ -5,7 +5,7 @@
 
 \begin{itemize}
     \item This chapter synthesises results across the four evaluation axes.
-    \item It judges the hypotheses from \autoref{sec:Hypotheses} and enumerates the threats to validity that bound the conclusions.
+    \item It reads each axis through the primal/dual lens (\autoref{sec:PrimalDualLens}) and enumerates the threats to validity that bound the conclusions.
 \end{itemize}
 
 %----------------------------------------------------------------------------
@@ -23,35 +23,32 @@ primal/dual framing of \autoref{sec:PrimalDual}.}
 \end{itemize}
 
 %----------------------------------------------------------------------------
-\section{Verdicts on H1--H3}
+\section{Reading the results through the primal/dual lens}
 \label{sec:Verdicts}
 %----------------------------------------------------------------------------
 
-\paragraph{H1 (XPBD degrades under high mass ratios) ---
-\emph{TODO: confirmed / refuted}.}
+\paragraph{Mass-ratio regime.}
 \begin{itemize}
     \item Tied to \autoref{ssec:MassRatioPendulum} and \autoref{ssec:MassRatioChain}.
-    \item Mechanism (if confirmed): dual updates propagate slowly through chains of strongly mismatched masses, because each Gauss--Seidel sweep changes only one constraint's multiplier, and the change couples to the next constraint only through the position update on the shared particle.
+    \item Interpretation: dual updates propagate slowly through chains of strongly mismatched masses, because each Gauss--Seidel sweep changes only one constraint's multiplier, and the change couples to the next constraint only through the position update on the shared particle. \emph{TODO: state what the measurements actually show here.}
 \end{itemize}
 
-\paragraph{H2 (VBD degrades under high stiffness ratios) ---
-\emph{TODO: confirmed / refuted}.}
+\paragraph{Stiffness-ratio regime.}
 \begin{itemize}
     \item Tied to \autoref{ssec:StiffnessRatioChain} and \autoref{ssec:StiffRatioTest}.
-    \item Mechanism (if confirmed): the local Hessian block $\mathbf{H}_{i}$ at a vertex sums contributions from every incident spring, so widely varying stiffnesses explode the block's condition number, slowing the Newton step.
+    \item Interpretation: the local Hessian block $\mathbf{H}_{i}$ at a vertex sums contributions from every incident spring, so widely varying stiffnesses inflate the block's condition number and can slow the Newton step. \emph{TODO: state what the measurements actually show here.}
 \end{itemize}
 
-\paragraph{H3 (VBD's per-iteration convergence is more stiffness-robust)
---- \emph{TODO: confirmed / refuted}.}
+\paragraph{Per-iteration convergence under stiffness.}
 \begin{itemize}
     \item Tied to \autoref{ssec:ResidualConvergence} and \autoref{ssec:IterIndepStiff}.
-    \item Mechanism (if confirmed): VBD uses second-order information about $E$ locally, so increasing $k$ does not change the number of Newton steps to convergence much; XPBD discards this information.
+    \item Interpretation: VBD uses second-order information about $E$ locally, so increasing $k$ need not change the number of Newton steps to convergence much, whereas XPBD discards this information. \emph{TODO: state what the measurements actually show here.}
 \end{itemize}
 
 \paragraph{Joint reading.}
 \begin{itemize}
-    \item If H1, H2, H3 all hold, the framing is consistent: each solver is robust exactly in the regime where its update direction sees the right information, and brittle where the other side of the dual would.
-    \item The practical recommendation in that case is regime-based, not absolute --- itself a useful contribution if the experiments support it.
+    \item Read together, the three regimes describe where each solver's update direction sees the information it needs and where it does not.
+    \item Where the results bear this out, the practical recommendation is regime-based rather than absolute --- a useful outcome in its own right. \emph{TODO: finalise once results are in.}
 \end{itemize}
 
 %----------------------------------------------------------------------------
@@ -71,7 +68,7 @@ primal/dual framing of \autoref{sec:PrimalDual}.}
 \label{ssec:ThreatMassSpring}
 \begin{itemize}
     \item I use distance-spring energies throughout, including for bending; real cloth simulators use FEM-based stretch energies and dihedral bending.
-    \item The primal/dual framing carries over (both XPBD and VBD admit arbitrary elastic energies), but the specific stiffness ratios encountered --- and therefore the magnitude of the H2/H3 effects --- may differ.
+    \item The primal/dual framing carries over (both XPBD and VBD admit arbitrary elastic energies), but the specific stiffness ratios encountered --- and therefore the magnitude of the stiffness-ratio and per-iteration-convergence effects --- may differ.
 \end{itemize}
 
 \subsection{Gauss--Seidel order dependence}
