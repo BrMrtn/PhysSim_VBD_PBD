@@ -25,6 +25,8 @@ public class XPBDSolver
     public float[] invMasses;
     public DistanceConstraint[] constraints;
     public float[] lambdas;
+    public DihedralConstraint[] dihedralConstraints;
+    public float[] dihedralLambdas;
     public Vector3[] externalForces;
 
     private SpatialHash spatialHash;
@@ -44,6 +46,7 @@ public class XPBDSolver
         externalForces = new Vector3[numVerts];
         Array.Fill(invMasses, 1f);
         constraints = Array.Empty<DistanceConstraint>();
+        dihedralConstraints = Array.Empty<DihedralConstraint>();
     }
 
     public void CreateSpatialHash(float spacing)
@@ -60,6 +63,9 @@ public class XPBDSolver
         if (lambdas == null || lambdas.Length < constraints.Length)
             lambdas = new float[constraints.Length];
 
+        if (dihedralLambdas == null || dihedralLambdas.Length < dihedralConstraints.Length)
+            dihedralLambdas = new float[dihedralConstraints.Length];
+
         if (handleSelfCollisions)
         {
             spatialHash.Create(positions);
@@ -75,9 +81,11 @@ public class XPBDSolver
             Integrate(sdt, maxVelocity);
 
             Array.Clear(lambdas, 0, constraints.Length);
+            Array.Clear(dihedralLambdas, 0, dihedralConstraints.Length);
             for (int iter = 0; iter < numIterations; iter++)
             {
                 SolveDistanceConstraints(sdt, invSdt2);
+                SolveDihedralConstraints(sdt, invSdt2);
                 if (handleSelfCollisions) SolveSelfCollisions();
             }
 
@@ -149,6 +157,42 @@ public class XPBDSolver
 
             positions[id0] += grad * (deltaLambda * w0);
             positions[id1] -= grad * (deltaLambda * w1);
+        }
+    }
+
+    // Dihedral bending: the same XPBD scalar update as a distance constraint,
+    // but over four particles and with the angle gradients supplied by the
+    // shared geometric kernel. No second-derivative information is needed - the
+    // compliance/lambda machinery supplies the stiffness.
+    private void SolveDihedralConstraints(float sdt, float invSdt2)
+    {
+        for (int i = 0; i < dihedralConstraints.Length; i++)
+        {
+            ref var c = ref dihedralConstraints[i];
+            float w1 = invMasses[c.p1Idx];
+            float w2 = invMasses[c.p2Idx];
+            float w3 = invMasses[c.p3Idx];
+            float w4 = invMasses[c.p4Idx];
+
+            if (!DihedralBending.ComputeGradients(
+                    positions[c.p1Idx], positions[c.p2Idx], positions[c.p3Idx], positions[c.p4Idx],
+                    out float angle, out Vector3 g1, out Vector3 g2, out Vector3 g3, out Vector3 g4))
+                continue;
+
+            // Generalised inverse-mass-weighted gradient norm, sum_j w_j |grad_j|^2.
+            float wSum = w1 * g1.sqrMagnitude + w2 * g2.sqrMagnitude
+                       + w3 * g3.sqrMagnitude + w4 * g4.sqrMagnitude;
+            if (wSum == 0f) continue;
+
+            float C = angle - c.restAngle;
+            float alpha = c.compliance * invSdt2;
+            float deltaLambda = (-C - alpha * dihedralLambdas[i]) / (wSum + alpha);
+            dihedralLambdas[i] += deltaLambda;
+
+            positions[c.p1Idx] += g1 * (deltaLambda * w1);
+            positions[c.p2Idx] += g2 * (deltaLambda * w2);
+            positions[c.p3Idx] += g3 * (deltaLambda * w3);
+            positions[c.p4Idx] += g4 * (deltaLambda * w4);
         }
     }
 

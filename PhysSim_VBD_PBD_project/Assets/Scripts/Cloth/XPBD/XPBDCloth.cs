@@ -14,6 +14,11 @@ public class XPBDCloth : MonoBehaviour
     public float shearCompliance = 0.0001f;
     public float bendingCompliance = 0.001f;
 
+    // When set, the i,i+2 distance "bending" springs are replaced by true
+    // dihedral-angle bending constraints over each interior hinge.
+    public bool useDihedralBending = false;
+    public float dihedralBendingCompliance = 0.01f;
+
     public float totalMass = 1f;
 
     public bool handleSelfCollisions = false;
@@ -269,10 +274,67 @@ public class XPBDCloth : MonoBehaviour
         AddConstraint(constraintsList, 0, 0, 0, 1, stretchingCompliance);     // stretch vertical
         AddConstraint(constraintsList, 0, 0, 1, 1, shearCompliance);          // shear down
         AddConstraint(constraintsList, 1, 0, 0, 1, shearCompliance);          // shear up
-        AddConstraint(constraintsList, 0, 0, 2, 0, bendingCompliance);        // bend horizontal
-        AddConstraint(constraintsList, 0, 0, 0, 2, bendingCompliance);        // bend vertical
+
+        if (!useDihedralBending)
+        {
+            AddConstraint(constraintsList, 0, 0, 2, 0, bendingCompliance);    // bend horizontal
+            AddConstraint(constraintsList, 0, 0, 0, 2, bendingCompliance);    // bend vertical
+        }
 
         Solver.constraints = constraintsList.ToArray();
+
+        if (useDihedralBending)
+        {
+            var dihedrals = new List<DihedralConstraint>();
+            AddDihedralConstraints(dihedrals);
+            Solver.dihedralConstraints = dihedrals.ToArray();
+        }
+    }
+
+    // Builds one dihedral hinge per interior triangle edge, using the same
+    // (a,b,d)+(a,d,c) triangulation as the mass/area code. Each edge shared by
+    // two triangles becomes a hinge whose wings are the two opposite vertices.
+    private void AddDihedralConstraints(List<DihedralConstraint> list)
+    {
+        var firstWing = new Dictionary<long, int>();
+
+        void ProcessEdge(int u, int v, int wing)
+        {
+            int a = Mathf.Min(u, v), b = Mathf.Max(u, v);
+            long key = ((long)a << 32) | (uint)b;
+            if (firstWing.TryGetValue(key, out int w0))
+            {
+                DihedralBending.ComputeGradients(
+                    Solver.positions[a], Solver.positions[b],
+                    Solver.positions[w0], Solver.positions[wing],
+                    out float restAngle, out _, out _, out _, out _);
+                list.Add(new DihedralConstraint
+                {
+                    p1Idx = a, p2Idx = b, p3Idx = w0, p4Idx = wing,
+                    restAngle = restAngle,
+                    compliance = dihedralBendingCompliance
+                });
+            }
+            else firstWing[key] = wing;
+        }
+
+        void ProcessTriangle(int t0, int t1, int t2)
+        {
+            ProcessEdge(t0, t1, t2);
+            ProcessEdge(t1, t2, t0);
+            ProcessEdge(t2, t0, t1);
+        }
+
+        for (int iy = 0; iy < numY - 1; iy++)
+            for (int ix = 0; ix < numX - 1; ix++)
+            {
+                int a = iy * numX + ix;
+                int b = iy * numX + (ix + 1);
+                int c = (iy + 1) * numX + ix;
+                int d = (iy + 1) * numX + (ix + 1);
+                ProcessTriangle(a, b, d);
+                ProcessTriangle(a, d, c);
+            }
     }
 
     private void AddConstraint(List<DistanceConstraint> constraintsList, int offset_i0, int offset_j0, int offset_i1, int offset_j1, float compliance)

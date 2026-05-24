@@ -18,6 +18,11 @@ public class VBDCloth : MonoBehaviour
     public float shearStiffness = 1e4f;
     public float bendingStiffness = 1e3f;
 
+    // When set, the i,i+2 distance "bending" springs are replaced by true
+    // dihedral-angle bending elements over each interior hinge.
+    public bool useDihedralBending = false;
+    public float dihedralBendingStiffness = 1e-1f;
+
     public float totalMass = 1f;
 
     public bool handleSelfCollisions = false;
@@ -301,8 +306,12 @@ public class VBDCloth : MonoBehaviour
         AddSprings(perVertEdges, 0, 0, 0, 1, stretchingStiffness); // stretch vertical
         AddSprings(perVertEdges, 0, 0, 1, 1, shearStiffness);      // shear  /
         AddSprings(perVertEdges, 1, 0, 0, 1, shearStiffness);      // shear  \
-        AddSprings(perVertEdges, 0, 0, 2, 0, bendingStiffness);    // bend horizontal
-        AddSprings(perVertEdges, 0, 0, 0, 2, bendingStiffness);    // bend vertical
+
+        if (!useDihedralBending)
+        {
+            AddSprings(perVertEdges, 0, 0, 2, 0, bendingStiffness);    // bend horizontal
+            AddSprings(perVertEdges, 0, 0, 0, 2, bendingStiffness);    // bend vertical
+        }
 
         // Flatten per-vertex lists into CSR (springListStart + springEdges).
         var listStart = new int[numVerts + 1];
@@ -325,6 +334,80 @@ public class VBDCloth : MonoBehaviour
 
         Solver.springEdges = flat;
         Solver.springListStart = listStart;
+
+        if (useDihedralBending) InitBendElements();
+    }
+
+    // Builds the dihedral hinges (same triangulation as the mass code) and, for
+    // each one, appends a VertexBendElement to all four incident vertices'
+    // lists - flattened into the same CSR layout the springs use. Unlike XPBD's
+    // single per-hinge constraint, every vertex carries its own copy of the
+    // hinge so the Gauss-Seidel vertex sweep can solve it locally.
+    private void InitBendElements()
+    {
+        var perVert = new List<VertexBendElement>[numVerts];
+        for (int i = 0; i < numVerts; i++) perVert[i] = new List<VertexBendElement>();
+
+        var firstWing = new Dictionary<long, int>();
+
+        void Emit(int p1, int p2, int p3, int p4)
+        {
+            DihedralBending.ComputeGradients(
+                Solver.positions[p1], Solver.positions[p2],
+                Solver.positions[p3], Solver.positions[p4],
+                out float restAngle, out _, out _, out _, out _);
+
+            perVert[p1].Add(new VertexBendElement { i1 = p1, i2 = p2, i3 = p3, i4 = p4, role = 0, restAngle = restAngle, stiffness = dihedralBendingStiffness });
+            perVert[p2].Add(new VertexBendElement { i1 = p1, i2 = p2, i3 = p3, i4 = p4, role = 1, restAngle = restAngle, stiffness = dihedralBendingStiffness });
+            perVert[p3].Add(new VertexBendElement { i1 = p1, i2 = p2, i3 = p3, i4 = p4, role = 2, restAngle = restAngle, stiffness = dihedralBendingStiffness });
+            perVert[p4].Add(new VertexBendElement { i1 = p1, i2 = p2, i3 = p3, i4 = p4, role = 3, restAngle = restAngle, stiffness = dihedralBendingStiffness });
+        }
+
+        void ProcessEdge(int u, int v, int wing)
+        {
+            int a = Mathf.Min(u, v), b = Mathf.Max(u, v);
+            long key = ((long)a << 32) | (uint)b;
+            if (firstWing.TryGetValue(key, out int w0)) Emit(a, b, w0, wing);
+            else firstWing[key] = wing;
+        }
+
+        void ProcessTriangle(int t0, int t1, int t2)
+        {
+            ProcessEdge(t0, t1, t2);
+            ProcessEdge(t1, t2, t0);
+            ProcessEdge(t2, t0, t1);
+        }
+
+        for (int iy = 0; iy < numY - 1; iy++)
+            for (int ix = 0; ix < numX - 1; ix++)
+            {
+                int a = iy * numX + ix;
+                int b = iy * numX + (ix + 1);
+                int c = (iy + 1) * numX + ix;
+                int d = (iy + 1) * numX + (ix + 1);
+                ProcessTriangle(a, b, d);
+                ProcessTriangle(a, d, c);
+            }
+
+        var listStart = new int[numVerts + 1];
+        int running = 0;
+        for (int i = 0; i < numVerts; i++)
+        {
+            listStart[i] = running;
+            running += perVert[i].Count;
+        }
+        listStart[numVerts] = running;
+
+        var flat = new VertexBendElement[running];
+        for (int i = 0; i < numVerts; i++)
+        {
+            var l = perVert[i];
+            int s = listStart[i];
+            for (int j = 0; j < l.Count; j++) flat[s + j] = l[j];
+        }
+
+        Solver.bendElements = flat;
+        Solver.bendListStart = listStart;
     }
 
     private void AddSprings(List<VertexSpringEdge>[] perVertEdges,

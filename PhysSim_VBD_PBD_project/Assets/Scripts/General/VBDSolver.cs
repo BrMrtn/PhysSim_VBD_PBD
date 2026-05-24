@@ -50,6 +50,8 @@ public class VBDSolver
     public bool[] isColliding;
     public VertexSpringEdge[] springEdges;
     public int[] springListStart;
+    public VertexBendElement[] bendElements;
+    public int[] bendListStart;
     public Vector3[] externalForces;
 
     private SpatialHash spatialHash;
@@ -80,6 +82,8 @@ public class VBDSolver
         Array.Fill(invMasses, 1f);
         springEdges = Array.Empty<VertexSpringEdge>();
         springListStart = new int[numVerts + 1];
+        bendElements = Array.Empty<VertexBendElement>();
+        bendListStart = new int[numVerts + 1];
         externalForces = new Vector3[numVerts];
     }
 
@@ -296,6 +300,37 @@ public class VBDSolver
                 f.x += fScale * diffx;
                 f.y += fScale * diffy;
                 f.z += fScale * diffz;
+            }
+
+            // Dihedral bending. For each incident hinge this vertex re-evaluates
+            // the full angle gradient and keeps the component for its own role.
+            // Energy E = 0.5 k C^2 gives force -k C grad and the Gauss-Newton
+            // local Hessian k grad grad^T - rank-1 and therefore PSD, so the
+            // indefinite k C d^2C/dx^2 term is dropped, exactly as for contacts.
+            int bStart = bendListStart[i];
+            int bEnd = bendListStart[i + 1];
+            for (int b = bStart; b < bEnd; b++)
+            {
+                VertexBendElement be = bendElements[b];
+                if (!DihedralBending.ComputeGradients(
+                        positions[be.i1], positions[be.i2], positions[be.i3], positions[be.i4],
+                        out float angle, out Vector3 g1, out Vector3 g2, out Vector3 g3, out Vector3 g4))
+                    continue;
+
+                Vector3 g = be.role == 0 ? g1 : be.role == 1 ? g2 : be.role == 2 ? g3 : g4;
+                float kb = be.stiffness;
+                float C = angle - be.restAngle;
+
+                f.x -= kb * C * g.x;
+                f.y -= kb * C * g.y;
+                f.z -= kb * C * g.z;
+
+                h00 += kb * g.x * g.x;
+                h11 += kb * g.y * g.y;
+                h22 += kb * g.z * g.z;
+                h01 += kb * g.x * g.y;
+                h02 += kb * g.x * g.z;
+                h12 += kb * g.y * g.z;
             }
 
             if (handleSelfCollisions && selfCollisionStiffness > 0f)
