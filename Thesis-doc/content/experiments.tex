@@ -41,24 +41,6 @@
 \section{Robustness and stability}
 \label{sec:Robustness}
 %----------------------------------------------------------------------------
-
-\subsection{Stability map: max stable $dt$ vs.\ stiffness}
-\label{ssec:StabilityMap}
-\begin{itemize}
-    \item For each solver, sweep $dt$ and material stiffness $k$, flagging combinations where artefacts appear (oscillation amplitude exceeds rest length, NaNs, visible blow-up).
-    \item Deliverable: a 2D stability map per solver, summarising at a glance each solver's operating envelope.
-    \item This replaces the simpler ``raise $dt$ until artefacts appear'' test of \cite{app142311072} (their Figs.~7--8) with a fuller picture.
-\end{itemize}
-\emph{TODO: Figure --- 2D stability map for XPBD and VBD on shared axes.}
-
-\subsection{Single-iteration regime}
-\label{ssec:SingleIter}
-\begin{itemize}
-    \item Both solvers configured for exactly one inner iteration per substep; report whether each remains visually plausible across the default scenes.
-    \item This is the most adversarial setting for each algorithm and isolates per-iteration update quality.
-\end{itemize}
-\emph{TODO: Side-by-side renders, qualitative description.}
-
 \subsection{High mass ratio at the end of a pendulum}
 \label{ssec:MassRatioPendulum}
 \begin{itemize}
@@ -67,14 +49,6 @@
     \item \emph{Hypothesis H1 prediction: XPBD degrades.}
 \end{itemize}
 \emph{TODO: Figure --- error vs.\ mass ratio.}
-
-\subsection{High mass ratio chain}
-\label{ssec:MassRatioChain}
-\begin{itemize}
-    \item A chain with alternating heavy and light particles, designed to maximise the chain length over which mass disparities couple.
-    \item Same outputs as the pendulum.
-\end{itemize}
-\emph{TODO: Figure / description.}
 
 \subsection{High stiffness ratio chain}
 \label{ssec:StiffnessRatioChain}
@@ -153,6 +127,7 @@
 \begin{itemize}
     \item For each solver, sweep stiffness $k$ over several decades and measure how many iterations / substeps are needed to reach a fixed error threshold.
     \item Following Fig.~6 in \cite{10.1145/2994258.2994272}, XPBD is expected to be roughly stiffness-independent in iteration count thanks to the compliance formulation.
+    \item For both methods, stiffness stays roughly the same accross all iteration counds.
 \end{itemize}
 \emph{TODO: Figure --- iterations to threshold vs.\ stiffness.}
 

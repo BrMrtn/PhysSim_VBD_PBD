@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  23 MAY 2026 15:31
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  24 MAY 2026 11:45
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -842,52 +842,46 @@ Chapter 6.
 
 
 
-]
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 45.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 45.
-
-[20] [21] [22]) [23]
+] [20] [21]) [22]
 \openout2 = `content/discussion.aux'.
 
  (./content/discussion.tex
 Chapter 7.
-[24
+[23
 
 
 
 
 ]
 
-LaTeX Warning: Reference `ssec:ResidualConvergence' on page 25 undefined on input line 47.
+LaTeX Warning: Reference `ssec:ResidualConvergence' on page 24 undefined on input line 47.
 
-[25]
+[24]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 92.
+
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 92.
 
 
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 92.
+LaTeX Warning: Reference `ssec:StabilityMap' on page 25 undefined on input line 97.
 
-) [26]
+) [25]
 \openout2 = `content/conclusion.aux'.
 
  (./content/conclusion.tex
 Chapter 8.
-[27
+[26
 
 
 
 
-]) [28]
+]) [27]
 \openout2 = `content/acknowledgement.aux'.
 
- (./content/acknowledgement.tex) [29
+ (./content/acknowledgement.tex) [28
 
 
 
@@ -912,16 +906,16 @@ Underfull \hbox (badness 10000) in paragraph at lines 81--89
 [][]\TU/lmtt/m/n/10.95 https://doi.org/10.1016/j.jvcir.2007.01.005[][]\TU/lmr/m/n/10.95 .  URL [][]$[][][][][] [] [] [] [][][] []
  []
 
-) [30
+) [29
 
 
 
 ]
 \openout2 = `content/appendices.aux'.
 
- (./content/appendices.tex [31
+ (./content/appendices.tex [30
 
-] (./include/AI_nyilatkozat_tablazat_EN.tex [32
+] (./include/AI_nyilatkozat_tablazat_EN.tex [31
 
 ]
 Underfull \hbox (badness 10000) in paragraph at lines 13--63
@@ -933,7 +927,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 13--63
 
  []
 
-)) [33
+)) [32
 
 ]
 \tf@thm=\write5
@@ -953,16 +947,25 @@ L3 programming layer <2026-01-19>
 
 LaTeX Warning: There were undefined references.
 
-Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 193BA8F6C8221D920BCF62988FE199A8;16101.
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+
+Package rerunfilecheck Warning: File `thesis.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `thesis.out':
+(rerunfilecheck)             Before: 1DEE70EEEB4AA41AEDD129695BB4E25A;15631
+(rerunfilecheck)             After:  0213EA9B16F7A9B34D979E3714B840CC;15455.
  ) 
 Here is how much of TeX's memory you used:
- 18559 strings out of 469581
- 352118 string characters out of 5461843
- 1168188 words of memory out of 5000000
- 46820 multiletter control sequences out of 15000+600000
+ 18558 strings out of 469581
+ 352101 string characters out of 5461843
+ 1169050 words of memory out of 5000000
+ 46819 multiletter control sequences out of 15000+600000
  642389 words of font info for 127 fonts, out of 8000000 for 9000
  376 hyphenation exceptions out of 8191
  78i,14n,82p,913b,1983s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on thesis.pdf (40 pages).
+Output written on thesis.pdf (39 pages).

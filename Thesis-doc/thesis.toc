@@ -58,44 +58,41 @@
 \select@language {english} \contentsline {subsection}{\numberline {6.1.1}Wall-clock}{19}{subsection.6.1.1}%
 \select@language {english} \contentsline {subsection}{\numberline {6.1.2}Frame time vs.\ node count}{20}{subsection.6.1.2}%
 \select@language {english} \contentsline {section}{\numberline {6.2}Robustness and stability}{20}{section.6.2}%
-\select@language {english} \contentsline {subsection}{\numberline {6.2.1}Stability map: max stable $dt$ vs.\ stiffness}{20}{subsection.6.2.1}%
-\select@language {english} \contentsline {subsection}{\numberline {6.2.2}Single-iteration regime}{20}{subsection.6.2.2}%
-\select@language {english} \contentsline {subsection}{\numberline {6.2.3}High mass ratio at the end of a pendulum}{20}{subsection.6.2.3}%
-\select@language {english} \contentsline {subsection}{\numberline {6.2.4}High mass ratio chain}{21}{subsection.6.2.4}%
-\select@language {english} \contentsline {subsection}{\numberline {6.2.5}High stiffness ratio chain}{21}{subsection.6.2.5}%
-\select@language {english} \contentsline {subsection}{\numberline {6.2.6}Self-collision: cloth folded onto itself}{21}{subsection.6.2.6}%
-\select@language {english} \contentsline {section}{\numberline {6.3}Physical realism}{21}{section.6.3}%
-\select@language {english} \contentsline {subsection}{\numberline {6.3.1}Newton reference}{21}{subsection.6.3.1}%
+\select@language {english} \contentsline {subsection}{\numberline {6.2.1}High mass ratio at the end of a pendulum}{20}{subsection.6.2.1}%
+\select@language {english} \contentsline {subsection}{\numberline {6.2.2}High stiffness ratio chain}{20}{subsection.6.2.2}%
+\select@language {english} \contentsline {subsection}{\numberline {6.2.3}Self-collision: cloth folded onto itself}{20}{subsection.6.2.3}%
+\select@language {english} \contentsline {section}{\numberline {6.3}Physical realism}{20}{section.6.3}%
+\select@language {english} \contentsline {subsection}{\numberline {6.3.1}Newton reference}{20}{subsection.6.3.1}%
 \select@language {english} \contentsline {subsection}{\numberline {6.3.2}Harmonic oscillator}{21}{subsection.6.3.2}%
-\select@language {english} \contentsline {subsection}{\numberline {6.3.3}Energy tracking}{22}{subsection.6.3.3}%
-\select@language {english} \contentsline {subsection}{\numberline {6.3.4}Hanging cloth: stretched area vs.\ reference}{22}{subsection.6.3.4}%
-\select@language {english} \contentsline {subsection}{\numberline {6.3.5}Damping cross-check}{22}{subsection.6.3.5}%
+\select@language {english} \contentsline {subsection}{\numberline {6.3.3}Energy tracking}{21}{subsection.6.3.3}%
+\select@language {english} \contentsline {subsection}{\numberline {6.3.4}Hanging cloth: stretched area vs.\ reference}{21}{subsection.6.3.4}%
+\select@language {english} \contentsline {subsection}{\numberline {6.3.5}Damping cross-check}{21}{subsection.6.3.5}%
 \select@language {english} \contentsline {section}{\numberline {6.4}Flexibility}{22}{section.6.4}%
 \select@language {english} \contentsline {subsection}{\numberline {6.4.1}Iteration-count independence of stiffness}{22}{subsection.6.4.1}%
 \select@language {english} \contentsline {subsection}{\numberline {6.4.2}Stiffness-ratio test}{22}{subsection.6.4.2}%
-\select@language {english} \contentsline {subsection}{\numberline {6.4.3}Ease of adding a new constraint or force}{23}{subsection.6.4.3}%
-\select@language {english} \contentsline {chapter}{\numberline {7}Discussion}{24}{chapter.7}%
-\select@language {english} \contentsline {section}{\numberline {7.1}Synthesis across axes}{24}{section.7.1}%
-\select@language {english} \contentsline {section}{\numberline {7.2}Verdicts on H1--H3}{24}{section.7.2}%
-\select@language {english} \contentsline {paragraph}{H1 (XPBD degrades under high mass ratios) --- \emph {TODO: confirmed / refuted}.}{24}{section*.16}%
-\select@language {english} \contentsline {paragraph}{H2 (VBD degrades under high stiffness ratios) --- \emph {TODO: confirmed / refuted}.}{24}{section*.17}%
-\select@language {english} \contentsline {paragraph}{H3 (VBD's per-iteration convergence is more stiffness-robust) --- \emph {TODO: confirmed / refuted}.}{25}{section*.18}%
-\select@language {english} \contentsline {paragraph}{Joint reading.}{25}{section*.19}%
-\select@language {english} \contentsline {section}{\numberline {7.3}Threats to validity}{25}{section.7.3}%
-\select@language {english} \contentsline {subsection}{\numberline {7.3.1}Single-threaded execution}{25}{subsection.7.3.1}%
-\select@language {english} \contentsline {subsection}{\numberline {7.3.2}Mass-spring discretisation only}{25}{subsection.7.3.2}%
-\select@language {english} \contentsline {subsection}{\numberline {7.3.3}Gauss--Seidel order dependence}{25}{subsection.7.3.3}%
-\select@language {english} \contentsline {subsection}{\numberline {7.3.4}Mismatched collision models}{26}{subsection.7.3.4}%
-\select@language {english} \contentsline {subsection}{\numberline {7.3.5}Fixed $dt = 1/30$~s}{26}{subsection.7.3.5}%
-\select@language {english} \contentsline {section}{\numberline {7.4}Limitations}{26}{section.7.4}%
-\select@language {english} \contentsline {chapter}{\numberline {8}Conclusion and future work}{27}{chapter.8}%
-\select@language {english} \contentsline {section}{\numberline {8.1}Summary}{27}{section.8.1}%
-\select@language {english} \contentsline {section}{\numberline {8.2}Future work}{27}{section.8.2}%
-\select@language {english} \contentsline {subsection}{\numberline {8.2.1}Multithreaded and GPU comparison}{27}{subsection.8.2.1}%
-\select@language {english} \contentsline {subsection}{\numberline {8.2.2}Extend research to other dynamic types}{27}{subsection.8.2.2}%
-\select@language {english} \contentsline {subsection}{\numberline {8.2.3}FEM constraints}{28}{subsection.8.2.3}%
-\select@language {english} \contentsline {subsection}{\numberline {8.2.4}AVBD and post-2024 variants}{28}{subsection.8.2.4}%
-\select@language {english} \contentsline {chapter}{Acknowledgements}{29}{chapter*.20}%
-\select@language {english} \contentsline {chapter}{Bibliography}{30}{chapter*.20}%
-\select@language {english} \contentsline {chapter}{Appendix}{32}{appendix*.22}%
-\select@language {english} \contentsline {section}{\numberline {A.1}Declaration on the Use of Generative Artificial Intelligence}{33}{section.A.1}%
+\select@language {english} \contentsline {subsection}{\numberline {6.4.3}Ease of adding a new constraint or force}{22}{subsection.6.4.3}%
+\select@language {english} \contentsline {chapter}{\numberline {7}Discussion}{23}{chapter.7}%
+\select@language {english} \contentsline {section}{\numberline {7.1}Synthesis across axes}{23}{section.7.1}%
+\select@language {english} \contentsline {section}{\numberline {7.2}Verdicts on H1--H3}{23}{section.7.2}%
+\select@language {english} \contentsline {paragraph}{H1 (XPBD degrades under high mass ratios) --- \emph {TODO: confirmed / refuted}.}{23}{section*.16}%
+\select@language {english} \contentsline {paragraph}{H2 (VBD degrades under high stiffness ratios) --- \emph {TODO: confirmed / refuted}.}{23}{section*.17}%
+\select@language {english} \contentsline {paragraph}{H3 (VBD's per-iteration convergence is more stiffness-robust) --- \emph {TODO: confirmed / refuted}.}{24}{section*.18}%
+\select@language {english} \contentsline {paragraph}{Joint reading.}{24}{section*.19}%
+\select@language {english} \contentsline {section}{\numberline {7.3}Threats to validity}{24}{section.7.3}%
+\select@language {english} \contentsline {subsection}{\numberline {7.3.1}Single-threaded execution}{24}{subsection.7.3.1}%
+\select@language {english} \contentsline {subsection}{\numberline {7.3.2}Mass-spring discretisation only}{24}{subsection.7.3.2}%
+\select@language {english} \contentsline {subsection}{\numberline {7.3.3}Gauss--Seidel order dependence}{24}{subsection.7.3.3}%
+\select@language {english} \contentsline {subsection}{\numberline {7.3.4}Mismatched collision models}{25}{subsection.7.3.4}%
+\select@language {english} \contentsline {subsection}{\numberline {7.3.5}Fixed $dt = 1/30$~s}{25}{subsection.7.3.5}%
+\select@language {english} \contentsline {section}{\numberline {7.4}Limitations}{25}{section.7.4}%
+\select@language {english} \contentsline {chapter}{\numberline {8}Conclusion and future work}{26}{chapter.8}%
+\select@language {english} \contentsline {section}{\numberline {8.1}Summary}{26}{section.8.1}%
+\select@language {english} \contentsline {section}{\numberline {8.2}Future work}{26}{section.8.2}%
+\select@language {english} \contentsline {subsection}{\numberline {8.2.1}Multithreaded and GPU comparison}{26}{subsection.8.2.1}%
+\select@language {english} \contentsline {subsection}{\numberline {8.2.2}Extend research to other dynamic types}{26}{subsection.8.2.2}%
+\select@language {english} \contentsline {subsection}{\numberline {8.2.3}FEM constraints}{27}{subsection.8.2.3}%
+\select@language {english} \contentsline {subsection}{\numberline {8.2.4}AVBD and post-2024 variants}{27}{subsection.8.2.4}%
+\select@language {english} \contentsline {chapter}{Acknowledgements}{28}{chapter*.20}%
+\select@language {english} \contentsline {chapter}{Bibliography}{29}{chapter*.20}%
+\select@language {english} \contentsline {chapter}{Appendix}{31}{appendix*.22}%
+\select@language {english} \contentsline {section}{\numberline {A.1}Declaration on the Use of Generative Artificial Intelligence}{32}{section.A.1}%
