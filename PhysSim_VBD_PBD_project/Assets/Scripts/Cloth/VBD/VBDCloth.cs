@@ -101,7 +101,7 @@ public class VBDCloth : MonoBehaviour
         Solver = new VBDSolver(numVerts)
         {
             numSubsteps = numSubsteps,
-            numIterations = numIterations,
+            maxIterations = numIterations,
             useAcceleration = useAcceleration,
             accelerationRho = accelerationRho,
             handleSelfCollisions = handleSelfCollisions,

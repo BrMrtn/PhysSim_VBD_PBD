@@ -65,7 +65,7 @@ public class VBDChain : MonoBehaviour
 
         Solver = ChainFactory.BuildVBD(cfg);
         Solver.numSubsteps = numSubsteps;
-        Solver.numIterations = numIterations;
+        Solver.maxIterations = numIterations;
         Solver.useAcceleration = useAcceleration;
         Solver.accelerationRho = accelerationRho;
         Solver.rayleighMassDamping = rayleighMassDamping;

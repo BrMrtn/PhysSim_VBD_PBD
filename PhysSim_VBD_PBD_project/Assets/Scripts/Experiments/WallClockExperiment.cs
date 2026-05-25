@@ -82,7 +82,7 @@ public class WallClockExperiment : MonoBehaviour
                   (S, n) =>
                   {
                       var s = ChainFactory.BuildVBD(cfg);
-                      s.numSubsteps = S; s.numIterations = n;
+                      s.numSubsteps = S; s.maxIterations = n;
                       s.useAcceleration = false;
                       s.accelerationRho = 0.5f;
                       return (() => s.Step(dt), s.positions);

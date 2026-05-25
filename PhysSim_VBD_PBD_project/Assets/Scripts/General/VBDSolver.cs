@@ -4,7 +4,13 @@ using UnityEngine;
 public class VBDSolver
 {
     public int numSubsteps = 1;
-    public int numIterations = 15;
+    public int maxIterations = 15;
+
+    // Early-out for the Gauss-Seidel sweep. Each iteration reports the largest Newton
+    // step taken over all vertices; once that drops below this threshold the descent has
+    // reached its fixed point and further iterations would not move the solution, so the
+    // substep stops early instead of always running the full maxIterations. In metres.
+    public float convergenceTolerance = 1e-5f;
 
     // Chebyshev semi-iterative acceleration (VBD paper)
     public bool useAcceleration = false;
@@ -116,11 +122,11 @@ public class VBDSolver
             Array.Clear(isColliding, 0, numVerts);
 
             float omega = 1f;
-            for (int iter = 0; iter < numIterations; iter++)
+            for (int iter = 0; iter < maxIterations; iter++)
             {
                 if (useAcceleration) Array.Copy(positions, prevIterPositions, numVerts);
 
-                Solve(sdt);
+                float maxStep = Solve(sdt);
 
                 if (useAcceleration)
                 {
@@ -128,6 +134,8 @@ public class VBDSolver
                     ApplyAccelerator(omega);
                     Array.Copy(prevIterPositions, prevPrevIterPositions, numVerts);
                 }
+
+                if (maxStep < convergenceTolerance) break;
             }
             OnSubstep?.Invoke();
             UpdateVelocities(sdt);
@@ -196,10 +204,13 @@ public class VBDSolver
         }
     }
 
-    // VBD solve - one Gauss-Seidel block-descent pass over all vertices
-    private void Solve(float dt)
+    // VBD solve - one Gauss-Seidel block-descent pass over all vertices.
+    // Returns the largest per-vertex Newton step magnitude applied this pass, used as
+    // the convergence measure for the early-out in Step.
+    private float Solve(float dt)
     {
         float invDt2 = 1f / (dt * dt);
+        float maxStep2 = 0f;
         float invDt = 1f / dt;
         bool hasMassDamping = rayleighMassDamping > 0f;
         bool hasStiffDamping = rayleighStiffnessDamping > 0f;
@@ -380,7 +391,12 @@ public class VBDSolver
                 dx = LineSearch(i, dx, f, f - fBeforeCallback, massInvDt2, cMass);
 
             positions[i] += dx;
+
+            float step2 = dx.sqrMagnitude;
+            if (step2 > maxStep2) maxStep2 = step2;
         }
+
+        return Mathf.Sqrt(maxStep2);
     }
 
     // Re-evaluates the residual force at the final positions: a fresh pass over the same
