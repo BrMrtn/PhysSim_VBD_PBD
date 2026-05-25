@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  25 MAY 2026 01:29
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  25 MAY 2026 22:06
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -599,7 +599,7 @@ Package hyperref Info: Option `colorlinks' set `true' on input line 39.
 \c@currtheoremctr=\count347
 \c@endtheoremctr=\count348
 \c@theorem=\count349
-) (./thesis.aux (./include/titlepage.aux) (./include/declaration_EN.aux) (./content/abstract.aux) (./content/introduction.aux) (./content/background.aux) (./content/related-work.aux) (./content/algorithms.aux) (./content/methodology.aux) (./content/experiments.aux) (./content/discussion.aux) (./content/conclusion.aux) (./content/acknowledgement.aux) (./content/appendices.aux))
+) (./thesis.aux (./include/titlepage.aux) (./include/declaration_EN.aux) (./content/abstract.aux) (./content/introduction.aux) (./content/background.aux) (./content/related-work.aux) (./content/algorithms.aux) (./content/methodology.aux) (./content/experiments.aux) (./content/discussion.aux) (./content/conclusion.aux) (./content/appendices.aux))
 \openout1 = `thesis.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 31.
@@ -810,37 +810,42 @@ Chapter 5.
 ]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 60.
+(hyperref)                removing `math shift' on input line 63.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\leftrightarrow' on input line 60.
+(hyperref)                removing `\leftrightarrow' on input line 63.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 60.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 85.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 85.
+(hyperref)                removing `math shift' on input line 63.
 
 [16]
 
-LaTeX Warning: Reference `ssec:DampingCheck' on page 17 undefined on input line 133.
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 86.
 
-[17]
 
-LaTeX Warning: Reference `ssec:SelfCollResults' on page 18 undefined on input line 147.
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 86.
 
-) [18]
+
+Package natbib Warning: Citation `10.1145/2816795.2818063' on page 17 undefined on input line 100.
+
+
+LaTeX Warning: Reference `ssec:SelfCollResults' on page 17 undefined on input line 114.
+
+[17]) [18]
 \openout2 = `content/experiments.aux'.
 
  (./content/experiments.tex
 Chapter 6.
+[19
+
+
+
+
+]
 File: figures/ErrorVsMs/WallClock_fair_base_clean_newton1ss.png Graphic file (type bmp)
 <figures/ErrorVsMs/WallClock_fair_base_clean_newton1ss.png>
 File: figures/ErrorVsMs/WallClock_fair_base_clean_newton4ss.png Graphic file (type bmp)
@@ -850,16 +855,10 @@ File: figures/ErrorVsMs/WallClock_fair_base_clean_newton8ss.png Graphic file (ty
 File: figures/ErrorVsMs/WallClock_fair_base_clean_newton64ss.png Graphic file (type bmp)
 <figures/ErrorVsMs/WallClock_fair_base_clean_newton64ss.png>
 
-Overfull \hbox (6.92471pt too wide) in paragraph at lines 44--53
+Overfull \hbox (6.92471pt too wide) in paragraph at lines 47--55
  [][] 
  []
 
-[19
-
-
-
-
-]
 File: figures/NodeCountVsFPS/XPBD/frame_0.png Graphic file (type bmp)
 <figures/NodeCountVsFPS/XPBD/frame_0.png>
 File: figures/NodeCountVsFPS/XPBD/frame_1.png Graphic file (type bmp)
@@ -880,20 +879,20 @@ File: figures/NodeCountVsFPS/VBD/frame_3.png Graphic file (type bmp)
 <figures/NodeCountVsFPS/VBD/frame_3.png>
 File: figures/NodeCountVsFPS/VBD/frame_4.png Graphic file (type bmp)
 <figures/NodeCountVsFPS/VBD/frame_4.png>
+[20]
 File: figures/ChainWithHeavyWeight/NewtonMassRatio.png Graphic file (type bmp)
 <figures/ChainWithHeavyWeight/NewtonMassRatio.png>
 File: figures/ChainWithHeavyWeight/XPBDMassRatio.png Graphic file (type bmp)
 <figures/ChainWithHeavyWeight/XPBDMassRatio.png>
 File: figures/ChainWithHeavyWeight/VBDMassRatio.png Graphic file (type bmp)
 <figures/ChainWithHeavyWeight/VBDMassRatio.png>
- [20]
+ [21]
 File: figures/StiffnessRatioChain/NewtonStiffnessRatio.png Graphic file (type bmp)
 <figures/StiffnessRatioChain/NewtonStiffnessRatio.png>
 File: figures/StiffnessRatioChain/XPBDStiffnessRatio.png Graphic file (type bmp)
 <figures/StiffnessRatioChain/XPBDStiffnessRatio.png>
 File: figures/StiffnessRatioChain/VBDStiffnessRatio.png Graphic file (type bmp)
 <figures/StiffnessRatioChain/VBDStiffnessRatio.png>
- [21]
 File: figures/SelfCollisionDrop/XPBD-w1/frame_0.png Graphic file (type bmp)
 <figures/SelfCollisionDrop/XPBD-w1/frame_0.png>
 File: figures/SelfCollisionDrop/XPBD-w1/frame_1.png Graphic file (type bmp)
@@ -967,7 +966,6 @@ File: figures/EnergyTracking/energy_dissipation_s0_e5.png Graphic file (type bmp
 <figures/EnergyTracking/energy_dissipation_s0_e5.png>
 File: figures/EnergyTracking/energy_dissipation_s0_e10.png Graphic file (type bmp)
 <figures/EnergyTracking/energy_dissipation_s0_e10.png>
- [23]
 File: figures/IterationIndependence/XPBD_i20_16x16.png Graphic file (type bmp)
 <figures/IterationIndependence/XPBD_i20_16x16.png>
 File: figures/IterationIndependence/XPBD_i40_16x16.png Graphic file (type bmp)
@@ -984,8 +982,8 @@ File: figures/IterationIndependence/VBD_i80.png Graphic file (type bmp)
 <figures/IterationIndependence/VBD_i80.png>
 File: figures/IterationIndependence/VBD_i160.png Graphic file (type bmp)
 <figures/IterationIndependence/VBD_i160.png>
- [24]
-Overfull \hbox (69.14998pt too wide) in paragraph at lines 372--384
+ [23] [24]
+Overfull \hbox (69.14998pt too wide) in paragraph at lines 374--386
  [][] 
  []
 
@@ -1034,15 +1032,7 @@ Chapter 8.
 
 
 
-]) [31]
-\openout2 = `content/acknowledgement.aux'.
-
- (./content/acknowledgement.tex) [32
-
-
-
-
-] (./thesis.bbl
+]) [31] (./thesis.bbl
 Underfull \hbox (badness 10000) in paragraph at lines 81--89
 []\TU/lmr/m/n/10.95 Matthias Müller, Bruno Heidelberger, Marcus Hennix, and John Rat-
  []
@@ -1062,16 +1052,16 @@ Underfull \hbox (badness 10000) in paragraph at lines 81--89
 [][]\TU/lmtt/m/n/10.95 https://doi.org/10.1016/j.jvcir.2007.01.005[][]\TU/lmr/m/n/10.95 .  URL [][]$[][][][][] [] [] [] [][][] []
  []
 
-) [33
+) [32
 
 
 
 ]
 \openout2 = `content/appendices.aux'.
 
- (./content/appendices.tex [34
+ (./content/appendices.tex [33
 
-] (./include/AI_nyilatkozat_tablazat_EN.tex [35
+] (./include/AI_nyilatkozat_tablazat_EN.tex [34
 
 ]
 Underfull \hbox (badness 10000) in paragraph at lines 13--63
@@ -1083,13 +1073,17 @@ Underfull \hbox (badness 10000) in paragraph at lines 13--63
 
  []
 
-)) [36
+)) [35
 
 ]
 \tf@thm=\write5
 \openout5 = `thesis.thm'.
 
- (./thesis.aux (./include/titlepage.aux) (./include/declaration_EN.aux) (./content/abstract.aux) (./content/introduction.aux) (./content/background.aux) (./content/related-work.aux) (./content/algorithms.aux) (./content/methodology.aux) (./content/experiments.aux) (./content/discussion.aux) (./content/conclusion.aux) (./content/acknowledgement.aux) (./content/appendices.aux))
+
+
+Package natbib Warning: There were undefined citations.
+
+(./thesis.aux (./include/titlepage.aux) (./include/declaration_EN.aux) (./content/abstract.aux) (./content/introduction.aux) (./content/background.aux) (./content/related-work.aux) (./content/algorithms.aux) (./content/methodology.aux) (./content/experiments.aux) (./content/discussion.aux) (./content/conclusion.aux) (./content/appendices.aux))
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1099,15 +1093,15 @@ L3 programming layer <2026-01-19>
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: CC72C5535D8F95762C5D087B8BA450BE;15219.
+(rerunfilecheck)             Checksum: 2F9BD021BA452F1615AB9E156E21E9FD;14970.
  ) 
 Here is how much of TeX's memory you used:
- 19129 strings out of 469581
- 379703 string characters out of 5461843
- 1169738 words of memory out of 5000000
- 47350 multiletter control sequences out of 15000+600000
+ 19102 strings out of 469581
+ 378744 string characters out of 5461843
+ 1168805 words of memory out of 5000000
+ 47330 multiletter control sequences out of 15000+600000
  642381 words of font info for 126 fonts, out of 8000000 for 9000
  376 hyphenation exceptions out of 8191
  78i,14n,82p,913b,1983s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on thesis.pdf (43 pages).
+Output written on thesis.pdf (42 pages).

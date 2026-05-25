@@ -115,18 +115,61 @@
 
 % Primal/dual descent methods paper
 @inproceedings{10.1111/cgf.14104,
-author = {Macklin, M. and Erleben, K. and M\"{u}ller, M. and Chentanez, N. and Jeschke, S. and Kim, T. Y.},
-title = {Primal/dual descent methods for dynamics},
-year = {2020},
-publisher = {Eurographics Association},
-address = {Goslar, DEU},
-url = {https://doi.org/10.1111/cgf.14104},
-doi = {10.1111/cgf.14104},
-abstract = {We examine the relationship between primal, or force-based, and dual, or constraint-based formulations of dynamics. Variational frameworks such as Projective Dynamics have proved popular for deformable simulation, however they have not been adopted for contact-rich scenarios such as rigid body simulation. We propose a new preconditioned frictional contact solver that is compatible with existing primal optimization methods, and competitive with complementarity-based approaches. Our relaxed primal model generates improved contact force distributions when compared to dual methods, and has the advantage of being differentiable, making it well-suited for trajectory optimization. We derive both primal and dual methods from a common variational point of view, and present a comprehensive numerical analysis of both methods with respect to conditioning. We demonstrate our method on scenarios including rigid body contact, deformable simulation, and robotic manipulation.},
-booktitle = {Proceedings of the ACM SIGGRAPH/Eurographics Symposium on Computer Animation},
-articleno = {9},
-numpages = {12},
-keywords = {robotics, numerical optimization, friction, contact},
-location = {Virtual Event, Canada},
-series = {SCA '20}
+  author    = {Macklin, M. and Erleben, K. and M\"{u}ller, M. and Chentanez, N. and Jeschke, S. and Kim, T. Y.},
+  title     = {Primal/dual descent methods for dynamics},
+  year      = {2020},
+  publisher = {Eurographics Association},
+  address   = {Goslar, DEU},
+  url       = {https://doi.org/10.1111/cgf.14104},
+  doi       = {10.1111/cgf.14104},
+  abstract  = {We examine the relationship between primal, or force-based, and dual, or constraint-based formulations of dynamics. Variational frameworks such as Projective Dynamics have proved popular for deformable simulation, however they have not been adopted for contact-rich scenarios such as rigid body simulation. We propose a new preconditioned frictional contact solver that is compatible with existing primal optimization methods, and competitive with complementarity-based approaches. Our relaxed primal model generates improved contact force distributions when compared to dual methods, and has the advantage of being differentiable, making it well-suited for trajectory optimization. We derive both primal and dual methods from a common variational point of view, and present a comprehensive numerical analysis of both methods with respect to conditioning. We demonstrate our method on scenarios including rigid body contact, deformable simulation, and robotic manipulation.},
+  booktitle = {Proceedings of the ACM SIGGRAPH/Eurographics Symposium on Computer Animation},
+  articleno = {9},
+  numpages  = {12},
+  keywords  = {robotics, numerical optimization, friction, contact},
+  location  = {Virtual Event, Canada},
+  series    = {SCA '20}
+}
+
+% Chebyshev acceleration for PBD paper
+@article{10.1145/2816795.2818063,
+  author     = {Wang, Huamin},
+  title      = {A chebyshev semi-iterative approach for accelerating projective and position-based dynamics},
+  year       = {2015},
+  issue_date = {November 2015},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {34},
+  number     = {6},
+  issn       = {0730-0301},
+  url        = {https://doi.org/10.1145/2816795.2818063},
+  doi        = {10.1145/2816795.2818063},
+  abstract   = {In this paper, we study the use of the Chebyshev semi-iterative approach in projective and position-based dynamics. Although projective dynamics is fundamentally nonlinear, its convergence behavior is similar to that of an iterative method solving a linear system. Because of that, we can estimate the "spectral radius" and use it in the Chebyshev approach to accelerate the convergence by at least one order of magnitude, when the global step is handled by the direct solver, the Jacobi solver, or even the Gauss-Seidel solver. Our experiment shows that the combination of the Chebyshev approach and the direct solver runs fastest on CPU, while the combination of the Chebyshev approach and the Jacobi solver outperforms any other combination on GPU, as it is highly compatible with parallel computing. Our experiment further shows position-based dynamics can be accelerated by the Chebyshev approach as well, although the effect is less obvious for tetrahedral meshes. The whole approach is simple, fast, effective, GPU-friendly, and has a small memory cost.},
+  journal    = {ACM Trans. Graph.},
+  month      = nov,
+  articleno  = {246},
+  numpages   = {9},
+  keywords   = {chebyshev semi-iterative method, jacobi method, parallel computing, position-based dynamics, projective dynamics}
+}
+
+% - - - - - - - - - - - - -
+% Example Implementations
+% - - - - - - - - - - - - -
+
+% VBD implementation Github repository
+@misc{vbdGithub,
+  author       = {Anka He Chen},
+  title        = {TinyVBD},
+  howpublished = {\url{https://github.com/AnkaChan/TinyVBD}},
+  year         = {2024},
+  annote       = {A tiny version of VBD, focused on mass spring strand simulation. A demo for the Vertex Block Descent paper.},
+}
+
+% XPBD implementation Github repository
+@misc{xpbdGithub,
+  author       = {Matthias M\"uller},
+  title        = {Ten Minute Physics - Self Collision},
+  howpublished = {\url{https://github.com/matthias-research/pages/blob/master/tenMinutePhysics/15-selfCollision.html}},
+  year         = {2022},
+  annote       = {A demo of a cloth self-collision simulated with XPBD. From the Ten Minute Physics YouTube channel.},
 }

@@ -22,8 +22,13 @@
         \item OS: \emph{Windows 11 Pro}.
         \item Dev Tool: \emph{Unity 6000.4.0f1}.
     \end{itemize}
+    \item Unity's functionalities were really useful for conducting the experiments, easy to use
+    \begin{itemize}
+        \item Profiler for gathering fps statistics
+        \item Recorder for recording videos of the simulations
+        \item Shader graph for creating textures in a straightforward way
+    \end{itemize}
 \end{itemize}
-\emph{TODO: write used Unity functionalities: Recorder, shader graph, etc.}
 
 %----------------------------------------------------------------------------
 \section{Integration architecture}
@@ -31,21 +36,28 @@
 %----------------------------------------------------------------------------
 \begin{itemize}
     \item Both solvers share a common scene scaffolding.
-    \item Unity drives a fixed-rate physics tick at $1/dt = 30$~Hz; within each tick the active solver runs its update loop --- substeps and inner iterations for XPBD, block iterations for VBD --- on the shared particle/spring data structures.
+    \item Simulations are driven by the Update method in Unity's MonoBehaviour classes.
 \end{itemize}
 The scaffolding handles:
 \begin{itemize}
     \item mesh and spring topology construction at scene load,
-    \item particle/spring storage in flat C\# arrays to keep cache behaviour comparable,
-    \item recording of per-frame timing, energies, and reference solutions,
-    \item rendering, which runs on the Unity main thread separately from the simulator.
+    \item recording of statistics such as frametime and memory,
+    \item rendering, which runs on a separate thread from the simulator.
 \end{itemize}
-
+About the frame rate:
+\begin{itemize}
+    \item The Update method in Unity Editor gets called as often as the environment allows. If a step takes more compute time than the frame time, the next frame is delayed until it finishes.
+    \item So taking these into account, the Update method virtually gives us a variable frame rate that we can use to measure computation time.
+    \item For the sake of keeping the experiments deterministic and easier to control, I used a fixed simulation delta time of $dt = 1/30$~s. This also counts as a relatively large time step, so it is a good test of the solvers' stability (and lets substep count be more meaningful in \autopageref{ssec:ErrorVsMs}).
+\end{itemize}
 \paragraph{Overhead of the shared scaffolding.}
 \begin{itemize}
-    \item The scaffolding adds a small constant per-frame overhead (buffer swapping, Unity message dispatch, rendering).
-    \item Both solvers pay this overhead identically, so it does not bias the comparison.
-    \item I report the isolated solver time (excluding render and dispatch) separately from end-to-end frame time in \autoref{sec:EffResults}.
+    \item The scaffolding adds a small, practically constant per-frame overhead (mostly Unity-specific calls and rendering).
+    \item I measure FPS with Unity Profiler, which calculates based on the actual frames being drawn, so the value includes the overhead, but because both solvers pay this overhead identically, it does not bias the comparison.
+\end{itemize}
+\subsection{Cloth model construction}
+\begin{itemize}
+    \item A
 \end{itemize}
 
 %----------------------------------------------------------------------------
@@ -53,7 +65,6 @@ The scaffolding handles:
 \label{sec:Fairness}
 %----------------------------------------------------------------------------
 \begin{itemize}
-    \item A common pitfall is to set some parameter ``the same'' that is not actually the same physical quantity on the two sides.
     \item I adopt four explicit fairness controls.
 \end{itemize}
 
@@ -61,25 +72,23 @@ The scaffolding handles:
 \label{ssec:StiffCompl}
 \begin{itemize}
     \item VBD takes a stiffness $k$ directly.
-    \item XPBD takes a compliance $\alpha = 1/k$, scaled by the time step to $\tilde\alpha = \alpha/h^{2}$.
+    \item XPBD takes a compliance $\alpha = 1/k$.
     \item To match materials I set:
 \end{itemize}
 \begin{equation}
     \alpha_{\mathrm{XPBD}} \;=\; 1/k_{\mathrm{VBD}},
 \end{equation}
 \begin{itemize}
-    \item Mapping verified in a controlled test: a single spring with known analytic period simulated under both solvers; measured period required to match to within \emph{TODO: tolerance, e.g.\ 1\%}.
-    \item Verification result reported in \autoref{sec:Realism}.
+    \item Mapping verified in \autoref{ssec:HarmonicOscillator}: a single spring with known analytic parameters results in the same oscillation frequency and decay rate in both solvers.
 \end{itemize}
 
 \subsection{Matched compute budget --- and the substep/iteration caveat}
 \label{ssec:ComputeBudget}
 \begin{itemize}
     \item The natural unit of work differs: XPBD's primary lever is substep count, VBD's is inner iteration count.
-    \item \textbf{A substep is not an iteration.} An XPBD substep recomputes the inertial target $\mathbf{y}$ and solves a fresh constraint system; a VBD iteration refines the same step.
-    \item Because of this asymmetry, \emph{wall-clock} is the primary axis of comparison throughout \autoref{chap:Experiments}.
-    \item I sweep substep counts for XPBD and iteration counts for VBD independently, plot quality vs.\ ms/frame, and read the \emph{equal-wall-clock frontier} from the resulting curves.
-    \item Iteration-count comparisons are reported only as secondary information.
+    \item \textbf{A substep is not an iteration.} A substep recomputes the inertial target $\mathbf{y}$ and solves a fresh constraint system; an iteration refines the same step.
+    \item Because of this asymmetry, I try to compare the two methods based on \emph{wall-clock time} throughout \autoref{chap:Experiments}.
+    \item A measure that creates bias: VBD uses maximum iteration count, XPBD uses fixed iteration count. Both could implement either, but these decisions are inherently parts of each method's design (even if I consider their future optimisations), so I keep them as they are.
 \end{itemize}
 
 \subsection{Matched gravity, $dt$, and damping}
@@ -88,8 +97,7 @@ For all experiments unless otherwise noted:
 \begin{itemize}
     \item gravity $\mathbf{g} = (0, -9.81, 0)$~m/s$^{2}$,
     \item simulation time step $dt = 1/30$~s,
-    \item Rayleigh damping with matched $\alpha_{\mathrm{Rayleigh}}$ and $\beta_{\mathrm{Rayleigh}}$ coefficients (see \autoref{sec:Damping}),
-    \item particle mass $m_{i} = 1$~kg unless a mass-ratio sweep is in progress.
+    \item Rayleigh damping is not used in either method, because the difference in solver structure creates different results with the same parameters.
 \end{itemize}
 
 \subsection{Handling VBD's accelerations for the core comparison}
@@ -97,40 +105,7 @@ For all experiments unless otherwise noted:
 \begin{itemize}
     \item The 2024 VBD paper~\cite{Chen2024} reports significant speedups from Chebyshev acceleration and adaptive initialisation.
     \item Adaptive init is VBD's own inertial prediction, that is also present in XPBD (it guesses with explicit euler), so I keep it enabled.
-    \item Chebyshev-acceleration is also part of VBD, but it confounds an apples-to-apples comparison, as XPBD could also implement the same method (essentially Anderson-accelerated XPBD).
-\end{itemize}
-
-%----------------------------------------------------------------------------
-\section{Damping models}
-\label{sec:Damping}
-%----------------------------------------------------------------------------
-\begin{itemize}
-    \item Both solvers implement Rayleigh damping, but through different mechanisms.
-\end{itemize}
-
-\paragraph{XPBD damping ($\gamma$-formulation).}
-\begin{itemize}
-    \item I use the multiplier-update extension of \cite{10.1145/2994258.2994272}:
-\end{itemize}
-\begin{equation}
-    \Delta \lambda_{j} \;=\;
-        \frac{-C_{j} - \tilde\alpha_{j}\lambda_{j}
-              - \tilde\gamma_{j}\,\nabla C_{j}^{\top}(\mathbf{x} - \mathbf{x}_{\mathrm{prev}})}
-             {\nabla C_{j}^{\top}\mathbf{M}^{-1}\nabla C_{j}\,(1+\tilde\gamma_{j})
-              + \tilde\alpha_{j}},
-\end{equation}
-\begin{itemize}
-    \item $\tilde\gamma$ encodes the dissipation coefficient.
-    \item This couples damping into the dual update without changing the algorithm's structure.
-\end{itemize}
-
-\paragraph{VBD damping (implicit Hessian).}
-\begin{itemize}
-    \item VBD absorbs Rayleigh damping into the local Hessian $\mathbf{H}_{i} \to \mathbf{H}_{i} + \beta\,\mathbf{H}_{i,\mathrm{el}}$ and into the gradient via a velocity term.
-    \item Because the local solve is a Newton step, damping is handled fully implicitly with no additional outer iteration.
-\end{itemize}
-\begin{itemize}
-    \item Whether the two damping models produce the same physical decay at matched coefficients is analysed in \autoref{ssec:DampingCheck}, where it doubles as a fairness check.
+    \item Chebyshev-acceleration is also part of VBD, but it confounds an apples-to-apples comparison, as XPBD could also implement the same method as shown in \cite{10.1145/2816795.2818063}.
 \end{itemize}
 
 %----------------------------------------------------------------------------
@@ -143,8 +118,8 @@ The two solvers implement self-collision differently, by necessity:
     \item \emph{VBD self-collision} uses an elastic penalty potential added to $E$, contributing a gradient and Hessian to the affected vertex blocks.
 \end{itemize}
 \begin{itemize}
-    \item This is a model difference, not a solver difference: a penalty model \emph{could} be implemented in XPBD and a projection model \emph{could} be implemented in VBD, but the natural form differs.
-    \item Flagged here so the self-collision result in \autoref{ssec:SelfCollResults} is read correctly: differences there are partly attributable to the contact model, not solely to XPBD vs.\ VBD.
+    \item This is a model difference, not a solver difference: a penalty model \emph{could} be implemented in XPBD and a projection model \emph{could} be implemented in VBD, but the natural, most solver-fitting form differs.
+    \item Thus the self-collision comparison experiment in \autoref{ssec:SelfCollisionDrop} is purely qualitative.
 \end{itemize}
 
 %----------------------------------------------------------------------------
@@ -153,11 +128,12 @@ The two solvers implement self-collision differently, by necessity:
 \label{ssec:Parallelisation}
 %----------------------------------------------------------------------------
 \begin{itemize}
-    \item All measurements in this thesis are single-threaded on CPU.
+    \item All measurements in this thesis are run single-threaded on the CPU.
     \item Noted here, and revisited in \autoref{sec:ThreatsValidity}, the two solvers have different parallelisation profiles:
     \begin{itemize}
         \item \emph{VBD} parallelises naturally over vertex blocks via graph colouring: vertices sharing no constraint can be updated independently within a colour class. Well-suited to GPU execution.
-        \item \emph{XPBD} can be parallelised via constraint-graph colouring, but the colouring is finer-grained (per constraint, not per vertex) and the dependency structure is less regular.
+        \item \emph{XPBD} can be parallelised via constraint-graph colouring, but the colouring is finer-grained (per constraint -that we usually have much more of than vertices-, not per vertex) and the dependency structure is less regular.
     \end{itemize}
-    \item The expected result --- parallelisation favours VBD more than XPBD --- is plausible but unverified by my experiments, and stands as a threat to external validity for any claim about which solver is ``faster overall''.
+    \item The expected result --- parallelisation favours VBD more than XPBD --- is plausible but unverified by my experiments.
+    \item This stands as a threat to external validity for any claim about which solver is ``faster overall''.
 \end{itemize}

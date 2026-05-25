@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(ls \"d:\\\\uni\\\\Szakdoga_teljes\\\\PhysSim_VBD_PBD\\\\Data-analysis\\\\Logs\\\\EnergyLogs\")",
-      "Read(//d/uni/Szakdoga_teljes/PhysSim_VBD_PBD/Data-analysis/Logs/EnergyLogs/**)"
+      "Read(//d/uni/Szakdoga_teljes/PhysSim_VBD_PBD/Data-analysis/Logs/EnergyLogs/**)",
+      "Read(//d/uni/Szakdoga_teljes/PhysSim_VBD_PBD/Data-analysis/**)",
+      "Bash(./vis_env.venv/Scripts/python.exe nodecount_fps_scaling.py)",
+      "Bash(./vis_env.venv/Scripts/python.exe nodecount_fps_vbd_vs_xpbd.py)"
     ]
   }
 }

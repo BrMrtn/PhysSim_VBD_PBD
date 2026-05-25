@@ -212,9 +212,9 @@ MonoBehaviour:
   numIterations: 1
   stretchingCompliance: 0.00001
   shearCompliance: 0.001
-  bendingCompliance: 0.01
-  useDihedralBending: 1
-  dihedralBendingCompliance: 0.0001
+  bendingCompliance: 0.000001
+  useDihedralBending: 0
+  dihedralBendingCompliance: 1000
   totalMass: 1
   handleSelfCollisions: 0
   selfCollisionFriction: 0
