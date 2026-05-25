@@ -36,20 +36,21 @@
 \select@language {english} \contentsline {subsection}{\numberline {4.1.3}Characteristics}{13}{subsection.4.1.3}%
 \select@language {english} \contentsline {section}{\numberline {4.2}VBD: primal block-coordinate descent}{13}{section.4.2}%
 \select@language {english} \contentsline {subsection}{\numberline {4.2.1}Derivation}{13}{subsection.4.2.1}%
-\select@language {english} \contentsline {subsection}{\numberline {4.2.2}Algorithm}{13}{subsection.4.2.2}%
-\select@language {english} \contentsline {subsection}{\numberline {4.2.3}Characteristics}{14}{subsection.4.2.3}%
-\select@language {english} \contentsline {section}{\numberline {4.3}Side-by-side: where the algorithms differ}{14}{section.4.3}%
-\select@language {english} \contentsline {chapter}{\numberline {5}Methodology and implementation}{15}{chapter.5}%
-\select@language {english} \contentsline {section}{\numberline {5.1}Platform and environment}{15}{section.5.1}%
-\select@language {english} \contentsline {section}{\numberline {5.2}Integration architecture}{15}{section.5.2}%
+\select@language {english} \contentsline {subsection}{\numberline {4.2.2}Algorithm}{14}{subsection.4.2.2}%
+\select@language {english} \contentsline {subsection}{\numberline {4.2.3}Characteristics}{15}{subsection.4.2.3}%
+\select@language {english} \contentsline {section}{\numberline {4.3}Side-by-side: where the algorithms differ}{15}{section.4.3}%
+\select@language {english} \contentsline {chapter}{\numberline {5}Methodology and implementation}{16}{chapter.5}%
+\select@language {english} \contentsline {section}{\numberline {5.1}Platform and environment}{16}{section.5.1}%
+\select@language {english} \contentsline {section}{\numberline {5.2}Integration architecture}{16}{section.5.2}%
 \select@language {english} \contentsline {paragraph}{Overhead of the shared scaffolding.}{16}{section*.13}%
-\select@language {english} \contentsline {section}{\numberline {5.3}How the comparison is kept fair}{16}{section.5.3}%
-\select@language {english} \contentsline {subsection}{\numberline {5.3.1}Stiffness $\leftrightarrow $ compliance mapping}{16}{subsection.5.3.1}%
-\select@language {english} \contentsline {subsection}{\numberline {5.3.2}Matched compute budget --- and the substep/iteration caveat}{16}{subsection.5.3.2}%
+\select@language {english} \contentsline {subsection}{\numberline {5.2.1}Cloth model construction}{17}{subsection.5.2.1}%
+\select@language {english} \contentsline {section}{\numberline {5.3}How the comparison is kept fair}{17}{section.5.3}%
+\select@language {english} \contentsline {subsection}{\numberline {5.3.1}Stiffness $\leftrightarrow $ compliance mapping}{17}{subsection.5.3.1}%
+\select@language {english} \contentsline {subsection}{\numberline {5.3.2}Matched compute budget --- and the substep/iteration caveat}{17}{subsection.5.3.2}%
 \select@language {english} \contentsline {subsection}{\numberline {5.3.3}Matched gravity, $dt$, and damping}{17}{subsection.5.3.3}%
 \select@language {english} \contentsline {subsection}{\numberline {5.3.4}Handling VBD's accelerations for the core comparison}{17}{subsection.5.3.4}%
-\select@language {english} \contentsline {section}{\numberline {5.4}Self-collision handling}{17}{section.5.4}%
-\select@language {english} \contentsline {section}{\numberline {5.5}Parallelisation (forward-looking)}{17}{section.5.5}%
+\select@language {english} \contentsline {section}{\numberline {5.4}Self-collision handling}{18}{section.5.4}%
+\select@language {english} \contentsline {section}{\numberline {5.5}Parallelisation (forward-looking)}{18}{section.5.5}%
 \select@language {english} \contentsline {chapter}{\numberline {6}Experiments and results}{19}{chapter.6}%
 \select@language {english} \contentsline {section}{\numberline {6.1}Computational efficiency}{19}{section.6.1}%
 \select@language {english} \contentsline {subsection}{\numberline {6.1.1}Influence of substep and iteration count on error and compute time}{19}{subsection.6.1.1}%
@@ -86,5 +87,8 @@
 \select@language {english} \contentsline {subsection}{\numberline {8.2.3}FEM constraints}{31}{subsection.8.2.3}%
 \select@language {english} \contentsline {subsection}{\numberline {8.2.4}AVBD and post-2024 variants}{31}{subsection.8.2.4}%
 \select@language {english} \contentsline {chapter}{Bibliography}{32}{subsection.8.2.4}%
-\select@language {english} \contentsline {chapter}{Appendix}{34}{appendix*.31}%
-\select@language {english} \contentsline {section}{\numberline {A.1}Declaration on the Use of Generative Artificial Intelligence}{35}{section.A.1}%
+\select@language {english} \contentsline {chapter}{Appendix}{35}{appendix*.31}%
+\select@language {english} \contentsline {section}{\numberline {A.1}Declaration on the Use of Generative Artificial Intelligence}{36}{section.A.1}%
+\select@language {english} \contentsline {section}{\numberline {A.2}Full solver pseudocode}{37}{section.A.2}%
+\select@language {english} \contentsline {subsection}{\numberline {A.2.1}XPBD, full implementation}{37}{subsection.A.2.1}%
+\select@language {english} \contentsline {subsection}{\numberline {A.2.2}VBD, full implementation}{37}{subsection.A.2.2}%

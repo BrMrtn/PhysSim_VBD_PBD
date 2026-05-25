@@ -1,4 +1,4 @@
-\begin{thebibliography}{9}
+\begin{thebibliography}{10}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -86,5 +86,14 @@ Matthias Müller, Bruno Heidelberger, Marcus Hennix, and John Ratcliff.
 \newblock \doi{https://doi.org/10.1016/j.jvcir.2007.01.005}.
 \newblock URL
   \url{https://www.sciencedirect.com/science/article/pii/S1047320307000065}.
+
+\bibitem[Wang(2015)]{10.1145/2816795.2818063}
+Huamin Wang.
+\newblock A chebyshev semi-iterative approach for accelerating projective and
+  position-based dynamics.
+\newblock \emph{ACM Trans. Graph.}, 34\penalty0 (6), November 2015.
+\newblock ISSN 0730-0301.
+\newblock \doi{10.1145/2816795.2818063}.
+\newblock URL \url{https://doi.org/10.1145/2816795.2818063}.
 
 \end{thebibliography}

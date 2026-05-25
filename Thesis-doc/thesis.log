@@ -1,10 +1,9 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  25 MAY 2026 22:06
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  26 MAY 2026 00:00
 entering extended mode
  restricted \write18 enabled.
- file:line:error style messages enabled.
  %&-line parsing enabled.
-**d:/uni/Szakdoga_teljes/PhysSim_VBD_PBD/Thesis-doc/thesis
-(d:/uni/Szakdoga_teljes/PhysSim_VBD_PBD/Thesis-doc/thesis.tex
+**thesis.tex
+(./thesis.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
 (d:/Programok/texlive/2026/texmf-dist/tex/latex/base/report.cls
@@ -24,15 +23,23 @@ File: size11.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
 \abovecaptionskip=\skip49
 \belowcaptionskip=\skip50
 \bibindent=\dimen148
-) (./include/packages.tex (d:/Programok/texlive/2026/texmf-dist/tex/generic/iftex/ifxetex.sty
+)
+(./include/packages.tex
+(d:/Programok/texlive/2026/texmf-dist/tex/generic/iftex/ifxetex.sty
 Package: ifxetex 2019/10/25 v0.7 ifxetex legacy package. Use iftex instead.
- (d:/Programok/texlive/2026/texmf-dist/tex/generic/iftex/iftex.sty
+
+(d:/Programok/texlive/2026/texmf-dist/tex/generic/iftex/iftex.sty
 Package: iftex 2024/12/12 v1.0g TeX engine tests
-)) (d:/Programok/texlive/2026/texmf-dist/tex/generic/iftex/ifluatex.sty
+))
+(d:/Programok/texlive/2026/texmf-dist/tex/generic/iftex/ifluatex.sty
 Package: ifluatex 2019/10/25 v1.5 ifluatex legacy package. Use iftex instead.
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec.sty (d:/Programok/texlive/2026/texmf-dist/tex/latex/l3packages/xparse/xparse.sty (d:/Programok/texlive/2026/texmf-dist/tex/latex/l3kernel/expl3.sty
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec.sty
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/l3kernel/expl3.sty
 Package: expl3 2026-01-19 L3 programming layer (loader) 
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-xetex.def
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-xetex.def
 File: l3backend-xetex.def 2025-10-09 L3 backend support: XeTeX
 \g__graphics_track_int=\count280
 \g__pdfannot_backend_int=\count281
@@ -42,7 +49,8 @@ Package: xparse 2025-10-09 L3 Experimental document command parser
 )
 Package: fontspec 2025/09/29 v2.9g Font selection for XeLaTeX and LuaLaTeX
  (d:/Programok/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec-xetex.sty
-Package: fontspec-xetex 2025/09/29 v2.9g Font selection for XeLaTeX and LuaLaTeX
+Package: fontspec-xetex 2025/09/29 v2.9g Font selection for XeLaTeX and LuaLaTe
+X
 \l__fontspec_script_int=\count283
 \l__fontspec_language_int=\count284
 \l__fontspec_strnum_int=\count285
@@ -57,27 +65,44 @@ Package: fontspec-xetex 2025/09/29 v2.9g Font selection for XeLaTeX and LuaLaTeX
 \l__fontspec_tmpa_dim=\dimen149
 \l__fontspec_tmpb_dim=\dimen150
 \l__fontspec_tmpc_dim=\dimen151
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/base/fontenc.sty
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/base/fontenc.sty
 Package: fontenc 2025/07/18 v2.1d Standard LaTeX package
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec.cfg))) (d:/Programok/texlive/2026/texmf-dist/tex/generic/babel/babel.sty
-Package: babel 2026/02/14 v26.3 The multilingual framework for LuaLaTeX, pdfLaTeX and XeLaTeX
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec.cfg)))
+(d:/Programok/texlive/2026/texmf-dist/tex/generic/babel/babel.sty
+Package: babel 2026/02/14 v26.3 The multilingual framework for LuaLaTeX, pdfLaT
+eX and XeLaTeX
 \babel@savecnt=\count294
-LaTeX Encoding Info:    Redeclaring text command \ij (encoding OT1) on input line 2078.
-LaTeX Encoding Info:    Redeclaring text command \IJ (encoding OT1) on input line 2080.
-LaTeX Encoding Info:    Redeclaring text command \ij (encoding T1) on input line 2082.
-LaTeX Encoding Info:    Redeclaring text command \IJ (encoding T1) on input line 2083.
-LaTeX Encoding Info:    Ignoring declaration for text command \ij (encoding ?) on input line 2084.
-LaTeX Encoding Info:    Ignoring declaration for text command \IJ (encoding ?) on input line 2086.
-LaTeX Encoding Info:    Ignoring declaration for text command \SS (encoding ?) on input line 2111.
+LaTeX Encoding Info:    Redeclaring text command \ij (encoding OT1) on input li
+ne 2078.
+LaTeX Encoding Info:    Redeclaring text command \IJ (encoding OT1) on input li
+ne 2080.
+LaTeX Encoding Info:    Redeclaring text command \ij (encoding T1) on input lin
+e 2082.
+LaTeX Encoding Info:    Redeclaring text command \IJ (encoding T1) on input lin
+e 2083.
+LaTeX Encoding Info:    Ignoring declaration for text command \ij (encoding ?) 
+on input line 2084.
+LaTeX Encoding Info:    Ignoring declaration for text command \IJ (encoding ?) 
+on input line 2086.
+LaTeX Encoding Info:    Ignoring declaration for text command \SS (encoding ?) 
+on input line 2111.
 \U@D=\dimen152
 \l@unhyphenated=\language34
- (d:/Programok/texlive/2026/texmf-dist/tex/generic/babel/xebabel.def)
+
+(d:/Programok/texlive/2026/texmf-dist/tex/generic/babel/xebabel.def)
 \bbl@readstream=\read2
 \bbl@dirlevel=\count295
- (d:/Programok/texlive/2026/texmf-dist/tex/generic/babel/locale/en/babel-english.tex) (d:/Programok/texlive/2026/texmf-dist/tex/generic/babel/locale/hu/babel-magyar.tex)
+
+(d:/Programok/texlive/2026/texmf-dist/tex/generic/babel/locale/en/babel-english
+.tex)
+(d:/Programok/texlive/2026/texmf-dist/tex/generic/babel/locale/hu/babel-magyar.
+tex)
 Package babel Info: Importing font and identification data for english
 (babel)             from babel-en.ini. Reported on input line 4330.
- (d:/Programok/texlive/2026/texmf-dist/tex/generic/babel-english/english.ldf
+
+(d:/Programok/texlive/2026/texmf-dist/tex/generic/babel-english/english.ldf
 Language: english 2017/06/06 v3.3r English support from the babel system
 Package babel Info: Hyphen rules for 'canadian' set to \l@english
 (babel)             (\language0). Reported on input line 102.
@@ -88,7 +113,8 @@ Package babel Info: Hyphen rules for 'newzealand' set to \l@ukenglish
 )
 Package babel Info: Importing font and identification data for magyar
 (babel)             from babel-hu.ini. Reported on input line 4330.
- (./magyar.ldf
+
+(./magyar.ldf
 Invalid UTF-8 byte or sequence at line 61 replaced by U+FFFD.
 Invalid UTF-8 byte or sequence at line 61 replaced by U+FFFD.
 Language: magyar 2015/11/24 v1.5c Magyar support from the babel v3.7 system
@@ -248,7 +274,8 @@ Invalid UTF-8 byte or sequence at line 5772 replaced by U+FFFD.
 Invalid UTF-8 byte or sequence at line 5784 replaced by U+FFFD.
 Invalid UTF-8 byte or sequence at line 5789 replaced by U+FFFD.
 Invalid UTF-8 byte or sequence at line 5794 replaced by U+FFFD.
-)) (d:/Programok/texlive/2026/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+))
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/amsfonts/amsfonts.sty
 Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 \@emptytoks=\toks17
 \symAMSa=\mathgroup4
@@ -256,21 +283,25 @@ Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/amsmath/amsmath.sty
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/amsmath/amsmath.sty
 Package: amsmath 2025/07/09 v2.17z AMS math features
 \@mathmargin=\skip51
 
 For additional information on amsmath, use the `?' option.
 (d:/Programok/texlive/2026/texmf-dist/tex/latex/amsmath/amstext.sty
 Package: amstext 2024/11/17 v2.01 AMS text
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/amsmath/amsgen.sty
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/amsmath/amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0 generic functions
 \@emptytoks=\toks18
 \ex@=\dimen153
-)) (d:/Programok/texlive/2026/texmf-dist/tex/latex/amsmath/amsbsy.sty
+))
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/amsmath/amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
 \pmbraise@=\dimen154
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/amsmath/amsopn.sty
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/amsmath/amsopn.sty
 Package: amsopn 2022/04/08 v2.04 operator names
 )
 \inf@bad=\count298
@@ -320,9 +351,11 @@ LaTeX Info: Redefining \Relbar on input line 970.
 \mathdisplay@stack=\toks22
 LaTeX Info: Redefining \[ on input line 2950.
 LaTeX Info: Redefining \] on input line 2951.
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/amsfonts/amssymb.sty
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/amsfonts/amssymb.sty
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/booktabs/booktabs.sty
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/booktabs/booktabs.sty
 Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \heavyrulewidth=\dimen162
 \lightrulewidth=\dimen163
@@ -341,25 +374,32 @@ Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \@thisruleclass=\count312
 \@lastruleclass=\count313
 \@thisrulewidth=\dimen174
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/graphics/graphicx.sty
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 2024/12/31 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/graphics/keyval.sty
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
 \KV@toks@=\toks23
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/graphics/graphics.sty
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/graphics/graphics.sty
 Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/graphics/trig.sty
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/graphics/trig.sty
 Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: xetex.def on input line 106.
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/graphics-def/xetex.def
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/graphics-def/xetex.def
 File: xetex.def 2025/11/01 v5.0p Graphics/color driver for xetex
 ))
 \Gin@req@height=\dimen175
 \Gin@req@width=\dimen176
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/anysize/anysize.sty
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/anysize/anysize.sty
 Package: anysize 1994/08/13 setting margin sizes
 
 document style option `anysize' loaded
@@ -371,31 +411,43 @@ Version 1.0, Aug 13, 1994
 \@Bottommargin=\dimen180
 ) (d:/Programok/texlive/2026/texmf-dist/tex/latex/setspace/setspace.sty
 Package: setspace 2022/12/04 v6.7b set line spacing
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/hyperref/hyperref.sty
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/hyperref/hyperref.sty
 Package: hyperref 2026-01-29 v7.01p Hypertext links for LaTeX
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
 Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
-) (d:/Programok/texlive/2026/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
 Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
 ) (d:/Programok/texlive/2026/texmf-dist/tex/generic/pdfescape/pdfescape.sty
 Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
- (d:/Programok/texlive/2026/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+
+(d:/Programok/texlive/2026/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
 Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
-) (d:/Programok/texlive/2026/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
-Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO)
- (d:/Programok/texlive/2026/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+(d:/Programok/texlive/2026/texmf-dist/tex/generic/infwarerr/infwarerr.sty
 Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
 )
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 Package pdftexcmds Info: \pdfdraftmode not found.
-)) (d:/Programok/texlive/2026/texmf-dist/tex/latex/hycolor/hycolor.sty
+))
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/hycolor/hycolor.sty
 Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/hyperref/nameref.sty
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2026-01-29 v2.58 Cross-referencing by name of section
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/refcount/refcount.sty
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/refcount/refcount.sty
 Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
-) (d:/Programok/texlive/2026/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/generic/gettitlestring/gettitlestring
+.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
  (d:/Programok/texlive/2026/texmf-dist/tex/latex/kvoptions/kvoptions.sty
 Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
@@ -404,19 +456,24 @@ Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
 ) (d:/Programok/texlive/2026/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
 \etb@tempcnta=\count315
-) (d:/Programok/texlive/2026/texmf-dist/tex/generic/stringenc/stringenc.sty
-Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO)
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/generic/stringenc/stringenc.sty
+Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
+)
 )
 \@linkdim=\dimen181
 \Hy@linkcounter=\count316
 \Hy@pagecounter=\count317
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/hyperref/pd1enc.def
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2026-01-29 v7.01p Hyperref: PDFDocEncoding definition (HO)
-) (d:/Programok/texlive/2026/texmf-dist/tex/generic/intcalc/intcalc.sty
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
 \Hy@SavedSpaceFactor=\count318
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/hyperref/puenc.def
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/hyperref/puenc.def
 File: puenc.def 2026-01-29 v7.01p Hyperref: PDF Unicode definition (HO)
 )
 Package hyperref Info: Option `unicode' set `true' on input line 4072.
@@ -428,16 +485,20 @@ Package hyperref Info: Backreferencing OFF on input line 4221.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4468.
 \c@Hy@tempcnt=\count319
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/url/url.sty
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip18
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 4807.
 \XeTeXLinkMargin=\dimen182
- (d:/Programok/texlive/2026/texmf-dist/tex/generic/bitset/bitset.sty
+
+(d:/Programok/texlive/2026/texmf-dist/tex/generic/bitset/bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
- (d:/Programok/texlive/2026/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
-Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO)
+
+(d:/Programok/texlive/2026/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
+)
 ))
 \Fld@menulength=\count320
 \Field@Width=\dimen183
@@ -454,28 +515,36 @@ Package hyperref Info: PDF/A mode OFF on input line 6114.
 \c@Hfootnote=\count323
 )
 Package hyperref Info: Driver (autodetected): hxetex.
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/hyperref/hxetex.def
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/hyperref/hxetex.def
 File: hxetex.def 2026-01-29 v7.01p Hyperref driver for XeTeX
 \pdfm@box=\box55
 \c@Hy@AnnotLevel=\count324
 \HyField@AnnotCount=\count325
 \Fld@listcount=\count326
 \c@bookmark@seq@number=\count327
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.s
+ty
 Package: rerunfilecheck 2025-06-21 v1.11 Rerun checks for auxiliary files (HO)
- (d:/Programok/texlive/2026/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+
+(d:/Programok/texlive/2026/texmf-dist/tex/generic/uniquecounter/uniquecounter.s
+ty
 Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
 )
-Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 284.
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
+84.
 )
 \Hy@SectionHShift=\skip54
 ) (d:/Programok/texlive/2026/texmf-dist/tex/latex/xcolor/xcolor.sty
 Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/graphics-cfg/color.cfg
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/graphics-cfg/color.cfg
 File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package xcolor Info: Driver file: xetex.def on input line 274.
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/graphics/mathcolor.ltx)
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/graphics/mathcolor.ltx)
 Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
 Package xcolor Info: Model `RGB' extended on input line 1365.
 Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1367.
@@ -484,7 +553,8 @@ Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
 Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/listings.sty
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/listings.sty
 \lst@mode=\count328
 \lst@gtempboxa=\box56
 \lst@token=\toks24
@@ -497,14 +567,17 @@ Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
 \lst@newlines=\count332
 \lst@lineno=\count333
 \lst@maxwidth=\dimen188
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstpatch.sty
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstpatch.sty
 File: lstpatch.sty 2025/11/14 1.11b (Carsten Heinz)
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstmisc.sty
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2025/11/14 1.11b (Carsten Heinz)
 \c@lstnumber=\count334
 \lst@skipnumbers=\count335
 \lst@framebox=\box57
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/listings.cfg
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/listings.cfg
 File: listings.cfg 2025/11/14 1.11b listings configuration
 ))
 Package: listings 2025/11/14 1.11b (Carsten Heinz)
@@ -515,52 +588,89 @@ Package: listings 2025/11/14 1.11b (Carsten Heinz)
     but found:
         2025/11/14 1.11b (Carsten Heinz)
     so I'm assuming it got fixed.
-(d:/Programok/texlive/2026/texmf-dist/tex/latex/ntheorem/ntheorem.sty
-Style `ntheorem', Version 1.33 <2011/08/15>
-Package: ntheorem 2011/08/15 1.33
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/algorithms/algorithm.sty
+Invalid UTF-8 byte or sequence at line 11 replaced by U+FFFD.
+Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating enviro
+nment
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count336
+\float@exts=\toks25
+\float@box=\box58
+\@float@everytoks=\toks26
+\@floatcapt=\box59
+)
 (d:/Programok/texlive/2026/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2024/03/16 v1.1e Standard LaTeX ifthen package (DPC)
 )
-\theorem@style=\toks25
-\theorem@@style=\toks26
-\theorembodyfont=\toks27
-\theoremnumbering=\toks28
-\theorempreskipamount=\skip55
-\theorempostskipamount=\skip56
-\theoremframepreskipamount=\skip57
-\theoremframepostskipamount=\skip58
-\theoreminframepreskipamount=\skip59
-\theoreminframepostskipamount=\skip60
-\theorem@preskip=\toks29
-\theorem@postskip=\toks30
-\theorem@framepreskip=\toks31
-\theorem@framepostskip=\toks32
-\theorem@inframepreskip=\toks33
-\theorem@inframepostskip=\toks34
+\@float@every@algorithm=\toks27
+\c@algorithm=\count337
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/algorithmicx/algpseudocode.sty
+Package: algpseudocode 
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/algorithmicx/algorithmicx.sty
+Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
+
+Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
+\c@ALG@line=\count338
+\c@ALG@rem=\count339
+\c@ALG@nested=\count340
+\ALG@tlm=\skip55
+\ALG@thistlm=\skip56
+\c@ALG@Lnr=\count341
+\c@ALG@blocknr=\count342
+\c@ALG@storecount=\count343
+\c@ALG@tmpcounter=\count344
+\ALG@tmplength=\skip57
+)
+Document Style - pseudocode environments for use with the `algorithmicx' style
+) (d:/Programok/texlive/2026/texmf-dist/tex/latex/ntheorem/ntheorem.sty
+Style `ntheorem', Version 1.33 <2011/08/15>
+Package: ntheorem 2011/08/15 1.33
+\theorem@style=\toks28
+\theorem@@style=\toks29
+\theorembodyfont=\toks30
+\theoremnumbering=\toks31
+\theorempreskipamount=\skip58
+\theorempostskipamount=\skip59
+\theoremframepreskipamount=\skip60
+\theoremframepostskipamount=\skip61
+\theoreminframepreskipamount=\skip62
+\theoreminframepostskipamount=\skip63
+\theorem@preskip=\toks32
+\theorem@postskip=\toks33
+\theorem@framepreskip=\toks34
+\theorem@framepostskip=\toks35
+\theorem@inframepreskip=\toks36
+\theorem@inframepostskip=\toks37
 \theoremindent=\dimen189
 \theorem@indent=\dimen190
 \theoremrightindent=\dimen191
 \theorem@rightindent=\dimen192
-\theoremheaderfont=\toks35
-\theoremseparator=\toks36
-\theoremprework=\toks37
-\theorempostwork=\toks38
-\theoremsymbol=\toks39
-\qedsymbol=\toks40
-\theoremkeyword=\toks41
-\qedsymbol=\toks42
-\thm@topsep=\skip61
-\thm@topsepadd=\skip62
+\theoremheaderfont=\toks38
+\theoremseparator=\toks39
+\theoremprework=\toks40
+\theorempostwork=\toks41
+\theoremsymbol=\toks42
+\qedsymbol=\toks43
+\theoremkeyword=\toks44
+\qedsymbol=\toks45
+\thm@topsep=\skip64
+\thm@topsepadd=\skip65
 Package ntheorem Info: Option `thmmarks' loaded on input line 1175.
-\c@endNonectr=\count336
-\c@currNonectr=\count337
-\mysavskip=\skip63
-Package ntheorem Info: option `amsmath' handling for `thmmarks' loaded on input line 1175.
+\c@endNonectr=\count345
+\c@currNonectr=\count346
+\mysavskip=\skip66
+Package ntheorem Info: option `amsmath' handling for `thmmarks' loaded on input
+ line 1175.
 \thm@amstmpdepth=\dimen193
 \tagwidth=\dimen194
 ) (d:/Programok/texlive/2026/texmf-dist/tex/latex/caption/caption.sty
 Package: caption 2023/08/05 v3.6o Customizing captions (AR)
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/caption/caption3.sty
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/caption/caption3.sty
 Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
 \caption@tempdima=\dimen195
 \captionmargin=\dimen196
@@ -573,33 +683,43 @@ Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
 Package caption Info: Standard document class detected.
 Package caption Info: hungarian babel package is loaded.
 )
-\c@caption@flags=\count338
-\c@continuedfloat=\count339
+\c@caption@flags=\count347
+\c@continuedfloat=\count348
 Package caption Info: hungarian babel package is loaded.
+Package caption Info: float package is loaded.
 Package caption Info: hyperref package is loaded.
 Package caption Info: listings package is loaded.
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/natbib/natbib.sty
+)
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/natbib/natbib.sty
 Package: natbib 2010/09/13 8.31b (PWD, AO)
-\bibhang=\skip64
-\bibsep=\skip65
+\bibhang=\skip67
+\bibsep=\skip68
 LaTeX Info: Redefining \cite on input line 694.
-\c@NAT@ctr=\count340
-)) (d:/Programok/texlive/2026/texmf-dist/tex/latex/tools/xspace.sty
+\c@NAT@ctr=\count349
+))
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/tools/xspace.sty
 Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
-) (./include/thesis-en.tex) (./include/preamble.tex
+)
+(./include/thesis-en.tex) (./include/preamble.tex
 Package hyperref Info: Option `unicode' set `true' on input line 39.
 Package hyperref Info: Option `pdfnewwindow' set `true' on input line 39.
 Package hyperref Info: Option `colorlinks' set `true' on input line 39.
-\c@currexamplectr=\count341
-\c@endexamplectr=\count342
-\c@example=\count343
-\c@currdefinitionctr=\count344
-\c@enddefinitionctr=\count345
-\c@definition=\count346
-\c@currtheoremctr=\count347
-\c@endtheoremctr=\count348
-\c@theorem=\count349
-) (./thesis.aux (./include/titlepage.aux) (./include/declaration_EN.aux) (./content/abstract.aux) (./content/introduction.aux) (./content/background.aux) (./content/related-work.aux) (./content/algorithms.aux) (./content/methodology.aux) (./content/experiments.aux) (./content/discussion.aux) (./content/conclusion.aux) (./content/appendices.aux))
+\c@currexamplectr=\count350
+\c@endexamplectr=\count351
+\c@example=\count352
+\c@currdefinitionctr=\count353
+\c@enddefinitionctr=\count354
+\c@definition=\count355
+\c@currtheoremctr=\count356
+\c@endtheoremctr=\count357
+\c@theorem=\count358
+) (./thesis.aux
+(./include/titlepage.aux) (./include/declaration_EN.aux)
+(./content/abstract.aux) (./content/introduction.aux) (./content/background.aux
+) (./content/related-work.aux) (./content/algorithms.aux)
+(./content/methodology.aux) (./content/experiments.aux)
+(./content/discussion.aux) (./content/conclusion.aux) (./content/appendices.aux
+))
 \openout1 = `thesis.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 31.
@@ -694,10 +814,11 @@ Package hyperref Info: Link coloring ON on input line 31.
 \@outlinefile=\write3
 \openout3 = `thesis.out'.
 
-\c@lstlisting=\count350
+\c@lstlisting=\count359
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/base/report.cls
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/base/report.cls
 LaTeX Info: Redefining \cal on input line 577.
 LaTeX Info: Redefining \mit on input line 578.
 )
@@ -705,16 +826,21 @@ Package babel Info: 'magyar' activates 'magyar' shorthands.
 (babel)             Reported on input line 31.
 \openout2 = `include/titlepage.aux'.
 
- (./include/titlepage.tex
+
+(./include/titlepage.tex
 Package hyperref Info: Option `pageanchor' set `false' on input line 1.
 File: figures/bme_logo.pdf Graphic file (type pdf)
 <use figures/bme_logo.pdf>
 LaTeX Font Info:    Trying to load font information for U+msa on input line 20.
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
+
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Trying to load font information for U+msb on input line 20.
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
+
+
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
@@ -722,7 +848,8 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 ]
 Package hyperref Info: Option `pageanchor' set `false' on input line 30.
-) (./thesis.toc [1
+)
+(./thesis.toc [1
 
 
 
@@ -738,14 +865,15 @@ Package hyperref Info: Option `pageanchor' set `false' on input line 30.
 ])
 \openout2 = `content/abstract.aux'.
 
- (./content/abstract.tex [1
+
+(./content/abstract.tex [1
 
 
 
 
 
 ]
-\c@romanPage=\count351
+\c@romanPage=\count360
 ) [2
 
 ]
@@ -786,23 +914,26 @@ Chapter 3.
 
  (./content/algorithms.tex
 Chapter 4.
-(d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2025/11/14 1.11b listings language file
-)
-Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 44.
-LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <8> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 45.
- [12
+
+Package hyperref Warning: No autoref name for `algorithm' on input line 46.
+
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
+put line 51.
+[12
 
 
 
 
-] [13]) [14]
+] [13]
+
+Package hyperref Warning: No autoref name for `algorithm' on input line 124.
+
+[14]) [15]
 \openout2 = `content/methodology.aux'.
 
  (./content/methodology.tex
 Chapter 5.
-[15
+[16
 
 
 
@@ -810,55 +941,52 @@ Chapter 5.
 ]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 63.
+(hyperref)                removing `math shift' on input line 41.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\leftrightarrow' on input line 63.
+(hyperref)                removing `\leftrightarrow' on input line 41.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 63.
-
-[16]
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 86.
+(hyperref)                removing `math shift' on input line 41.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 86.
+(hyperref)                removing `math shift' on input line 53.
 
 
-Package natbib Warning: Citation `10.1145/2816795.2818063' on page 17 undefined on input line 100.
-
-
-LaTeX Warning: Reference `ssec:SelfCollResults' on page 17 undefined on input line 114.
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 53.
 
 [17]) [18]
 \openout2 = `content/experiments.aux'.
 
  (./content/experiments.tex
 Chapter 6.
+File: figures/ErrorVsMs/WallClock_fair_base_clean_newton1ss.png Graphic file (t
+ype bmp)
+<figures/ErrorVsMs/WallClock_fair_base_clean_newton1ss.png>
+File: figures/ErrorVsMs/WallClock_fair_base_clean_newton4ss.png Graphic file (t
+ype bmp)
+<figures/ErrorVsMs/WallClock_fair_base_clean_newton4ss.png>
+File: figures/ErrorVsMs/WallClock_fair_base_clean_newton8ss.png Graphic file (t
+ype bmp)
+<figures/ErrorVsMs/WallClock_fair_base_clean_newton8ss.png>
+File: figures/ErrorVsMs/WallClock_fair_base_clean_newton64ss.png Graphic file (
+type bmp)
+<figures/ErrorVsMs/WallClock_fair_base_clean_newton64ss.png>
+
+Overfull \hbox (6.92471pt too wide) in paragraph at lines 51--59
+ [][] 
+ []
+
 [19
 
 
 
 
 ]
-File: figures/ErrorVsMs/WallClock_fair_base_clean_newton1ss.png Graphic file (type bmp)
-<figures/ErrorVsMs/WallClock_fair_base_clean_newton1ss.png>
-File: figures/ErrorVsMs/WallClock_fair_base_clean_newton4ss.png Graphic file (type bmp)
-<figures/ErrorVsMs/WallClock_fair_base_clean_newton4ss.png>
-File: figures/ErrorVsMs/WallClock_fair_base_clean_newton8ss.png Graphic file (type bmp)
-<figures/ErrorVsMs/WallClock_fair_base_clean_newton8ss.png>
-File: figures/ErrorVsMs/WallClock_fair_base_clean_newton64ss.png Graphic file (type bmp)
-<figures/ErrorVsMs/WallClock_fair_base_clean_newton64ss.png>
-
-Overfull \hbox (6.92471pt too wide) in paragraph at lines 47--55
- [][] 
- []
-
 File: figures/NodeCountVsFPS/XPBD/frame_0.png Graphic file (type bmp)
 <figures/NodeCountVsFPS/XPBD/frame_0.png>
 File: figures/NodeCountVsFPS/XPBD/frame_1.png Graphic file (type bmp)
@@ -879,7 +1007,7 @@ File: figures/NodeCountVsFPS/VBD/frame_3.png Graphic file (type bmp)
 <figures/NodeCountVsFPS/VBD/frame_3.png>
 File: figures/NodeCountVsFPS/VBD/frame_4.png Graphic file (type bmp)
 <figures/NodeCountVsFPS/VBD/frame_4.png>
-[20]
+ [20]
 File: figures/ChainWithHeavyWeight/NewtonMassRatio.png Graphic file (type bmp)
 <figures/ChainWithHeavyWeight/NewtonMassRatio.png>
 File: figures/ChainWithHeavyWeight/XPBDMassRatio.png Graphic file (type bmp)
@@ -887,11 +1015,14 @@ File: figures/ChainWithHeavyWeight/XPBDMassRatio.png Graphic file (type bmp)
 File: figures/ChainWithHeavyWeight/VBDMassRatio.png Graphic file (type bmp)
 <figures/ChainWithHeavyWeight/VBDMassRatio.png>
  [21]
-File: figures/StiffnessRatioChain/NewtonStiffnessRatio.png Graphic file (type bmp)
+File: figures/StiffnessRatioChain/NewtonStiffnessRatio.png Graphic file (type b
+mp)
 <figures/StiffnessRatioChain/NewtonStiffnessRatio.png>
-File: figures/StiffnessRatioChain/XPBDStiffnessRatio.png Graphic file (type bmp)
+File: figures/StiffnessRatioChain/XPBDStiffnessRatio.png Graphic file (type bmp
+)
 <figures/StiffnessRatioChain/XPBDStiffnessRatio.png>
 File: figures/StiffnessRatioChain/VBDStiffnessRatio.png Graphic file (type bmp)
+
 <figures/StiffnessRatioChain/VBDStiffnessRatio.png>
 File: figures/SelfCollisionDrop/XPBD-w1/frame_0.png Graphic file (type bmp)
 <figures/SelfCollisionDrop/XPBD-w1/frame_0.png>
@@ -960,11 +1091,14 @@ File: figures/SelfCollisionDrop/VBD-w1e4/frame_7.png Graphic file (type bmp)
  [22]
 File: figures/oscillator_amplitude.png Graphic file (type bmp)
 <figures/oscillator_amplitude.png>
-File: figures/EnergyTracking/energy_dissipation_s0_e80.png Graphic file (type bmp)
+File: figures/EnergyTracking/energy_dissipation_s0_e80.png Graphic file (type b
+mp)
 <figures/EnergyTracking/energy_dissipation_s0_e80.png>
-File: figures/EnergyTracking/energy_dissipation_s0_e5.png Graphic file (type bmp)
+File: figures/EnergyTracking/energy_dissipation_s0_e5.png Graphic file (type bm
+p)
 <figures/EnergyTracking/energy_dissipation_s0_e5.png>
-File: figures/EnergyTracking/energy_dissipation_s0_e10.png Graphic file (type bmp)
+File: figures/EnergyTracking/energy_dissipation_s0_e10.png Graphic file (type b
+mp)
 <figures/EnergyTracking/energy_dissipation_s0_e10.png>
 File: figures/IterationIndependence/XPBD_i20_16x16.png Graphic file (type bmp)
 <figures/IterationIndependence/XPBD_i20_16x16.png>
@@ -973,6 +1107,7 @@ File: figures/IterationIndependence/XPBD_i40_16x16.png Graphic file (type bmp)
 File: figures/IterationIndependence/XPBD_i80_16x16.png Graphic file (type bmp)
 <figures/IterationIndependence/XPBD_i80_16x16.png>
 File: figures/IterationIndependence/XPBD_i160_16x16.png Graphic file (type bmp)
+
 <figures/IterationIndependence/XPBD_i160_16x16.png>
 File: figures/IterationIndependence/VBD_i20.png Graphic file (type bmp)
 <figures/IterationIndependence/VBD_i20.png>
@@ -983,7 +1118,7 @@ File: figures/IterationIndependence/VBD_i80.png Graphic file (type bmp)
 File: figures/IterationIndependence/VBD_i160.png Graphic file (type bmp)
 <figures/IterationIndependence/VBD_i160.png>
  [23] [24]
-Overfull \hbox (69.14998pt too wide) in paragraph at lines 374--386
+Overfull \hbox (69.14998pt too wide) in paragraph at lines 378--390
  [][] 
  []
 
@@ -993,16 +1128,20 @@ Overfull \hbox (69.14998pt too wide) in paragraph at lines 374--386
  (./content/discussion.tex
 Chapter 7.
 
-LaTeX Warning: Reference `ssec:MassRatioPendulum' on page 27 undefined on input line 27.
+LaTeX Warning: Reference `ssec:MassRatioPendulum' on page 27 undefined on input
+ line 27.
 
 
-LaTeX Warning: Reference `ssec:MassRatioChain' on page 27 undefined on input line 27.
+LaTeX Warning: Reference `ssec:MassRatioChain' on page 27 undefined on input li
+ne 27.
 
 
-LaTeX Warning: Reference `ssec:StiffRatioTest' on page 27 undefined on input line 33.
+LaTeX Warning: Reference `ssec:StiffRatioTest' on page 27 undefined on input li
+ne 33.
 
 
-LaTeX Warning: Reference `ssec:ResidualConvergence' on page 27 undefined on input line 39.
+LaTeX Warning: Reference `ssec:ResidualConvergence' on page 27 undefined on inp
+ut line 39.
 
 [27
 
@@ -1020,7 +1159,8 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 
 [28]
 
-LaTeX Warning: Reference `ssec:StabilityMap' on page 29 undefined on input line 82.
+LaTeX Warning: Reference `ssec:StabilityMap' on page 29 undefined on input line
+ 82.
 
 ) [29]
 \openout2 = `content/conclusion.aux'.
@@ -1034,34 +1174,39 @@ Chapter 8.
 
 ]) [31] (./thesis.bbl
 Underfull \hbox (badness 10000) in paragraph at lines 81--89
-[]\TU/lmr/m/n/10.95 Matthias Müller, Bruno Heidelberger, Marcus Hennix, and John Rat-
+[]\TU/lmr/m/n/10.95 Matthias Müller, Bruno Heidelberger, Marcus Hennix, and Joh
+n Rat-
  []
 
 
-Underfull \hbox (badness 3780) in paragraph at lines 81--89
-\TU/lmr/m/n/10.95 cliff.  Position based dynamics.  \TU/lmr/m/it/10.95 Journal of Visual Communication and
+Underfull \hbox (badness 3009) in paragraph at lines 81--89
+\TU/lmr/m/n/10.95 cliff.  Position based dynamics.  \TU/lmr/m/it/10.95 Journal 
+of Visual Communication and
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 81--89
-\TU/lmr/m/it/10.95 Image Representation\TU/lmr/m/n/10.95 , 18(2):109–118, 2007.  ISSN 1047-3203.  DOI:
+\TU/lmr/m/it/10.95 Image Representation\TU/lmr/m/n/10.95 , 18(2):109–118, 2007.
+  ISSN 1047-3203.  DOI:
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 81--89
-[][]\TU/lmtt/m/n/10.95 https://doi.org/10.1016/j.jvcir.2007.01.005[][]\TU/lmr/m/n/10.95 .  URL [][]$[][][][][] [] [] [] [][][] []
+[][]\TU/lmtt/m/n/10.95 https://doi.org/10.1016/j.jvcir.2007.01.005[][]\TU/lmr/m
+/n/10.95 .  URL [][]$[][][][][] [] [] [] [][][] []
  []
 
-) [32
+[32
 
 
 
-]
+]) [33]
 \openout2 = `content/appendices.aux'.
 
- (./content/appendices.tex [33
+ (./content/appendices.tex [34
 
-] (./include/AI_nyilatkozat_tablazat_EN.tex [34
+]
+(./include/AI_nyilatkozat_tablazat_EN.tex [35
 
 ]
 Underfull \hbox (badness 10000) in paragraph at lines 13--63
@@ -1073,17 +1218,27 @@ Underfull \hbox (badness 10000) in paragraph at lines 13--63
 
  []
 
-)) [35
+) [36
 
-]
+] (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2025/11/14 1.11b listings language file
+)
+Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
+nput line 29.
+LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <8> not available
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 30.
+
+[37]) [38]
 \tf@thm=\write5
 \openout5 = `thesis.thm'.
 
-
-
-Package natbib Warning: There were undefined citations.
-
-(./thesis.aux (./include/titlepage.aux) (./include/declaration_EN.aux) (./content/abstract.aux) (./content/introduction.aux) (./content/background.aux) (./content/related-work.aux) (./content/algorithms.aux) (./content/methodology.aux) (./content/experiments.aux) (./content/discussion.aux) (./content/conclusion.aux) (./content/appendices.aux))
+ (./thesis.aux (./include/titlepage.aux)
+(./include/declaration_EN.aux) (./content/abstract.aux)
+(./content/introduction.aux) (./content/background.aux)
+(./content/related-work.aux) (./content/algorithms.aux)
+(./content/methodology.aux) (./content/experiments.aux)
+(./content/discussion.aux) (./content/conclusion.aux) (./content/appendices.aux
+))
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1093,15 +1248,15 @@ L3 programming layer <2026-01-19>
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 2F9BD021BA452F1615AB9E156E21E9FD;14970.
+(rerunfilecheck)             Checksum: 7396C15056B1BE0E07F2C2130D76F487;15713.
  ) 
 Here is how much of TeX's memory you used:
- 19102 strings out of 469581
- 378744 string characters out of 5461843
- 1168805 words of memory out of 5000000
- 47330 multiletter control sequences out of 15000+600000
+ 19805 strings out of 469581
+ 389844 string characters out of 5461843
+ 2020562 words of memory out of 5000000
+ 48019 multiletter control sequences out of 15000+600000
  642381 words of font info for 126 fonts, out of 8000000 for 9000
  376 hyphenation exceptions out of 8191
- 78i,14n,82p,913b,1983s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 78i,14n,82p,867b,1858s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on thesis.pdf (42 pages).
+Output written on thesis.xdv (45 pages, 805560 bytes).

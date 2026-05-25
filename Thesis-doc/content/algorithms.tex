@@ -41,21 +41,47 @@
 
 \subsection{Algorithm}
 \label{ssec:XPBDPseudo}
-\begin{lstlisting}[language=Python,caption={XPBD substep with $n_{\mathrm{iter}}$ Gauss--Seidel iterations.},label=lst:XPBDPseudo]
-def xpbd_substep(x, v, h, constraints):
-    y = x + h * v + h**2 * M_inv @ f_ext
-    x_new = y.copy()
-    lambdas = zeros(len(constraints))
-    for it in range(n_iter):
-        for j, C_j in enumerate(constraints):
-            dlam = (-C_j.value(x_new) - alpha_tilde[j] * lambdas[j]) / \
-                   (C_j.grad(x_new) @ M_inv @ C_j.grad(x_new).T
-                    + alpha_tilde[j])
-            x_new += M_inv @ C_j.grad(x_new).T * dlam
-            lambdas[j] += dlam
-    v_new = (x_new - x) / h
-    return x_new, v_new
-\end{lstlisting}
+This is the form used for the core comparison: no velocity damping and no
+collision handling, a single distance-constraint family, and a fixed iteration
+count. \autoref{alg:XPBDCore} states it; the full implemented version, with
+damping and self-collision, is in \autoref{sec:AppXPBD}.
+
+\begin{algorithm}[!ht]
+\caption{XPBD step (core comparison). $n_{\mathrm{sub}}$ substeps, each with
+         $n_{\mathrm{iter}}$ Gauss--Seidel iterations over the constraints.}
+\label{alg:XPBDCore}
+\begin{algorithmic}[1]
+\State $h \gets dt / n_{\mathrm{sub}}$ \Comment{substep size}
+\For{$s = 1$ \textbf{to} $n_{\mathrm{sub}}$}
+    \ForAll{vertices $i$}
+        \State $\mathbf{v}_i \gets \mathbf{v}_i + h\,w_i\,\mathbf{f}_{\mathrm{ext}}(\mathbf{x}_i)$
+               \Comment{$w_i = 1/m_i$; gravity folded in}
+    \EndFor
+    \ForAll{vertices $i$}
+        \State $\mathbf{p}_i \gets \mathbf{x}_i + h\,\mathbf{v}_i$
+               \Comment{inertial prediction $\mathbf{y}_i$}
+    \EndFor
+    \ForAll{constraints $j$}\ $\lambda_j \gets 0$ \EndFor
+        \Comment{multipliers reset every substep}
+    \For{$\mathrm{it} = 1$ \textbf{to} $n_{\mathrm{iter}}$}
+        \State \Call{ProjectConstraints}{$C_1,\dots,C_M,\ \mathbf{p},\ \boldsymbol{\lambda}$}
+    \EndFor
+    \ForAll{vertices $i$}
+        \State $\mathbf{v}_i \gets (\mathbf{p}_i - \mathbf{x}_i)/h$;\quad $\mathbf{x}_i \gets \mathbf{p}_i$
+    \EndFor
+\EndFor
+\Statex
+\Procedure{ProjectConstraints}{$C_1,\dots,C_M,\ \mathbf{p},\ \boldsymbol{\lambda}$}
+    \ForAll{constraints $j$} \Comment{one Gauss--Seidel sweep}
+        \State $\tilde{\alpha}_j \gets \alpha_j / h^2$
+        \State $\Delta\lambda_j \gets \dfrac{-C_j(\mathbf{p}) - \tilde{\alpha}_j\,\lambda_j}
+                {\nabla C_j\,\mathbf{M}^{-1}\nabla C_j^{\!\top} + \tilde{\alpha}_j}$
+        \State $\lambda_j \gets \lambda_j + \Delta\lambda_j$
+        \State $\mathbf{p} \gets \mathbf{p} + \mathbf{M}^{-1}\nabla C_j^{\!\top}\,\Delta\lambda_j$
+    \EndFor
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
 
 \subsection{Characteristics}
 \label{ssec:XPBDChar}
@@ -93,21 +119,46 @@ where
 
 \subsection{Algorithm}
 \label{ssec:VBDPseudo}
-\begin{lstlisting}[language=Python,caption={VBD step with $n_{\mathrm{iter}}$ block iterations.},label=lst:VBDPseudo]
-def vbd_step(x, v, h):
-    y = x + h * v + h**2 * M_inv @ f_ext
-    x_new = y.copy()  # inertial initialisation
-    for it in range(n_iter):
-        for i in vertex_order:
-            g_i = (m[i] / h**2) * (x_new[i] - y[i])
-            H_i = (m[i] / h**2) * I3
-            for e in incident_edges(i):
-                g_i += spring_grad_i(x_new, e)
-                H_i += spring_hess_ii(x_new, e)
-            x_new[i] -= solve_3x3(H_i, g_i)
-    v_new = (x_new - x) / h
-    return x_new, v_new
-\end{lstlisting}
+As with XPBD, the form below is the core-comparison version: no damping, no
+collisions, and a fixed iteration count in place of the convergence early-out.
+\autoref{alg:VBDCore} states it; the full implemented version, with adaptive
+initialisation, line search, Chebyshev acceleration, damping and self-collision,
+is in \autoref{sec:AppVBD}.
+
+\begin{algorithm}[!ht]
+\caption{VBD step (core comparison). $n_{\mathrm{sub}}$ substeps, each with
+         $n_{\mathrm{iter}}$ block-descent iterations over the vertices.}
+\label{alg:VBDCore}
+\begin{algorithmic}[1]
+\State $h \gets dt / n_{\mathrm{sub}}$
+\For{$s = 1$ \textbf{to} $n_{\mathrm{sub}}$}
+    \ForAll{vertices $i$}
+        \State $\mathbf{y}_i \gets \mathbf{x}_i + h\,\mathbf{v}_i + h^2 w_i\,\mathbf{f}_{\mathrm{ext}}(\mathbf{x}_i)$
+               \Comment{inertial target}
+        \State $\mathbf{x}^{\mathrm{prev}}_i \gets \mathbf{x}_i$;\quad $\mathbf{x}_i \gets \mathbf{y}_i$
+    \EndFor
+    \For{$\mathrm{it} = 1$ \textbf{to} $n_{\mathrm{iter}}$}
+        \State \Call{Sweep}{$\mathbf{x},\ \mathbf{y}$}
+               \Comment{one Gauss--Seidel pass over vertices}
+    \EndFor
+    \ForAll{vertices $i$}
+        \State $\mathbf{v}_i \gets (\mathbf{x}_i - \mathbf{x}^{\mathrm{prev}}_i)/h$
+    \EndFor
+\EndFor
+\Statex
+\Procedure{Sweep}{$\mathbf{x},\ \mathbf{y}$}
+    \ForAll{vertices $i$}
+        \State $\mathbf{g}_i \gets \dfrac{m_i}{h^2}(\mathbf{x}_i - \mathbf{y}_i)
+                + \displaystyle\sum_{e \in \mathcal{N}(i)} \nabla_i E_e(\mathbf{x})$
+               \Comment{negative force}
+        \State $\mathbf{H}_i \gets \dfrac{m_i}{h^2}\mathbf{I}_3
+                + \displaystyle\sum_{e \in \mathcal{N}(i)} \nabla^2_{ii} E_e(\mathbf{x})$
+        \State $\mathbf{x}_i \gets \mathbf{x}_i - \mathbf{H}_i^{-1}\mathbf{g}_i$
+               \Comment{local $3\times 3$ Newton step}
+    \EndFor
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
 
 \subsection{Characteristics}
 \label{ssec:VBDChar}

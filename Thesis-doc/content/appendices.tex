@@ -11,3 +11,147 @@ d%----------------------------------------------------------------------------
 
 \input{include/\AIdeclaration}
 
+%----------------------------------------------------------------------------
+\section{Full solver pseudocode}
+\label{sec:AppFullSolvers}
+%----------------------------------------------------------------------------
+\autoref{chap:Algorithms} states both solvers in their stripped core-comparison
+form. This appendix gives the full versions as actually implemented
+(\autoref{chap:Methodology}): inertial/adaptive initialisation, mass- and
+stiffness-proportional Rayleigh damping, self-collision, and (for VBD) the
+backtracking line search and Chebyshev acceleration. Optional terms are guarded
+by flags and disabled for the core comparison.
+
+%----------------------------------------------------------------------------
+\subsection{XPBD, full implementation}
+\label{sec:AppXPBD}
+%----------------------------------------------------------------------------
+\begin{lstlisting}[language=Python,caption={XPBD step as implemented.},label=lst:XPBDFull]
+def xpbd_step(x, v, dt):
+    h = dt / n_sub                                  # substep size
+    if self_collisions:                             # acceleration structure, once per frame
+        spatial_hash.rebuild(x)
+        spatial_hash.query(x, thickness + v_cap * dt)
+        cache_min_distances()                       # min(rest_dist, thickness) per pair
+
+    for s in range(n_sub):
+        f_ext = gather_external_forces()            # e.g. wind, rebuilt each substep
+        integrate(x, v, h, f_ext)
+        lambdas[:] = 0                              # multipliers reset every substep
+        for it in range(n_iter):                    # n_iter = 1 in the core comparison
+            solve_distance_constraints(x, h)
+            if self_collisions: solve_self_collisions(x)
+        v = (x - x_prev) / h
+
+def integrate(x, v, h, f_ext):
+    d = 1 / (1 + alpha_mass * h)                    # implicit mass-prop. Rayleigh damping
+    for i in dynamic_vertices:
+        v[i] += (gravity + f_ext[i] * w[i]) * h     # w[i] = 1/m[i]
+        v[i] *= d
+        if self_collisions: v[i] = cap(v[i], v_max)
+        x_prev[i] = x[i]
+        x[i] += v[i] * h                            # inertial prediction y_i
+
+def solve_distance_constraints(x, h):
+    a = 1 / h**2
+    for j, (p, q) in enumerate(distance_constraints):
+        w = w[p] + w[q]
+        if w == 0: continue
+        n = x[p] - x[q];  L = norm(n)
+        if L == 0: continue
+        n /= L
+        C = L - rest_length[j]
+        alpha = compliance[j] * a                   # alpha_tilde = (1/k)/h^2
+        gamma, gdx = stiffness_damping(j, n, x, x_prev, h)   # 0 if beta = 0
+        dlam = (-C - alpha*lambdas[j] - gamma*gdx) / ((1 + gamma)*w + alpha)
+        lambdas[j] += dlam
+        x[p] += n * (dlam * w[p])
+        x[q] -= n * (dlam * w[q])
+
+def solve_self_collisions(x):                        # inequality C = |x_p - x_q| - d_min >= 0
+    for p in dynamic_vertices:
+        for q in neighbours(p):
+            n = x[p] - x[q];  dist = norm(n)
+            if dist >= d_min[p,q] or dist == 0: continue   # only resolve penetration
+            n /= dist;  corr = n * (d_min[p,q] - dist)
+            x[p] += corr * (w[p]/w);  x[q] -= corr * (w[q]/w)
+            apply_tangential_friction(p, q, n)             # mu * relative displacement
+\end{lstlisting}
+
+%----------------------------------------------------------------------------
+\subsection{VBD, full implementation}
+\label{sec:AppVBD}
+%----------------------------------------------------------------------------
+\begin{lstlisting}[language=Python,caption={VBD step as implemented.},label=lst:VBDFull]
+def vbd_step(x, v, dt):
+    h = dt / n_sub                                  # n_sub = 1 in the core comparison
+    if self_collisions:
+        spatial_hash.rebuild(x)
+        spatial_hash.query_symmetric(x, thickness + cap(max_norm(v), v_cap) * dt)
+        cache_min_distances()
+
+    for s in range(n_sub):
+        f_ext = gather_external_forces()
+        adaptive_initialisation(x, v, h, f_ext)     # inertia y and warm-started x
+        omega = 1
+        for it in range(max_iter):
+            if accel: x_prev_iter = x.copy()
+            max_step = solve_sweep(x, h)            # one GS pass; returns max |dx|
+            if accel:                               # Chebyshev semi-iterative (VBD paper)
+                omega = chebyshev_omega(it + 1, rho, omega)
+                apply_accelerator(x, omega)         # skips colliding vertices
+            if max_step < tol: break                # early-out at the fixed point
+        v = (x - x_prev) / h                        # velocity cap if self-collisions
+
+def adaptive_initialisation(x, v, h, f_ext):
+    for i in dynamic_vertices:
+        a_ext = gravity + f_ext[i] * w[i]
+        x_prev[i] = x[i]
+        inertia[i] = x[i] + h*v[i] + h**2 * a_ext   # target y_i
+        alpha = 1                                    # full external accel by default
+        if have_prev_velocities and dot(a_ext, a_ext) > 0:
+            a_prev = (v[i] - v_prev[i]) / h
+            alpha = clamp01(dot(a_prev, a_ext) / dot(a_ext, a_ext))
+        x[i] = x_prev[i] + h*v[i] + alpha * h**2 * a_ext   # warm-start guess
+
+def solve_sweep(x, h):                               # returns largest per-vertex step
+    a = 1 / h**2;  max_step2 = 0
+    for i in dynamic_vertices:
+        m_a = m[i] * a
+        f = (inertia[i] - x[i]) * m_a               # inertial force (negative gradient)
+        H = m_a * I3                                # inertial Hessian
+        add_mass_damping(f, H, i, h)                # implicit, if alpha_mass > 0
+
+        for e in incident_springs(i):               # E = 0.5 k (|x_i - x_j| - l0)^2
+            d = x[i] - x[j];  L = norm(d);  n = d / L
+            f += k * (l0 - L) / L * d
+            H += k * max(0, 1 - l0/L) * I3 + k * (l0/L) * outer(n, n)   # clamp >= 0
+            add_stiffness_damping(f, H, ...)         # implicit, if beta > 0
+
+        for q in self_collision_neighbours(i):        # penalty, PSD rank-1 Hessian
+            d = x[i] - x[q];  dist = norm(d)
+            if dist < d_min[i,q]:
+                n = d / dist
+                f += k_c * (d_min[i,q] - dist) * n
+                H += k_c * outer(n, n)
+
+        f_internal = f
+        on_vertex_solve(i, f, H)                     # external callback (wind / contacts)
+
+        dx = solve_symmetric_3x3(H, f)               # local Newton step  H dx = f
+        if line_search:
+            dx = backtracking(i, dx, f, f - f_internal)   # Armijo; only shrinks dx
+        x[i] += dx
+        max_step2 = max(max_step2, dot(dx, dx))
+    return sqrt(max_step2)
+
+def backtracking(i, dx, f, f_ext):                   # guarantees local energy does not rise
+    slope = -dot(f, dx)
+    if slope >= 0: return dx                          # not a descent direction: leave as is
+    e0 = local_energy(i, x[i], f_ext);  t = 1
+    for _ in range(max_ls_iters):
+        if local_energy(i, x[i] + t*dx, f_ext) <= e0 + c1 * t * slope: break
+        t *= 0.5
+    return t * dx
+\end{lstlisting}
+
