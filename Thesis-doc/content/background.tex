@@ -6,6 +6,7 @@
 \begin{itemize}
     \item This chapter establishes the mathematical foundations for the rest of the thesis.
     \item The central object is the variational form of implicit Euler, which unifies XPBD and VBD as two approximate minimisers of the same energy function, and therefore justifies a shared Newton reference as ground truth.
+    \item Theory from \cite{li2026physics}. It contains detaild descriptions and case-studies about the theory and algorithms of most areas of physics-based simulations.
 \end{itemize}
 
 %----------------------------------------------------------------------------
@@ -14,40 +15,48 @@
 %----------------------------------------------------------------------------
 \begin{itemize}
     \item Real-time physics reduces to advancing a state $(\mathbf{x}, \mathbf{v})$ --- positions and velocities of $n$ particles --- forward in time.
-    \item Three families of approaches have been used in computer graphics:
+    \item In modern physics engines three families of approaches can be identified by splitting them based on how they resolve constraints and calculate motion.
 \end{itemize}
 
-\paragraph{Newtonian, force-based.}
+\paragraph{Force-based, Newtonian.}
 \begin{itemize}
-    \item Forces $\mathbf{f}(\mathbf{x}, \mathbf{v}, t)$ produce accelerations via $\ddot{\mathbf{x}} = \mathbf{M}^{-1} \mathbf{f}$, integrated by some scheme.
+    \item Forces $\mathbf{f}(\mathbf{x}, \mathbf{v}, t)$ produce accelerations via Newton's second law $f = M \dfrac{dv}{dt}$ and $v = \dfrac{dx}{dt}$.
+    \item We get $\ddot{\mathbf{x}} = \mathbf{M}^{-1} \mathbf{f}$.
+    \item Where $\mathbf{M}$ is the mass matrix.
+    \item The most intuitive approach.
+    \item This is mostly obsolete for real-time applications, but is still used for scenarios where high precision is required (engineering problems, offline VFX).
 \end{itemize}
 
 \paragraph{Impulse-based.}
 \begin{itemize}
-    \item Velocities are manipulated directly via collision or constraint impulses; popular for rigid bodies.
-    \item Not pursued here: awkward for distributed deformation, and the primal/dual framework of \autoref{sec:PrimalDual} is the right lens for comparing XPBD and VBD.
+    \item Velocities are manipulated directly via collision or constraint impulses.
+    \item Popular for rigid bodies, as it handles collisions as instantaneous changes.
+    \item Not pursued here, because instantaneous change is not suitable for deformable bodies.
 \end{itemize}
 
 \paragraph{Position-based.}
 \begin{itemize}
-    \item Positions are manipulated directly; velocities are recovered as finite differences. This is the lineage XPBD belongs to.
+    \item Resolves consstraints by directly updating positions, without explicitly calculating forces or accelerations.
+    \item PBD and XPBD belong in this cathegory.
+    \item VBD is a hybrid: it is mathematically a position-based solver, as it directly updates positions, but does it by solving a local optimization problem that mimics a forced-based solver, so it is also a force-based solver in spirit.
 \end{itemize}
 
-\subsection{Explicit Euler and why it fails}
+\subsection{Explicit Time Integration (Forward Euler) and why it fails}
 \label{ssec:ExplicitEuler}
-The explicit (forward) Euler scheme is
+It's explicit because it's a direct method to calculate $\mathbf{x}_{t+h}$ and $\mathbf{v}_{t+h}$ by substituting known values into simple formulas.
+The explicit Euler scheme is
 \begin{align}
     \mathbf{v}_{t+h} &= \mathbf{v}_t + h\,\mathbf{M}^{-1}\mathbf{f}(\mathbf{x}_t), \\
     \mathbf{x}_{t+h} &= \mathbf{x}_t + h\,\mathbf{v}_{t+h}.
 \end{align}
 \begin{itemize}
-    \item For a linear spring with stiffness $k$ and mass $m$, stability requires roughly $h < 2\sqrt{m/k}$.
-    \item For cloth, where $k$ may exceed $10^4$~N/m, this drives $h$ down to microseconds --- incompatible with a 16~ms real-time frame budget.
-    \item Velocity Verlet and symplectic-Euler variants still retain a stability limit driven by the stiffest mode.
+    \item Where $\mathbf{v_t}$ and $\mathbf{x}_t$ are the velocity and position at time $t$, and $h$ is the time step.
+    \item This method is considered unconditionally unstable, meaning that irrespective of $h$ the simulation will eventually explode for equations with nonconstant $\mathbf{f}$.
 \end{itemize}
 
-\subsection{Implicit Euler}
+\subsection{Implicit Time Integration (Backward Euler)}
 \label{ssec:ImplicitEuler}
+In contrast, implicit time integration requires solving a system of equations to determine the values of $\mathbf{x}_{t+h}$ and $\mathbf{v}_{t+h}$.
 The (backward) implicit Euler scheme evaluates forces at the unknown
 end-of-step state:
 \begin{align}
@@ -55,7 +64,10 @@ end-of-step state:
     \mathbf{x}_{t+h} &= \mathbf{x}_t + h\,\mathbf{v}_{t+h}.
 \end{align}
 \begin{itemize}
-    \item Unconditionally stable for linear systems, dissipative for non-linear ones.
+    \item Note that the calculation of $\mathbf{v}_{t+h}$ depends on $\mathbf{x}_{t+h}$, and $\mathbf{x}_{t+h}$ depends on $\mathbf{v}_{t+h}$.
+    \item This gets resolved by substituting the$\mathbf{v}_{t+h} = (\mathbf{x}_{t+h} - \mathbf{x}_t)/h$ estimate into the position update equation.
+    \item Unconditionally stable for linear systems.
+    \item If the approximation is far from the actual solution, the method might not converge.
     \item Cost: a non-linear root-finding problem each step.
 \end{itemize}
 
@@ -63,8 +75,9 @@ end-of-step state:
 \section{Implicit Euler as energy minimisation}
 \label{sec:Variational}
 %----------------------------------------------------------------------------
-Eliminating the velocity equation gives the well-known variational form of
-implicit Euler: the new positions $\mathbf{x}$ minimise
+Eliminating the velocity equation gives the well-known variational form (also called minimization or optimization form) of
+implicit Euler: $x$ is the minimiser of the energy function $G$:
+$x_{t+h} = \argmin_{\mathbf{x}} G(\mathbf{x})$
 \begin{equation}
     \label{eq:G}
     G(\mathbf{x}) \;=\; \tfrac{1}{2 h^{2}} \,\|\mathbf{x} - \mathbf{y}\|_{\mathbf{M}}^{2}
@@ -76,7 +89,7 @@ where
 \end{equation*}
 \begin{itemize}
     \item $\mathbf{y}$ is the \emph{inertial target} (the position reached under external forces alone).
-    \item $\|\cdot\|_{\mathbf{M}}$ is the mass-weighted norm; $E(\mathbf{x})$ is the elastic potential energy.
+    \item $\|\cdot\|_{\mathbf{M}}$ is the mass-weighted length; $E(\mathbf{x})$ is the total potential energy evaluated at $\mathbf{x}$.
     \item Equation~\eqref{eq:G} is central: \textbf{both XPBD and VBD are approximate minimisers of the same $G(\mathbf{x})$}.
     \item XPBD reaches a stationary point by descending on the Lagrange-dual problem; VBD reaches one by block-coordinate descent on the primal.
     \item This shared target licenses a Newton solve of \eqref{eq:G} to serve as unambiguous ground truth in \autoref{chap:Experiments}.
@@ -87,7 +100,7 @@ where
 \label{sec:MassSpring}
 %----------------------------------------------------------------------------
 \begin{itemize}
-    \item I use a mass-spring discretisation of cloth: vertices carry lumped masses, edges of the cloth mesh carry springs.
+    \item I use a mass-spring discretisation of cloth: vertices carry point masses, edges of the cloth mesh carry springs.
     \item For a spring between particles $i$ and $j$ with rest length $\ell_0$ and stiffness $k$, the constraint function and energy are:
 \end{itemize}
 \begin{align}
@@ -100,7 +113,7 @@ I will introduce the exact mass-spring structure used to represent cloth in \aut
 \subsection{Limitations of mass-spring}
 \label{ssec:MSSLimits}
 \begin{itemize}
-    \item Mass-spring is cheap and easy to differentiate, but is well known to be \emph{mesh-dependent}: effective macroscopic stiffness depends on the discretisation.
+    \item Mass-spring is cheap and easy to differentiate, but is well known to be \emph{simulation-mesh-dependent}: effective material parameters, like macroscopic stiffness, depend on the discretisation.
     \item Therefore conclusions about absolute material parameters are not transferable to FEM-based models.
     \item Conclusions about \emph{relative} solver behaviour --- my subject --- are transferable.
 \end{itemize}
@@ -114,8 +127,8 @@ I will introduce the exact mass-spring structure used to represent cloth in \aut
     \item A Jacobi variant updates all blocks from the start-of-iteration state in parallel: slower convergence in serial, but maps better to the GPU.
     \item Consequence (revisited in \autoref{sec:ThreatsValidity}): both solvers are \textbf{order-dependent}.
     \begin{itemize}
-        \item Constraint-traversal order (XPBD) and vertex-traversal order (VBD) both affect convergence rate and, in pathological cases, the converged solution.
-        \item My experiments fix a deterministic order for reproducibility.
+        \item Constraint-traversal order (XPBD) and vertex-traversal order (VBD) both affect convergence rate and, in some (but relatively rare) cases, the converged solution.
+        \item My experiments fix a deterministic order for reproducibility, I do not use randomisation, as none of the canonical solver implementations do.
     \end{itemize}
 \end{itemize}
 
@@ -140,14 +153,10 @@ I will introduce the exact mass-spring structure used to represent cloth in \aut
     \item XPBD is a Gauss--Seidel iteration on the resulting saddle-point system.
 \end{itemize}
 
-This duality is the lens used throughout the thesis to decide what to measure
-and to interpret what is measured. It points to a few places where the two
+This duality is the lens is the motivation in the thesis for choosing the stress tests in \autoref{ssec:ChainWithHeavyWeight} and \autoref{ssec:StiffnessRatioChain}.
+It also shows us where the two
 approaches naturally differ:
 \begin{itemize}
     \item Dual variables couple constraints that share a particle, so mass disparities at a shared particle are a scenario where XPBD's per-constraint updates may propagate slowly.
     \item The primal Hessian block at a vertex collects all spring stiffnesses meeting there, so widely varying stiffnesses produce an ill-conditioned block --- a scenario where VBD's per-vertex update may struggle.
-    \item The primal Hessian contains the true elastic operator, while the constraint linearisation underlying XPBD discards second-order information, which is why per-iteration convergence under increasing material stiffness is a natural point of comparison.
 \end{itemize}
-These are the considerations that motivate the stress tests in
-\autoref{chap:Experiments}; the experiments report what each solver actually
-does in these scenarios rather than setting out to confirm the framing.

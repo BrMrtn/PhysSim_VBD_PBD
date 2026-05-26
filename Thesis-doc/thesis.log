@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  26 MAY 2026 19:27
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  26 MAY 2026 23:15
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1021,16 +1021,16 @@ Overfull \hbox (32.0514pt too wide) in paragraph at lines 381--393
  (./content/discussion.tex
 Chapter 7.
 
-LaTeX Warning: Reference `ssec:MassRatioPendulum' on page 27 undefined on input line 27.
+LaTeX Warning: Reference `ssec:MassRatioPendulum' on page 27 undefined on input line 24.
 
 
-LaTeX Warning: Reference `ssec:MassRatioChain' on page 27 undefined on input line 27.
+LaTeX Warning: Reference `ssec:MassRatioChain' on page 27 undefined on input line 24.
 
 
-LaTeX Warning: Reference `ssec:StiffRatioTest' on page 27 undefined on input line 33.
+LaTeX Warning: Reference `ssec:StiffRatioTest' on page 27 undefined on input line 30.
 
 
-LaTeX Warning: Reference `ssec:ResidualConvergence' on page 27 undefined on input line 39.
+LaTeX Warning: Reference `ssec:ResidualConvergence' on page 27 undefined on input line 36.
 
 [27
 
@@ -1113,14 +1113,17 @@ L3 programming layer <2026-01-19>
 
 LaTeX Warning: There were undefined references.
 
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: B8FE939D472275759D0185D5E9D3C67D;15337.
+(rerunfilecheck)             Checksum: 1CD0712688F6BF508002AC26C3C0970E;15642.
  ) 
 Here is how much of TeX's memory you used:
- 19803 strings out of 469581
- 389933 string characters out of 5461843
- 2019486 words of memory out of 5000000
- 48016 multiletter control sequences out of 15000+600000
+ 19805 strings out of 469581
+ 389946 string characters out of 5461843
+ 2020558 words of memory out of 5000000
+ 48018 multiletter control sequences out of 15000+600000
  642381 words of font info for 126 fonts, out of 8000000 for 9000
  376 hyphenation exceptions out of 8191
  78i,14n,82p,913b,1858s stack positions out of 10000i,1000n,20000p,200000b,200000s

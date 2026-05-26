@@ -32,7 +32,10 @@ The mass-spring based cloth model I implement is the one used by Müller \cite{t
     \item \textbf{Shear} constraints connect each vertex to its diagonal neighbours.
     \item \textbf{Bending} constraints connect each vertex to its second horizontal and vertical neighbours.
 \end{itemize}
+So an internal vertex has 12 constraints connected to it.
 Note, that the bending constraints are not dihedral-angle constraints. I deliberately only use one constraint form, to keep the comparison less complex.
+The mass of vertices is set proportionally to the area of the cloth they represent: each vertex gets a mass of a quarter of the sum of quadrilateral areas it touches. The parameter the user gives is the total mass of the cloth.
+This was done so that the cloth behaviour will stay consistent across different resolutions. But without this, giving the same mass to each vertex would also leave us with heavier side and corner vertices.
 
 %----------------------------------------------------------------------------
 \section{How the comparison is kept fair}
@@ -73,6 +76,6 @@ This is a model difference, not a solver difference: a penalty model \emph{could
 \label{sec:Parallelisation}
 \label{ssec:Parallelisation}
 %----------------------------------------------------------------------------
-All measurements in this thesis are run single-threaded on the CPU. As noted here, and revisited in \autoref{sec:ThreatsValidity}, the two solvers have different parallelisation profiles. \emph{VBD} parallelises naturally over vertex blocks via graph colouring: vertices sharing no constraint can be updated independently within a colour class, which is well-suited to GPU execution. \emph{XPBD} can be parallelised via constraint-graph colouring, but the colouring is finer-grained (per constraint --- of which there are usually many more than vertices --- rather than per vertex), and the dependency structure is less regular.
+All measurements in this thesis are run single-threaded on the CPU. As noted here, and revisited in \autoref{sec:ThreatsValidity}, the two solvers have different parallelisation profiles. \emph{VBD} parallelises naturally over vertex blocks via graph colouring: vertices sharing no constraint can be updated independently within a colour class, which is well-suited to GPU execution. \emph{XPBD} can be parallelised via edge colouring, but this colouring is finer-grained (per constraint --- of which there are usually many more than vertices --- rather than per vertex), thus creates more colours so the dependency structure is less regular.
 
 The expected result --- that parallelisation favours VBD more than XPBD --- is plausible but unverified by my experiments. This stands as a threat to external validity for any claim about which solver is ``faster overall''.

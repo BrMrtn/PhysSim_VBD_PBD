@@ -6,7 +6,6 @@
 \begin{itemize}
     \item This chapter states XPBD and VBD in the form actually implemented in \autoref{chap:Methodology}.
     \item Both target the same variational problem \eqref{eq:G} but reach it through opposite descent directions.
-    \item The contrast made explicit here drives the experimental design in \autoref{chap:Experiments}.
 \end{itemize}
 
 %----------------------------------------------------------------------------
@@ -18,10 +17,11 @@
 \label{ssec:XPBDDeriv}
 \begin{itemize}
     \item For each elastic spring, associate a constraint $C(\mathbf{x}) = 0$ at zero deformation and a compliance $\alpha = 1/k$.
-    \item The augmented Lagrangian of \eqref{eq:G} with a single substep $h$ has stationarity conditions:
+    \item $\lambda = -\alpha^{-1} C$ is the Lagrange multiplier for the constraint, which can be interpreted as the spring force magnitude.
+    \item The augmented Lagrangian of \eqref{eq:G} with a single substep $h$ has stationarity conditions, and the constrained equation of motion:
 \end{itemize}
 \begin{align}
-    \mathbf{M}(\mathbf{x} - \mathbf{y}) &= h^{2}\,\nabla C(\mathbf{x})^{\!\top}\,\boldsymbol{\lambda}, \\
+    \mathbf{M}(\mathbf{x} - \mathbf{y}) - \nabla C(\mathbf{x})^{T}\,\boldsymbol{\lambda} &= \mathbf{0}, \\
     C(\mathbf{x}) + \tilde{\alpha}\,\boldsymbol{\lambda} &= \mathbf{0},
 \end{align}
 \begin{itemize}
@@ -35,16 +35,16 @@
                                  + \tilde{\alpha}_{j}},
 \end{equation}
 \begin{itemize}
-    \item Corresponding position correction: $\Delta \mathbf{x} = \mathbf{M}^{-1}\nabla C_{j}^{\!\top}\,\Delta \lambda_{j}$.
+    \item After XPBD omits the calculation of the Hessian by approximating their stiffness matrix with the mass matrix, we get the following equation for the position correction:
+    \item $\Delta \mathbf{x} = \mathbf{M}^{-1}\nabla C_{j}^{\!\top}\,\Delta \lambda_{j}$.
     \item Velocities are recovered at substep end by $\mathbf{v}_{t+h} = (\mathbf{x}_{t+h} - \mathbf{x}_{t}) / h$.
 \end{itemize}
 
 \subsection{Algorithm}
 \label{ssec:XPBDPseudo}
-This is the form used for the core comparison: no velocity damping and no
-collision handling, a single distance-constraint family, and a fixed iteration
-count. \autoref{alg:XPBDCore} states it; the full implemented version, with
-damping and self-collision, is in \autoref{sec:AppXPBD}.
+The simplified form of the XPBD algorithm used for the core comparisons can be seen on \autoref{alg:XPBDCore}: no damping or
+collision handling, only one type of constraint. The full implemented version, with
+damping and self-collision and with more detailed pseudocode is in \autoref{sec:AppXPBD}.
 
 \begin{algorithm}[!ht]
 \caption{XPBD step (core comparison). $n_{\mathrm{sub}}$ substeps, each with
@@ -56,8 +56,6 @@ damping and self-collision, is in \autoref{sec:AppXPBD}.
     \ForAll{vertices $i$}
         \State $\mathbf{v}_i \gets \mathbf{v}_i + h\,w_i\,\mathbf{f}_{\mathrm{ext}}(\mathbf{x}_i)$
                \Comment{$w_i = 1/m_i$; gravity folded in}
-    \EndFor
-    \ForAll{vertices $i$}
         \State $\mathbf{p}_i \gets \mathbf{x}_i + h\,\mathbf{v}_i$
                \Comment{inertial prediction $\mathbf{y}_i$}
     \EndFor
@@ -109,20 +107,21 @@ damping and self-collision, is in \autoref{sec:AppXPBD}.
 where
 \begin{align}
     \mathbf{g}_{i} &= \frac{m_{i}}{h^{2}}\,(\mathbf{x}_{i} - \mathbf{y}_{i})
-                      + \sum_{e \in \mathcal{N}(i)} \nabla_{i} E_{e}(\mathbf{x}), \\
+                      + \sum_{e \in \mathcal{N_i}} \nabla_{i} E_{e}(\mathbf{x}), \\
     \mathbf{H}_{i} &= \frac{m_{i}}{h^{2}}\,\mathbf{I}_{3}
-                      + \sum_{e \in \mathcal{N}(i)} \nabla_{ii}^{2}\, E_{e}(\mathbf{x}).
+                      + \sum_{e \in \mathcal{N_i}} \nabla_{ii}^{2}\, E_{e}(\mathbf{x}).
 \end{align}
 \begin{itemize}
+    \item where $\mathbf{g}_{i}$ is the derivative of the local variational energy around vertex $i$, \mathcal{N_i} is the set of force elements acting on vertex $i$, and $\mathbf{H}_{i}$ is the local Hessian.
+    \item $\nabla_{ii}^{2}\, E_{e}(\mathbf{x})$ is second derivative of the energy of element $e$ with respect to vertex $i$'s position.
     \item For a distance-spring energy $E_{e} = \tfrac{1}{2} k\,(\|\mathbf{x}_{i} - \mathbf{x}_{j}\| - \ell_{0})^{2}$, the per-vertex gradient and Hessian are closed-form and inexpensive.
 \end{itemize}
 
 \subsection{Algorithm}
 \label{ssec:VBDPseudo}
-As with XPBD, the form below is the core-comparison version: no damping, no
-collisions, and a fixed iteration count in place of the convergence early-out.
-\autoref{alg:VBDCore} states it; the full implemented version, with adaptive
-initialisation, line search, Chebyshev acceleration, damping and self-collision,
+As with XPBD, the form below is the simplified variant of the core-comparison version: no damping, no
+collisions. Here I use the fixed iteration count version in place of the convergence early-stopping one.
+The full implemented version, with adaptive initialisation, damping and self-collision,
 is in \autoref{sec:AppVBD}.
 
 \begin{algorithm}[!ht]
@@ -163,10 +162,10 @@ is in \autoref{sec:AppVBD}.
 \subsection{Characteristics}
 \label{ssec:VBDChar}
 \begin{itemize}
-    \item \emph{Primal.} An iteration's state is positions $\mathbf{x}$; no auxiliary multipliers.
+    \item \emph{Primal.} An iteration's state is positions $\mathbf{x}$; no extra multipliers.
     \item \emph{Second-order locally.} Each block update is a Newton step on the true elastic Hessian restricted to one vertex.
-    \item \emph{Iterations over substeps.} VBD is normally used with one long step subdivided by many block iterations; the implicit Hessian handles stiffness without tiny $h$.
-    \item \emph{Parallel-friendly.} Vertices sharing no constraint can be updated independently (graph colouring). I disable parallelism for the core comparison; see \autoref{ssec:Parallelisation}.
+    \item \emph{Iterations over substeps.} VBD is normally used with one long step subdivided by many block iterations; the implicit Hessian handles stiffness with larger $h$ too.
+    \item \emph{Parallel-friendly.} Vertices sharing no constraint can be updated independently (graph colouring).
 \end{itemize}
 
 %----------------------------------------------------------------------------
@@ -194,6 +193,5 @@ is in \autoref{sec:AppVBD}.
 \end{table}
 
 \begin{itemize}
-    \item The row of \autoref{tab:XPBDvsVBD} that drives the rest of the thesis is the first: XPBD lives in the dual, VBD lives in the primal.
-    \item This is the distinction the primal/dual lens (\autoref{sec:PrimalDualLens}) builds on, and the one the experiments return to when interpreting each result.
+    \item The first and third rows are the distinction the primal/dual lens (\autoref{sec:PrimalDualLens}) builds on, and the one the experiments return to when interpreting each result.
 \end{itemize}

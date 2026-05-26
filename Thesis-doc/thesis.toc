@@ -9,17 +9,17 @@
 \select@language {english} \contentsline {section}{\numberline {1.5}Thesis structure}{3}{section.1.5}%
 \select@language {english} \contentsline {chapter}{\numberline {2}Background and theoretical foundations}{5}{chapter.2}%
 \select@language {english} \contentsline {section}{\numberline {2.1}Time-stepping schemes for physical simulation}{5}{section.2.1}%
-\select@language {english} \contentsline {paragraph}{Newtonian, force-based.}{5}{section*.6}%
+\select@language {english} \contentsline {paragraph}{Force-based, Newtonian.}{5}{section*.6}%
 \select@language {english} \contentsline {paragraph}{Impulse-based.}{5}{section*.7}%
-\select@language {english} \contentsline {paragraph}{Position-based.}{5}{section*.8}%
-\select@language {english} \contentsline {subsection}{\numberline {2.1.1}Explicit Euler and why it fails}{6}{subsection.2.1.1}%
-\select@language {english} \contentsline {subsection}{\numberline {2.1.2}Implicit Euler}{6}{subsection.2.1.2}%
-\select@language {english} \contentsline {section}{\numberline {2.2}Implicit Euler as energy minimisation}{6}{section.2.2}%
+\select@language {english} \contentsline {paragraph}{Position-based.}{6}{section*.8}%
+\select@language {english} \contentsline {subsection}{\numberline {2.1.1}Explicit Time Integration (Forward Euler) and why it fails}{6}{subsection.2.1.1}%
+\select@language {english} \contentsline {subsection}{\numberline {2.1.2}Implicit Time Integration (Backward Euler)}{6}{subsection.2.1.2}%
+\select@language {english} \contentsline {section}{\numberline {2.2}Implicit Euler as energy minimisation}{7}{section.2.2}%
 \select@language {english} \contentsline {section}{\numberline {2.3}Mass-spring systems}{7}{section.2.3}%
 \select@language {english} \contentsline {subsection}{\numberline {2.3.1}Limitations of mass-spring}{7}{subsection.2.3.1}%
-\select@language {english} \contentsline {section}{\numberline {2.4}Solver structure: Gauss--Seidel vs.\ Jacobi}{7}{section.2.4}%
-\select@language {english} \contentsline {section}{\numberline {2.5}The primal/dual distinction}{7}{section.2.5}%
-\select@language {english} \contentsline {paragraph}{Primal.}{7}{section*.9}%
+\select@language {english} \contentsline {section}{\numberline {2.4}Solver structure: Gauss--Seidel vs.\ Jacobi}{8}{section.2.4}%
+\select@language {english} \contentsline {section}{\numberline {2.5}The primal/dual distinction}{8}{section.2.5}%
+\select@language {english} \contentsline {paragraph}{Primal.}{8}{section*.9}%
 \select@language {english} \contentsline {paragraph}{Dual.}{8}{section*.10}%
 \select@language {english} \contentsline {chapter}{\numberline {3}Related work}{9}{chapter.3}%
 \select@language {english} \contentsline {section}{\numberline {3.1}From PBD to XPBD}{9}{section.3.1}%
@@ -69,7 +69,7 @@
 \select@language {english} \contentsline {section}{\numberline {7.2}Reading the results through the primal/dual lens}{27}{section.7.2}%
 \select@language {english} \contentsline {paragraph}{Mass-ratio scenario.}{27}{section*.26}%
 \select@language {english} \contentsline {paragraph}{Stiffness-ratio scenario.}{27}{section*.27}%
-\select@language {english} \contentsline {paragraph}{Per-iteration convergence under stiffness.}{28}{section*.28}%
+\select@language {english} \contentsline {paragraph}{Per-iteration convergence under stiffness.}{27}{section*.28}%
 \select@language {english} \contentsline {paragraph}{Joint reading.}{28}{section*.29}%
 \select@language {english} \contentsline {section}{\numberline {7.3}Limitations and Threats to validity}{28}{section.7.3}%
 \select@language {english} \contentsline {subsection}{\numberline {7.3.1}Single-threaded execution}{28}{subsection.7.3.1}%
