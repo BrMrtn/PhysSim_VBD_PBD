@@ -11,7 +11,7 @@
 that explains how the result on that axis is consistent (or not) with the
 primal/dual framing of \autoref{sec:PrimalDual}.}
 \begin{itemize}
-    \item Efficiency: which solver dominates the equal-wall-clock frontier, and in what regime?
+    \item Efficiency: which solver dominates the equal-wall-clock frontier, and in which scenario?
     \item Robustness: where do the stability envelopes diverge, and does the divergence match the primal/dual prediction?
     \item Realism: which solver's converged state is closer to Newton at matched compute?
     \item Flexibility: how does the ease-of-extension cost compare against the per-frame cost benefit?
@@ -22,13 +22,13 @@ primal/dual framing of \autoref{sec:PrimalDual}.}
 \label{sec:Verdicts}
 %----------------------------------------------------------------------------
 
-\paragraph{Mass-ratio regime.}
+\paragraph{Mass-ratio scenario.}
 \begin{itemize}
     \item Tied to \autoref{ssec:MassRatioPendulum} and \autoref{ssec:MassRatioChain}.
     \item Interpretation: dual updates propagate slowly through chains of strongly mismatched masses, because each Gauss--Seidel sweep changes only one constraint's multiplier, and the change couples to the next constraint only through the position update on the shared particle. \emph{TODO: state what the measurements actually show here.}
 \end{itemize}
 
-\paragraph{Stiffness-ratio regime.}
+\paragraph{Stiffness-ratio scenario.}
 \begin{itemize}
     \item Tied to \autoref{ssec:StiffnessRatioChain} and \autoref{ssec:StiffRatioTest}.
     \item Interpretation: the local Hessian block $\mathbf{H}_{i}$ at a vertex sums contributions from every incident spring, so widely varying stiffnesses inflate the block's condition number and can slow the Newton step.
@@ -42,12 +42,12 @@ primal/dual framing of \autoref{sec:PrimalDual}.}
 
 \paragraph{Joint reading.}
 \begin{itemize}
-    \item Read together, the three regimes describe where each solver's update direction sees the information it needs and where it does not.
-    \item Where the results bear this out, the practical recommendation is regime-based rather than absolute --- a useful outcome in its own right. \emph{TODO: finalise once results are in.}
+    \item Read together, the three scenarios describe where each solver's update direction sees the information it needs and where it does not.
+    \item Where the results bear this out, the practical recommendation is scenario-based rather than absolute --- a useful outcome in its own right. \emph{TODO: finalise once results are in.}
 \end{itemize}
 
 %----------------------------------------------------------------------------
-\section{Threats to validity}
+\section{Limitations and Threats to validity}
 \label{sec:ThreatsValidity}
 %----------------------------------------------------------------------------
 
@@ -55,15 +55,18 @@ primal/dual framing of \autoref{sec:PrimalDual}.}
 \label{ssec:ThreatSingleThread}
 \begin{itemize}
     \item All measurements run single-threaded on CPU.
-    \item VBD is known to parallelise better than XPBD (\autoref{sec:Parallelisation}), so ms/frame results underestimate VBD's likely production advantage.
-    \item This affects external validity of any quantitative efficiency claim but does not invalidate qualitative claims about convergence quality or stability envelopes.
+    \item Because VBD parallelises better than XPBD (\autoref{sec:Parallelisation}), the ms/frame figures are biased against VBD: they understate the advantage it would show in a production, multi-threaded deployment.
+    \item This is a threat to the external validity of the quantitative efficiency claims only; it leaves the qualitative claims about convergence quality and stability envelopes untouched, since those do not depend on how the work is scheduled across cores.
+    \item Lifting this limitation --- the multithreaded and GPU comparison --- is the principal direction of \autoref{ssec:FWParallel}.
 \end{itemize}
 
 \subsection{Mass-spring discretisation only}
 \label{ssec:ThreatMassSpring}
 \begin{itemize}
-    \item I use distance-spring energies throughout, including for bending; real cloth simulators use FEM-based stretch energies and dihedral bending.
-    \item The primal/dual framing carries over (both XPBD and VBD admit arbitrary elastic energies), but the specific stiffness ratios encountered --- and therefore the magnitude of the stiffness-ratio and per-iteration-convergence effects --- may differ.
+    \item I use distance-spring energies throughout, including for bending. Dihedral bending constraints were implemented (with LLM assistance) but I deliberately did not run the evaluation on this newer model.
+    \item This choice is not neutral between the solvers: VBD's original paper uses an energy-based model (StVK), and such a discretisation would likely favour VBD to a similar degree that my mass-spring model favours XPBD.
+    \item The results are therefore not necessarily transferable to other cloth models. The primal/dual framing still carries over --- both XPBD and VBD admit arbitrary elastic energies --- but the specific stiffness ratios encountered, and hence the magnitude of the stiffness-ratio and per-iteration-convergence effects, may differ.
+    \item Re-running the comparison on energy-based and alternative-connectivity models is taken up as future work in \autoref{ssec:FWFEM}.
 \end{itemize}
 
 \subsection{Gauss--Seidel order dependence}
@@ -74,19 +77,10 @@ primal/dual framing of \autoref{sec:PrimalDual}.}
     \item I do not investigate this, and it is a real threat to reproducibility on other implementations.
 \end{itemize}
 
-\subsection{Fixed $dt = 1/30$~s}
-\label{ssec:ThreatDt}
+\subsection{Augmented Vertex Block Descent}
+\label{ssec:ThreatAVBD}
 \begin{itemize}
-    \item $dt = 1/30$~s is generous for Unity but stresses both solvers.
-    \item A different fixed $dt$, or an adaptive step, could shift the equal-wall-clock frontier.
-    \item The stability map in \autoref{ssec:StabilityMap} mitigates this by characterising both solvers over a $dt$ range, but the headline results in \autoref{sec:EffResults} are tied to a single $dt$.
-\end{itemize}
-
-%----------------------------------------------------------------------------
-\section{Limitations}
-\label{sec:Limitations}
-%----------------------------------------------------------------------------
-Beyond the threats above, three further limitations are worth naming:
-\begin{itemize}
-    \item I do not implement AVBD or any post-2024 VBD extension.
+    \item I do not implement AVBD or any other post-2024 VBD extension; the comparison is restricted to canonical 2024 VBD.
+    \item AVBD fixes several weaknesses of canonical VBD (notably wide stiffness ratios and near-infinite stiffness), so the robustness and stiffness-ratio findings that go against VBD should not be read as applying to AVBD.
+    \item Whether those findings are intrinsic to the primal approach or specific to the 2024 implementation is exactly the question \autoref{ssec:FWAVBD} proposes to settle.
 \end{itemize}

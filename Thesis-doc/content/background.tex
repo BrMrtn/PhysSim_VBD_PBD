@@ -4,8 +4,8 @@
 %----------------------------------------------------------------------------
 
 \begin{itemize}
-    \item This chapter establishes the mathematical scaffolding for the rest of the thesis.
-    \item The central object is the variational form of implicit Euler, which unifies XPBD and VBD as two approximate minimisers of the same energy functional, and therefore justifies a shared Newton reference as ground truth.
+    \item This chapter establishes the mathematical foundations for the rest of the thesis.
+    \item The central object is the variational form of implicit Euler, which unifies XPBD and VBD as two approximate minimisers of the same energy function, and therefore justifies a shared Newton reference as ground truth.
 \end{itemize}
 
 %----------------------------------------------------------------------------
@@ -95,14 +95,7 @@ where
     E(\mathbf{x}_i, \mathbf{x}_j) &= \tfrac{1}{2}\, k\, C^{2}.
 \end{align}
 
-\subsection{Distance, stretch, and bending springs}
-\label{ssec:SpringTypes}
-Two spring types, both expressed through the distance-spring energy above:
-\begin{itemize}
-    \item \emph{Stretch springs} between mesh-adjacent vertices oppose in-plane deformation.
-    \item \emph{Bending springs} are modelled as long-range distance springs between vertices opposite across an edge (the ``diagonal'' of the two-triangle quad).
-    \item Note: this is \emph{not} a dihedral-angle constraint --- I deliberately stay within a single constraint form, since the goal is a controlled comparison, not a state-of-the-art cloth model.
-\end{itemize}
+I will introduce the exact mass-spring structure used to represent cloth in \autoref{ssec:ClothModel}.
 
 \subsection{Limitations of mass-spring}
 \label{ssec:MSSLimits}
@@ -151,10 +144,10 @@ This duality is the lens used throughout the thesis to decide what to measure
 and to interpret what is measured. It points to a few places where the two
 approaches naturally differ:
 \begin{itemize}
-    \item Dual variables couple constraints that share a particle, so mass disparities at a shared particle are a regime where XPBD's per-constraint updates may propagate slowly.
-    \item The primal Hessian block at a vertex collects all spring stiffnesses meeting there, so widely varying stiffnesses produce an ill-conditioned block --- a regime where VBD's per-vertex update may struggle.
+    \item Dual variables couple constraints that share a particle, so mass disparities at a shared particle are a scenario where XPBD's per-constraint updates may propagate slowly.
+    \item The primal Hessian block at a vertex collects all spring stiffnesses meeting there, so widely varying stiffnesses produce an ill-conditioned block --- a scenario where VBD's per-vertex update may struggle.
     \item The primal Hessian contains the true elastic operator, while the constraint linearisation underlying XPBD discards second-order information, which is why per-iteration convergence under increasing material stiffness is a natural point of comparison.
 \end{itemize}
 These are the considerations that motivate the stress tests in
 \autoref{chap:Experiments}; the experiments report what each solver actually
-does in these regimes rather than setting out to confirm the framing.
+does in these scenarios rather than setting out to confirm the framing.

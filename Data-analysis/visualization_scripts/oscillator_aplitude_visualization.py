@@ -48,7 +48,7 @@ if not paths:
 order_map = {"XPBD": 0, "VBD": 1, "Newton": 2}
 paths.sort(key=lambda p: order_map.get(solver_name(os.path.basename(p)), 99))
 
-MAX_FRAMES = 200
+MAX_FRAMES = 10
 
 plt.figure(figsize=(9, 6))
 dt = None
@@ -110,7 +110,7 @@ hl = sorted(zip(handles, labels), key=lambda x: legend_order.get(x[1], 99))
 if hl:
     handles, labels = zip(*hl)
     plt.legend(handles, labels, loc="upper right")
-out_dir = r"..\Visuals\SpringLength"
+out_dir = r"..\Logs\SpringLengthLogs\Oscillator"
 os.makedirs(out_dir, exist_ok=True)
 out_path = os.path.join(out_dir, "oscillator_amplitude.png")
 plt.savefig(out_path, dpi=300, bbox_inches="tight")

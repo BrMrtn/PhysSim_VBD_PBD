@@ -25,12 +25,14 @@ The Update method in the Unity Editor gets called as often as the environment al
 The scaffolding adds a small, practically constant per-frame overhead, mostly from Unity-specific calls and rendering. I measure FPS with the Unity Profiler, which calculates based on the actual frames being drawn, so the value includes this overhead; but because both solvers pay this overhead identically, it does not bias the comparison.
 
 \subsection{Cloth model construction}
+\label{ssec:ClothModel}
 The mass-spring based cloth model I implement is the one used by Müller \cite{tenMinutePhysics}. Each internal vertex is connected to its neighbours by three types of distance constraints, each one having their own stiffness/compliance values:
 \begin{itemize}
     \item \textbf{Stretching} constraints connect each vertex to its immediate horizontal and vertical neighbours.
     \item \textbf{Shear} constraints connect each vertex to its diagonal neighbours.
     \item \textbf{Bending} constraints connect each vertex to its second horizontal and vertical neighbours.
 \end{itemize}
+Note, that the bending constraints are not dihedral-angle constraints. I deliberately only use one constraint form, to keep the comparison less complex.
 
 %----------------------------------------------------------------------------
 \section{How the comparison is kept fair}

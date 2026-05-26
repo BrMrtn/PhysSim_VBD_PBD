@@ -158,6 +158,9 @@ Similarly to the previous experiment, VBD - being a primal solver - does not con
     \label{fig:StiffnessRatioChain}
 \end{figure}
 
+These two experiments have also reinforced that my XPBD and VBD implementations are correct, as they behave as expected.
+This also increases confidence in the rest of my results, makes it more clear that the results I report are not bugs or implementation errors.
+
 \subsection{Self-collision: cloth folded onto itself}
 \label{ssec:SelfCollisionDrop}
 
@@ -377,14 +380,14 @@ extra work.
     \centering
     \begin{tabular}{l c c}
         \toprule
-                              & XPBD                                  & VBD \\
+                            & XPBD                                  & VBD \\
         \midrule
-        Shared gradient file  & \multicolumn{2}{c}{30 LOC (4-node gradients)} \\
-        Solver addition       & $\approx$28 LOC                       & $\approx$28 LOC (essentially the same) \\
-        Setup code            & 45 LOC                                & 58 LOC \\
-        New data type         & 4 vertices, rest angle, compliance    & + index of vertex being processed \\
-        Structural change     & purely additive; hinge visited once/iter & per-vertex; hinge recomputed $4\times$/iter \\
-        Derivative order      & first derivative only                 & first and second derivative \\
+        Shared file         & \multicolumn{2}{c}{30 LOC} \\
+        Solver addition     & $\approx$28 LOC                       & $\approx$28 LOC \\
+        Setup code          & $\approx$45 LOC                       & $\approx$58 LOC \\
+        New data type       & 4 vertices, rest angle, compliance    & + index of vertex being processed \\
+        Structural change   & one extra call added                  & per-vertex; hinge recomputed $4\times$/iter \\
+        Derivative order    & first derivative only                 & first and second derivative \\
         \bottomrule
     \end{tabular}
     \caption{Cost of adding dihedral bending constraints to each solver.}

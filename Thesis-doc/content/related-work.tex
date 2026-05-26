@@ -4,7 +4,7 @@
 %----------------------------------------------------------------------------
 
 \begin{itemize}
-    \item This chapter surveys the position-based and primal-descent lineages whose endpoints --- XPBD and VBD --- this thesis compares.
+    \item This chapter introduces the position-based and primal-descent lineages whose endpoints --- XPBD and VBD --- this thesis compares.
     \item It positions my work relative to the closest prior comparison.
 \end{itemize}
 
@@ -14,29 +14,17 @@
 %----------------------------------------------------------------------------
 \begin{itemize}
     \item Position-Based Dynamics (PBD), introduced by M\"uller et~al.~\cite{MULLER2007109}, targets real-time cloth and soft-body simulation in games.
-    \item Each iteration projects positions onto constraint manifolds (e.g.\ fixed edge lengths) via Gauss--Seidel sweeps, recovering velocities by finite difference.
+    \item Each iteration projects positions onto constraint manifolds (i. e. each edge is shared by at most two triangles) via Gauss--Seidel sweeps, recovering velocities by finite difference.
     \item PBD is unconditionally stable but has a known flaw: \emph{constraint stiffness depends on iteration count and time step}.
-    \begin{itemize}
-        \item Practitioners cannot specify a Young's modulus directly; they specify a stiffness coefficient that interacts unpredictably with solver settings.
-    \end{itemize}
     \item XPBD, introduced by Macklin et~al.~\cite{10.1145/2994258.2994272}, fixes this by augmenting each constraint with a compliance term $\alpha = 1/k$ and solving for the associated Lagrange multiplier $\lambda$.
     \item The resulting iteration solves an implicit-Euler problem with arbitrary elastic energies, and constraint stiffness becomes a true material parameter independent of iteration count.
+    \item From comparison \cite{app142311072}: "Early research focused on force–object relationships, leading to the development of models such as the Mass-Spring System [30], Finite Element Method [31], and Rigid Body Dynamics [32]. However, these models have limitations, including performance degradation, lack of real-time capability, and unrealistic motion as simulation complexity increases. PBD was introduced to address these limitations. Initially developed by Jakobsen [33], PBD provides a stable and efficient approach by applying wedge-based constraints instead of force-based methods. Macklin et al. [34]. further refined and optimized PBD for real-time interaction."
 \end{itemize}
 
 \paragraph{Small steps in physics simulation.}
 \begin{itemize}
     \item Macklin et~al.~\cite{Macklin2019SmallSI} (the ``Small Steps'' note) later argued that XPBD converges most reliably with \emph{many short substeps and a single iteration per substep}, rather than a single long step with many iterations.
-    \item This is now a standard XPBD configuration and is the default I adopt in \autoref{chap:Methodology}: it follows the recommendation and exposes XPBD's per-substep cost as the primary performance lever.
-\end{itemize}
-
-%----------------------------------------------------------------------------
-\section{Projective dynamics and descent methods}
-\label{sec:ProjectiveDynamics}
-%----------------------------------------------------------------------------
-\begin{itemize}
-    \item Projective dynamics recasts implicit Euler as a quadratic minimisation alternating between a global linear solve and local constraint projections.
-    \item Variants and accelerations (descent methods, Chebyshev acceleration, ADMM) bridge between projective dynamics and position-based methods.
-    \item They provide the theoretical bridge to VBD: VBD can be read as a \emph{block-coordinate descent} on the same variational energy~\eqref{eq:G} that projective dynamics minimises, but with single-vertex blocks rather than a global solve.
+    \item This is now a standard XPBD configuration. For the sake of fair comparison, I deliberately leave this optimization out of the core comparison.
 \end{itemize}
 
 %----------------------------------------------------------------------------
@@ -46,6 +34,7 @@
 \begin{itemize}
     \item Vertex Block Descent, due to Chen et~al.~\cite{Chen2024}, treats each vertex as a tiny optimisation block: at each iteration, every vertex moves to the minimiser of $G$ with all other vertices held fixed.
     \item This requires the local $3\times 3$ Hessian of the energies sharing the vertex and a Newton step on that block.
+    \item From comparison \cite{app142311072}: "More recently, the VBD algorithm that has been proposed provides an efficient approach to parallelize large-scale computations. By processing nodes in block units, VBD significantly enhances performance, particularly in simulations involving a high number of nodes [35]."
 \end{itemize}
 Critical features of the original VBD paper:
 \begin{itemize}
@@ -54,7 +43,7 @@ Critical features of the original VBD paper:
     \item \emph{Graph-colouring parallelism}: vertices sharing no constraint can be updated independently, enabling massive parallelism.
 \end{itemize}
 \begin{itemize}
-    \item A follow-up, Augmented VBD (AVBD)~\cite{Giles2025}, has improved stiffness-ratio handling and convergence behaviour.
+    \item A follow-up, Augmented VBD (AVBD)~\cite{Giles2025}, has improved stiffness-ratio handling, infinite stiffness handling, and convergence behaviour.
     \item I restrict the comparison to the canonical 2024 VBD since AVBD post-dates my implementation window; I cite AVBD in \autoref{sec:FlexResults} as the most relevant counter-evidence on the stiffness-ratio axis.
 \end{itemize}
 
@@ -64,7 +53,7 @@ Critical features of the original VBD paper:
 %----------------------------------------------------------------------------
 \begin{itemize}
     \item The most directly comparable prior work is Ma et~al.~\cite{app142311072}, who compare cloth simulation under PBD and VBD in Unity.
-    \item Their study established that VBD scales better than PBD with node count, and identified maximum sustainable node counts at 30~fps.
+    \item Their study established that VBD scales better than PBD with node count.
 \end{itemize}
 
 My work differs in three substantial ways:

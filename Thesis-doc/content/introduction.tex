@@ -9,20 +9,29 @@
 %----------------------------------------------------------------------------
 \begin{itemize}
     \item Real-time simulation is a baseline expectation in games, VR, and AR.
-    \item Elastic body dynamics (strings, cloth, soft bodies)
-    \item The simulator must deliver believable dynamics within a tight frame budget: at 60~fps a frame allows $\sim$16~ms for all physics, rendering, and gameplay logic, with physics getting only a fraction.
-    \item I focus on deformable bodies rather than rigid bodies because:
+    \item The simulator must deliver believable dynamics within a tight frame budget. A 60~fps framerate allows $\sim$16~ms for all physics, rendering, and gameplay logic, with physics getting only a fraction.
+    \item I focus on deformable bodies (springs, chains and cloth) rather than rigid bodies because:
     \begin{itemize}
-        \item the two studied algorithms differ most visibly on deformable material --- rigid-body simulation hides the per-constraint convergence behaviour I want to measure;
-        \item deformable simulation is the strictly harder case (many more degrees of freedom and constraints per frame), stressing both solvers so their failure modes become legible.
+        \item Deformable simulation is the harder case (many more degrees of freedom and constraints per frame), stressing both solvers.
+        \item Even with vertices and constraints in the ten thousands, all parts of the simulated system are still visible.
+        \item Solver behaviour can be easily observed, failures can be spotted.
+        \item Springs are one of the most common primitives in simulations, and an easily measureable one. Cloth is also really common, and a crucial stepping stone to soft body simulation.
     \end{itemize}
+\end{itemize}
+
+Designing such a (real-time) simulator is hard for three recurring reasons:
+\begin{itemize}
+    \item \emph{Stiffness.} Cloth and soft tissue have very stiff constraints (almost-inextensible fabric, near-rigid bones); stiff systems make explicit integrators unstable unless time steps become impractically small.
+    \item \emph{Stability.} Even implicit integrators can blow up under poorly conditioned constraints, large mass ratios between connected particles, or contact-induced velocity discontinuities.
+    \item \emph{Strict time constraints.} Methods that converge well offline (Newton's method, projective dynamics) are too expensive per frame; cheap real-time methods often trade convergence quality for predictable cost.
 \end{itemize}
 
 \paragraph{The accuracy/efficiency trade-off.}
 \begin{itemize}
-    \item Every physics-based simulator sits on a line between \emph{physical accuracy} and \emph{computational efficiency}; gaining one costs the other.
-    \item \autoref{tab:accuracy-efficiency} sketches this spectrum, ordered from most accurate to most efficient.
-    \item XPBD and VBD both sit near the efficient end --- where real-time applications live --- and the thesis asks which makes the better trade-off, and under what conditions.
+    \item Considering the above, every physics-based simulator sits on a line between \emph{physical accuracy} (merging stiffness and stability) and \emph{computational efficiency}. Trying to optimize efficiency will result in less realism.
+    \item \autoref{tab:accuracy-efficiency} sketches this spectrum with the most known solvers for deformable body simulation, ordered from most accurate to most efficient.
+    \item Mass-Spring System (MSS) is fast. It represents deformable materials using a network of masses connected by springs and uses explicit Euler integration, the most intuitive and straight-forward approach. It's technically more physically accurate than PBD or XPBD, but it is highly unstable for stiff and complex systems, sending it to the bottom of the list. \emph{TODO: cite something that shows this}
+    \item On the other end of the spectrum, the Finite Element Method (FEM) excels in high physical accuracy by trating objects as a continuous material discretized into volumetric finite elements (such as tetrahedra). It works with a Newton solver (using implicit Euler integration). However, its really high computational cost makes it impractical for real-time applications. \cite{nikishkov2004introfem}
 \end{itemize}
 
 \begin{table}[h]
@@ -31,33 +40,22 @@
 \toprule
 \textbf{Method} & \textbf{Accuracy} & \textbf{Cost} \\
 \midrule
-Newton's method (implicit Euler)   & reference            & offline only \\
-Projective Dynamics                & high                 & expensive    \\
-Vertex Block Descent (VBD)         & moderate--high       & real-time    \\
-Extended Position-Based Dynamics (XPBD) & moderate         & real-time    \\
-Position-Based Dynamics (PBD)      & low (stiffness-dep.) & cheap        \\
-Explicit Euler                     & poor (unstable)      & cheapest     \\
+FEM     & reference            & most expensive \\
+VBD     & moderate--high       & moderate       \\
+XPBD    & moderate             & cheap          \\
+PBD     & low (stiffness-dep.) & cheap          \\
+MSS     & poor (unstable)      & cheapest       \\
 \bottomrule
 \end{tabular}
 \caption{Deformable-simulation methods ordered from most accurate to most
-efficient. XPBD and VBD --- the subject of this thesis --- both target the
-real-time regime.}
+efficient. XPBD and VBD the real-time domain.}
 \label{tab:accuracy-efficiency}
 \end{table}
 
-Designing such a simulator is hard for three recurring reasons:
-\begin{itemize}
-    \item \emph{Stiffness.} Cloth and soft tissue have very stiff constraints (almost-inextensible fabric, near-rigid bones); stiff systems make explicit integrators unstable unless time steps become impractically small.
-    \item \emph{Stability.} Even implicit integrators can blow up under poorly conditioned constraints, large mass ratios between connected particles, or contact-induced velocity discontinuities.
-    \item \emph{Strict time constraints.} Methods that converge well offline (Newton's method, projective dynamics) are too expensive per frame; cheap real-time methods often trade convergence quality for predictable cost.
-\end{itemize}
-
-Within the real-time band:
+XPBD and VBD both sit near the efficient end, within the real-time cathegory.
 \begin{itemize}
     \item XPBD~\cite{10.1145/2994258.2994272} has been a workhorse for years.
-    \item VBD~\cite{Chen2024} is a recent, promising addition not yet evaluated head-to-head against XPBD.
-    \item The two occupy opposite sides of the \emph{primal/dual} duality identified by Macklin et~al.~\cite{10.1111/cgf.14104}: XPBD solves for Lagrange multipliers (dual variables on constraints), VBD solves directly for vertex positions (primal variables).
-    \item No controlled comparison between them currently exists.
+    \item VBD~\cite{Chen2024} is a recent, promising addition not yet throughly evaluated head-to-head against XPBD.
 \end{itemize}
 
 %----------------------------------------------------------------------------
@@ -69,28 +67,20 @@ Within the real-time band:
     \begin{itemize}
         \item both algorithms implemented in the same Unity-based codebase,
         \item applied to the same mass-spring material model,
-        \item run under a matched compute budget,
-        \item evaluated against a high-iteration Newton solve serving as numerical ground-truth reference.
+        \item run under a matched compute budget (iteration and substep counts), not merely matched material parameters,
+        \item evaluated not only qualitatively but also against a high-iteration Newton solver serving as a numerical ground-truth reference, which lets me report \emph{solution error} rather than only relative performance.
     \end{itemize}
-    \item This sharpens the closest prior comparison, Ma et~al.~\cite{app142311072}, which contrasts \emph{plain} PBD (not XPBD) with a non-canonical VBD implementation and reports only frame-rate scaling.
+    \item Crucially, the comparison uses XPBD --- the constraint-stiffness-independent variant any practitioner would deploy today --- and the canonical VBD formulation, not plain PBD or a non-canonical variant.
+    \item This sharpens the closest prior comparison, Ma et~al.~\cite{app142311072}, which contrasts plain PBD with a non-canonical VBD implementation and reports only frame-rate scaling; \autoref{sec:Ma2024} sets out exactly how my setup differs.
 \end{itemize}
-
-I distinguish this work by:
-\begin{enumerate}
-    \item using XPBD, the constraint-stiffness-independent variant any practitioner would deploy today;
-    \item implementing the canonical VBD formulation, including its block-coordinate-descent interpretation;
-    \item matching compute budgets and material parameters rather than iteration counts (one XPBD substep is not directly comparable to one VBD iteration);
-    \item adding a Newton ground truth, enabling reporting of \emph{solution error} rather than only relative performance.
-\end{enumerate}
 
 %----------------------------------------------------------------------------
 \section{The primal/dual lens}
 \label{sec:PrimalDualLens}
 %----------------------------------------------------------------------------
 \begin{itemize}
-    \item XPBD and VBD sit on opposite sides of the primal/dual split developed in \autoref{chap:Background}: XPBD updates dual variables one constraint at a time, VBD updates primal positions one vertex at a time.
-    \item This split is the lens I use to decide what is worth measuring. A dual solver is sensitive to how information propagates along chains of coupled constraints, so mass disparities along such a chain are a natural stress; a primal solver is sensitive to the conditioning of each per-vertex block, so a wide spread of stiffnesses meeting at one vertex is a natural stress. The experiments in \autoref{chap:Experiments} are organised around exactly these regimes.
-    \item The goal is to map where each solver is accurate, stable, and cheap, and where it is brittle --- not to argue for the primal/dual framing itself, which I take as given from \cite{10.1111/cgf.14104}.
+    \item The two solvers sit on opposite sides of the \emph{primal/dual} duality identified by Macklin et~al.~\cite{10.1111/cgf.14104}: XPBD is the dual solver (it solves for Lagrange multipliers on constraints), VBD the primal one (it solves directly for vertex positions).
+    \item This duality is the organising lens of the thesis: it anticipates complementary weak spots --- the dual solver where information must propagate along chains of coupled constraints, the primal solver where a wide spread of stiffnesses meets at one vertex --- and the stress tests in \autoref{chap:Experiments} are built around exactly these scenarios. \autoref{sec:PrimalDual} develops the distinction and its consequences in full.
 \end{itemize}
 
 %----------------------------------------------------------------------------
@@ -99,10 +89,10 @@ I distinguish this work by:
 %----------------------------------------------------------------------------
 I evaluate both solvers along four axes that together capture the trade-offs a practitioner cares about:
 \begin{description}
-    \item[Efficiency.] Wall-clock cost per frame as a function of mesh size, substep/iteration count, and target quality.
-    \item[Robustness.] Behaviour under stress: large time steps, single iterations, extreme mass ratios, extreme stiffness ratios, self-contact.
-    \item[Physical realism.] Distance from a Newton reference, energy behaviour, damping behaviour, and agreement with analytic solutions on a harmonic oscillator and a draped cloth.
-    \item[Flexibility.] Ease of changing material stiffness, adding new constraint types, and reasoning about parameters.
+    \item[Efficiency.] Computational cost per frame as a function of mesh size, substep/iteration count.
+    \item[Robustness.] Behaviour under stress: extreme mass ratios, extreme stiffness ratios, and how they result in stability issues.
+    \item[Physical realism.] Energy behaviour, damping behaviour, and how close each method is from a ground truth Newton reference.
+    \item[Flexibility.] Checking independency of material properties from iteration counts, adding new constraint types, and considering the domain coverage of the models.
 \end{description}
 
 %----------------------------------------------------------------------------
@@ -110,11 +100,11 @@ I evaluate both solvers along four axes that together capture the trade-offs a p
 \label{sec:Structure}
 %----------------------------------------------------------------------------
 \begin{itemize}
-    \item \autoref{chap:Background}: theoretical foundation --- variational form of implicit Euler, mass-spring energies, the primal/dual lens that makes XPBD and VBD comparable.
+    \item \autoref{chap:Background}: theoretical foundation --- variational form of implicit Euler, mass-spring energies, the primal/dual distinction.
     \item \autoref{chap:RelatedWork}: reviews PBD, XPBD, VBD literature and positions this work against Ma et~al.~\cite{app142311072}.
     \item \autoref{chap:Algorithms}: states the two algorithms in canonical form.
     \item \autoref{chap:Methodology}: the Unity implementation and the design decisions that keep the comparison fair.
     \item \autoref{chap:Experiments}: results along the four axes.
-    \item \autoref{chap:Discussion}: synthesis across axes through the primal/dual lens, threats to validity.
+    \item \autoref{chap:Discussion}: evaluating results, limitations.
     \item \autoref{chap:Conclusion}: closing with future-work directions.
 \end{itemize}
