@@ -8,11 +8,57 @@ This chapter describes the implementation that produces the data in
 XPBD-vs-VBD comparison fair.
 
 %----------------------------------------------------------------------------
+\section{The Unity game engine}
+\label{sec:Unity}
+%----------------------------------------------------------------------------
+A game engine is an integrated software framework that bundles the building
+blocks a real-time interactive application needs --- rendering, asset and scene
+management, input handling, a scripting layer, and usually a physics module ---
+behind a single editor and a consistent programming interface. Luckily,
+this doesn't just make it good for games, VR and AR uses, but also for simulations.
+
+Unity is one of the most popular game engines. It is cross-platform, scripted in C\#, and organized
+around a \emph{component model}: behavior is attached to objects in the scene as
+self-contained components, each of which can expose parameters in the editor and
+hook into the engine's update loop through callbacks. A
+simulator, in this model, is simply a component attached to a cloth object;
+references to other objects in the scene (a collider, a target transform) are
+assigned by dragging them onto the component in the editor, with no extra wiring
+code.
+
+Unity makes it easy to set up experiments, as most of the time it's enough to create a
+new scene, drag and drop objects into it (in my example, cloth models were simple plane 
+meshes imporetd from Blender), and assign the relevant components to them, which then
+decides what solver it will run. It also has several built-in tools that proved really
+useful for data collection: the Profiler for gathering FPS statistics, the Recorder for
+capturing videos of the experiments, and Shader Graph for creating textures in a straightforward way.
+
+\subsection{Pinning vertices through Unity components}
+\label{ssec:Pinning}
+Several experiments require parts of the cloth to be held in place --- for
+example, pinning the top edge of a hanging cloth. I implement this boundary
+condition with small, separate Unity components rather than inside the solver, so
+that the pinning logic is independent of which solver is running. Each such script
+is attached to the cloth object, and the external object that the cloth should
+follow --- shown in gray in the experiment figures --- is supplied to the script
+by assigning its collider in the editor.
+
+The script identifies the cloth vertices that lie on the assigned object and
+fixes them in two steps. It sets the \emph{inverse mass} of each of those vertices
+to zero, which makes them immovable as far as the solver is concerned: a vertex
+with zero inverse mass has effectively infinite mass and is never displaced by the
+constraint solve. It then overwrites the positions of those same vertices in its
+\texttt{Update} method so that they track the external object every frame. Each gray object is followed by the
+vertices attached to it; for the rectangle that pins the upper edge of the cloth,
+the followed vertices also inherit the object's rotation and scale, so moving,
+turning, or stretching that object drags the pinned edge with it.
+
+%----------------------------------------------------------------------------
 \section{Platform and environment}
 \label{sec:Platform}
 %----------------------------------------------------------------------------
-Both simulators are implemented inside the Unity Editor, and all measurements
-reported in \autoref{chap:Experiments} were collected in the same environment:
+As it's probably obvious from the previous chapter, the simulators are implemented inside the Unity Editor.
+All measurements reported in \autoref{chap:Experiments} were collected in the following environment:
 \begin{itemize}
     \item \textbf{CPU:} AMD Ryzen 7 5800H
     \item \textbf{Memory:} 16~GB DDR4
@@ -20,11 +66,6 @@ reported in \autoref{chap:Experiments} were collected in the same environment:
     \item \textbf{Operating system:} Windows 11 Pro
     \item \textbf{Development tool:} Unity 6000.4.0f1
 \end{itemize}
-
-Several of Unity's built-in tools proved useful and easy to work with while
-conducting the experiments: the Profiler for gathering FPS statistics, the
-Recorder for capturing videos of the simulations, and Shader Graph for creating
-textures in a straightforward way.
 
 %----------------------------------------------------------------------------
 \section{Integration architecture}
@@ -127,9 +168,9 @@ the core comparison.
 The original VBD paper argues that the Hessian need not be positive-definite: even
 if a step occasionally does not point in a descent direction, the small number of
 such steps does not affect overall convergence. In my experiments, however,
-projecting the matrix to be positive-definite let the method handle more extreme
-scenarios without noticeably changing its behavior or performance, so I project
-the Hessian to be positive-definite.
+keeping each local Hessian positive-definite let the method handle more extreme
+scenarios without noticeably changing its behavior or performance, so I keep each
+local Hessian positive-definite.
 
 %----------------------------------------------------------------------------
 \section{Self-collision handling}
@@ -145,6 +186,11 @@ This is a model difference, not a solver difference: a penalty model \emph{could
 be implemented in XPBD and a projection model \emph{could} be implemented in VBD,
 but the natural, most solver-fitting form differs between them. The self-collision
 experiment in \autoref{ssec:SelfCollisionDrop} is therefore purely qualitative.
+
+For both solvers, I used the implementation shown in \cite{tenMinutePhysics}.
+It uses a spatial hash in the broad phase to decrease the number of vertex pairs to check.
+As it works with discrete collision detection, it caps the velocity, so that
+fast-moving vertices cannot tunnel through each other.
 
 %----------------------------------------------------------------------------
 \section{Parallelization (forward-looking)}

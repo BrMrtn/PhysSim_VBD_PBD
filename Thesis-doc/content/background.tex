@@ -34,29 +34,31 @@ engineering problems and offline visual effects.
 Velocities are manipulated directly through collision or constraint impulses.
 This family is popular for rigid bodies because it handles collisions as
 instantaneous changes in velocity. I do not pursue it here, since instantaneous
-velocity changes are not well suited to deformable bodies.
+velocity changes are not well suited for deformable bodies.
 
 \paragraph{Position-based.}
-Constraints are resolved by directly updating positions, without explicitly
-computing forces or accelerations. PBD and XPBD belong to this category. VBD is a
+Constraints are resolved by directly updating positions, traditionally bypassing force
+or acceleration steps. PBD and XPBD belong to this category. VBD is a
 hybrid: mathematically it is a position-based solver, since it directly updates
 positions, but it does so by solving a local optimization problem that mimics a
-force-based solver, so it is force-based in spirit as well.
+force-based solver, so it is force-based in its physical formulation.
 
-\subsection{Explicit time integration (forward Euler) and why it fails}
+\subsection{Explicit time integration (forward Euler method) and why it fails}
 \label{ssec:ExplicitEuler}
 The scheme is called explicit because it computes $\mathbf{x}_{t+h}$ and
 $\mathbf{v}_{t+h}$ directly, by substituting known values into simple formulas:
 \begin{align}
     \mathbf{v}_{t+h} &= \mathbf{v}_t + h\,\mathbf{M}^{-1}\mathbf{f}(\mathbf{x}_t), \\
-    \mathbf{x}_{t+h} &= \mathbf{x}_t + h\,\mathbf{v}_{t+h}.
+    \mathbf{x}_{t+h} &= \mathbf{x}_t + h\,\mathbf{v}_t.
 \end{align}
 Here $\mathbf{v}_t$ and $\mathbf{x}_t$ are the velocity and position at time $t$,
-and $h$ is the time step. The method is considered unconditionally unstable:
-regardless of $h$, the simulation will eventually explode for equations with a
-nonconstant $\mathbf{f}$.
+and $h$ is the time step. This method, however, is unstable~\cite{10.1145/280814.280821}.
+More precisely, for spring systems, to keep stability, we have to preserve the spring's
+angular frequency $\omega = \sqrt{\frac{k}{m}}$, where $k$ is the spring stiffness and $m$ is the mass.
+For this we would need to choose a time step $h < \frac{2}{\omega} = 2\sqrt{\frac{m}{k}}$, which becomes impractically small
+for stiff materials, deeming it impractical for real-time cloth simulation.
 
-\subsection{Implicit time integration (backward Euler)}
+\subsection{Implicit time integration (backward Euler method)}
 \label{ssec:ImplicitEuler}
 Implicit time integration, in contrast, requires solving a system of equations to
 determine $\mathbf{x}_{t+h}$ and $\mathbf{v}_{t+h}$. The backward Euler scheme
@@ -67,9 +69,12 @@ evaluates forces at the unknown end-of-step state:
 \end{align}
 Now $\mathbf{v}_{t+h}$ depends on $\mathbf{x}_{t+h}$, and $\mathbf{x}_{t+h}$
 depends on $\mathbf{v}_{t+h}$. This circular dependency is resolved by
-substituting the estimate
-$\mathbf{v}_{t+h} = (\mathbf{x}_{t+h} - \mathbf{x}_t)/h$ into the position-update
-equation. The scheme is unconditionally stable for linear systems, but it may
+eliminating the velocity: substituting the velocity update into the
+position update gives a single equation,
+$\mathbf{x}_{t+h} = \mathbf{x}_t + h\,\mathbf{v}_t + h^{2}\,\mathbf{M}^{-1}\mathbf{f}(\mathbf{x}_{t+h})$,
+in the unknown $\mathbf{x}_{t+h}$ alone; the velocity is then recovered as
+$\mathbf{v}_{t+h} = (\mathbf{x}_{t+h} - \mathbf{x}_t)/h$. The scheme is
+unconditionally stable for linear systems, but it may
 fail to converge if the initial approximation is far from the true solution, and
 it carries a real cost: a nonlinear root-finding problem must be solved at every
 step.
@@ -78,12 +83,12 @@ step.
 \section{Implicit Euler as energy minimization}
 \label{sec:Variational}
 %----------------------------------------------------------------------------
-Eliminating the velocity equation yields the well-known variational form (also
-called the minimization or optimization form) of implicit Euler: $\mathbf{x}$ is
-the minimizer of an energy function $G$, so that
-$\mathbf{x}_{t+h} = \argmin_{\mathbf{x}} G(\mathbf{x})$, with
+Effectively, solving the nonlinear system of equations in implicit Euler is the same as
+solving an optimization problem. This form is known as the variational form
+(also called the minimization or optimization form) of implicit Euler:
 \begin{equation}
     \label{eq:G}
+    \mathbf{x}_{t+h} = \argmin\limits_{\mathbf{x}} G(\mathbf{x}),
     G(\mathbf{x}) \;=\; \tfrac{1}{2 h^{2}} \,\|\mathbf{x} - \mathbf{y}\|_{\mathbf{M}}^{2}
                        \;+\; E(\mathbf{x}),
 \end{equation}
@@ -131,7 +136,7 @@ material parameters therefore do not transfer to FEM-based models. Conclusions
 about \emph{relative} solver behavior --- my actual subject --- do transfer.
 
 %----------------------------------------------------------------------------
-\section{Solver structure: Gauss--Seidel vs.\ Jacobi}
+\section{Solver structure: Gauss--Seidel vs.\ Jacobi updates}
 \label{sec:GSJacobi}
 %----------------------------------------------------------------------------
 Both XPBD's constraint sweep and VBD's vertex-block sweep are Gauss--Seidel-style
@@ -143,7 +148,7 @@ execution but maps better to the GPU.
 A consequence, revisited in \autoref{sec:ThreatsValidity}, is that both solvers
 are \textbf{order-dependent}. The constraint-traversal order (XPBD) and the
 vertex-traversal order (VBD) both affect the convergence rate and, in some
-relatively rare cases, the converged solution itself. My experiments fix a
+cases, the converged solution itself. My experiments fix a
 deterministic order for reproducibility; I do not use randomization, since none
 of the canonical solver implementations do.
 
@@ -164,8 +169,8 @@ The energy is reformulated through compliant constraints --- each spring becomes
 soft constraint with compliance $\alpha = 1/k$ --- and the solver works for the
 Lagrange multipliers $\boldsymbol{\lambda}$ on those constraints. Introducing the
 multipliers turns the pure minimization over $\mathbf{x}$ into a coupled problem
-in both $\mathbf{x}$ and $\boldsymbol{\lambda}$: a \emph{saddle-point} (or KKT)
-system, so called because its solution minimizes the energy in the position
+in both $\mathbf{x}$ and $\boldsymbol{\lambda}$: it's a \emph{saddle-point}
+because its solution minimizes the energy in the position
 variables while maximizing it in the multipliers, rather than minimizing in all
 unknowns at once. XPBD solves this system with a Gauss--Seidel sweep, updating one
 constraint's multiplier --- and the positions it touches --- at a time.

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  27 MAY 2026 03:19
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  28 MAY 2026 01:01
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -785,7 +785,10 @@ Package hyperref Info: Option `pageanchor' set `false' on input line 30.
  (./content/introduction.tex
 Chapter 1.
 
-Package natbib Warning: Citation `nikishkov2004introfem' on page 1 undefined on input line 54.
+Package natbib Warning: Citation `10.1145/280814.280821' on page 1 undefined on input line 51.
+
+
+Package natbib Warning: Citation `nikishkov2004introfem' on page 1 undefined on input line 56.
 
 [1
 
@@ -802,7 +805,11 @@ Chapter 2.
 
 
 
-] [5] [6]) [7]
+]
+
+Package natbib Warning: Citation `10.1145/280814.280821' on page 5 undefined on input line 55.
+
+[5] [6]) [7]
 \openout2 = `content/related-work.aux'.
 
  (./content/related-work.tex
@@ -818,15 +825,19 @@ Chapter 3.
  (./content/algorithms.tex
 Chapter 4.
 
-Package hyperref Warning: No autoref name for `algorithm' on input line 43.
+Package hyperref Warning: No autoref name for `algorithm' on input line 51.
 
-Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 50.
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 57.
 [11
 
 
 
 
-] [12] [13]) [14]
+] [12]
+
+Package hyperref Warning: No autoref name for `algorithm' on input line 134.
+
+) [13] [14]
 \openout2 = `content/methodology.aux'.
 
  (./content/methodology.tex
@@ -836,28 +847,28 @@ Chapter 5.
 
 
 
-]
+] [16]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 83.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\leftrightarrow' on input line 83.
+(hyperref)                removing `math shift' on input line 124.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 83.
+(hyperref)                removing `\leftrightarrow' on input line 124.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 107.
+(hyperref)                removing `math shift' on input line 124.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 107.
+(hyperref)                removing `math shift' on input line 148.
 
-[16]) [17]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 148.
+
+[17]) [18]
 \openout2 = `content/experiments.aux'.
 
  (./content/experiments.tex
@@ -875,7 +886,7 @@ Overfull \hbox (6.92471pt too wide) in paragraph at lines 55--63
  [][] 
  []
 
-[18
+[19
 
 
 
@@ -901,14 +912,14 @@ File: figures/NodeCountVsFPS/VBD/frame_3.png Graphic file (type bmp)
 <figures/NodeCountVsFPS/VBD/frame_3.png>
 File: figures/NodeCountVsFPS/VBD/frame_4.png Graphic file (type bmp)
 <figures/NodeCountVsFPS/VBD/frame_4.png>
- [19]
+ [20]
 File: figures/ChainWithHeavyWeight/NewtonMassRatio.png Graphic file (type bmp)
 <figures/ChainWithHeavyWeight/NewtonMassRatio.png>
 File: figures/ChainWithHeavyWeight/XPBDMassRatio.png Graphic file (type bmp)
 <figures/ChainWithHeavyWeight/XPBDMassRatio.png>
 File: figures/ChainWithHeavyWeight/VBDMassRatio.png Graphic file (type bmp)
 <figures/ChainWithHeavyWeight/VBDMassRatio.png>
- [20]
+ [21]
 File: figures/StiffnessRatioChain/NewtonStiffnessRatio.png Graphic file (type bmp)
 <figures/StiffnessRatioChain/NewtonStiffnessRatio.png>
 File: figures/StiffnessRatioChain/XPBDStiffnessRatio.png Graphic file (type bmp)
@@ -979,7 +990,7 @@ File: figures/SelfCollisionDrop/VBD-w1e4/frame_6.png Graphic file (type bmp)
 <figures/SelfCollisionDrop/VBD-w1e4/frame_6.png>
 File: figures/SelfCollisionDrop/VBD-w1e4/frame_7.png Graphic file (type bmp)
 <figures/SelfCollisionDrop/VBD-w1e4/frame_7.png>
- [21]
+ [22]
 File: figures/oscillator_amplitude.png Graphic file (type bmp)
 <figures/oscillator_amplitude.png>
 File: figures/EnergyTracking/energy_dissipation_s0_e80.png Graphic file (type bmp)
@@ -1004,32 +1015,39 @@ File: figures/IterationIndependence/VBD_i80.png Graphic file (type bmp)
 <figures/IterationIndependence/VBD_i80.png>
 File: figures/IterationIndependence/VBD_i160.png Graphic file (type bmp)
 <figures/IterationIndependence/VBD_i160.png>
- [22] [23]
-Overfull \hbox (32.0514pt too wide) in paragraph at lines 403--415
+ [23] [24]
+Overfull \hbox (32.0514pt too wide) in paragraph at lines 402--414
  [][] 
  []
 
-[24]) [25]
+[25]) [26]
 \openout2 = `content/discussion.aux'.
 
  (./content/discussion.tex
 Chapter 7.
-[26
+
+LaTeX Warning: Reference `ssec:ThreatAVBD' on page 27 undefined on input line 58.
+
+[27
 
 
 
 
-] [27]) [28]
+] [28]) [29]
 \openout2 = `content/conclusion.aux'.
 
  (./content/conclusion.tex
 Chapter 8.
-[29
+[30
 
 
 
 
-]) [30] (./thesis.bbl
+]
+
+LaTeX Warning: Reference `ssec:ThreatAVBD' on page 31 undefined on input line 78.
+
+) [31] (./thesis.bbl
 Underfull \hbox (badness 10000) in paragraph at lines 81--89
 []\TU/lmr/m/n/10.95 Matthias Müller, Bruno Heidelberger, Marcus Hennix, and John Rat-
  []
@@ -1049,14 +1067,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 81--89
 [][]\TU/lmtt/m/n/10.95 https://doi.org/10.1016/j.jvcir.2007.01.005[][]\TU/lmr/m/n/10.95 .  URL [][]$[][][][][] [] [] [] [][][] []
  []
 
-[31
+[32
 
 
 
-]) [32]
+]) [33]
 \openout2 = `content/appendices.aux'.
 
- (./content/appendices.tex (./include/AI_nyilatkozat_tablazat_EN.tex [33
+ (./content/appendices.tex (./include/AI_nyilatkozat_tablazat_EN.tex [34
 
 
 ]
@@ -1069,15 +1087,15 @@ Underfull \hbox (badness 10000) in paragraph at lines 13--63
 
  []
 
-) [34
+) [35
 
 ] (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2025/11/14 1.11b listings language file
 )
-Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 29.
+Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 28.
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <8> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 30.
- [35]) [36]
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 36.
+ [36] [37]) [38]
 \tf@thm=\write5
 \openout5 = `thesis.thm'.
 
@@ -1090,16 +1108,23 @@ Package natbib Warning: There were undefined citations.
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: D47F4F3D687386EC6E60B92999470943;15848.
+(rerunfilecheck)             Checksum: A48307E0761A72403FD6A22FD53826B4;16113.
  ) 
 Here is how much of TeX's memory you used:
- 19804 strings out of 469581
- 389932 string characters out of 5461843
- 2020578 words of memory out of 5000000
- 48017 multiletter control sequences out of 15000+600000
- 642381 words of font info for 126 fonts, out of 8000000 for 9000
+ 19892 strings out of 469581
+ 391155 string characters out of 5461843
+ 1879713 words of memory out of 5000000
+ 48107 multiletter control sequences out of 15000+600000
+ 642373 words of font info for 125 fonts, out of 8000000 for 9000
  376 hyphenation exceptions out of 8191
- 78i,14n,82p,913b,1858s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 78i,14n,82p,913b,1985s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on thesis.pdf (43 pages).
+Output written on thesis.pdf (45 pages).

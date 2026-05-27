@@ -46,7 +46,9 @@ material as a network of point masses connected by springs and advances it with
 explicit Euler integration --- the most intuitive and straightforward approach.
 Although it is in principle more physically grounded than PBD or XPBD, it is
 highly unstable for stiff and complex systems, which pushes it to the bottom of
-the list. \emph{TODO: cite something that shows this} At the accurate extreme,
+the list: explicit integration of stiff cloth requires impractically small time
+steps to stay stable, which is exactly what motivated the move to implicit
+integration~\cite{10.1145/280814.280821}. At the accurate extreme,
 the Finite Element Method (FEM) treats an object as a continuous material
 discretized into volumetric finite elements (such as tetrahedra) and solves the
 resulting implicit-Euler problem with a Newton solver. It excels at physical

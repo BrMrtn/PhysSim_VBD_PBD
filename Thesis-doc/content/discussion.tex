@@ -79,8 +79,8 @@ easier to extend with the scalar dihedral-bending constraint: it needs only the
 first derivative and a single extra solve call, whereas VBD needs the second
 derivative and stores each hinge once per incident vertex, recomputing its
 Hessian block four times an iteration. This advantage is constraint-shaped rather
-than absolute --- for tensor-valued energies such as StVK it would be XPBD doing
-the extra work. On domain coverage (\autoref{ssec:DomainCoverage}) XPBD's decade
+than absolute --- for tensor-valued energies such as StVK it would probably be
+XPBD doing the extra work. On domain coverage (\autoref{ssec:DomainCoverage}) XPBD's decade
 of deployment across cloth, fluids, rigid bodies and hair is decisive against a
 2024 method still largely confined to elastic bodies.
 
@@ -137,13 +137,3 @@ Both solvers are order-sensitive (\autoref{sec:GSJacobi}). I fix a single
 deterministic order, but an adversarial reordering could in principle shift the
 results. I do not investigate this, and it remains a real threat to
 reproducibility across other implementations.
-
-\subsection{Augmented Vertex Block Descent}
-\label{ssec:ThreatAVBD}
-I do not implement AVBD or any other post-2024 VBD extension; the comparison is
-restricted to canonical 2024 VBD. AVBD fixes several weaknesses of canonical VBD
---- notably wide stiffness ratios and near-infinite stiffness --- so the robustness
-and stiffness-ratio findings that go against VBD should not be read as applying to
-AVBD. Whether those findings are intrinsic to the primal approach or specific to
-the 2024 implementation is exactly the question \autoref{ssec:FWAVBD} proposes to
-settle.

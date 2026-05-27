@@ -13,9 +13,9 @@ relative to the closest prior comparison.
 %----------------------------------------------------------------------------
 Position-Based Dynamics (PBD), introduced by M\"uller et~al.~\cite{MULLER2007109},
 targets real-time cloth and soft-body simulation in games. Each iteration
-projects positions onto constraint manifolds (so that, for example, each edge is
-shared by at most two triangles) through Gauss--Seidel sweeps, and recovers
-velocities by finite difference. PBD is unconditionally stable, but it has a
+projects the predicted positions onto the constraint set --- moving the particles
+each constraint couples until the constraint is satisfied --- through
+Gauss--Seidel sweeps, and recovers velocities by finite difference. PBD is unconditionally stable, but it has a
 well-known flaw: \emph{constraint stiffness depends on the iteration count and the
 time step}.
 
@@ -48,14 +48,15 @@ consistent regardless of the solver's configuration.
 \paragraph{Small steps in physics simulation.}
 Macklin et~al.~\cite{Macklin2019SmallSI} (the ``Small Steps'' note) later argued
 that XPBD converges most reliably with \emph{many short substeps and a single
-iteration per substep}, rather than a single long step with many iterations. With
-only one iteration the Lagrange multiplier is always zero, so the need to store
-and update it disappears. This version is now a standard XPBD configuration, but
-for the sake of a fair comparison I deliberately leave this optimization out of
+iteration per substep}, rather than a single long step with many iterations. With only one iteration per
+substep the multiplier term entering the update is always zero --- $\lambda$ is
+reset each substep and never re-used across iterations --- so there is no need to
+store and carry it between iterations. This version is now a standard XPBD configuration, but
+for the sake of a fair comparison --- to compare methods across substep and iteration counts --- I deliberately leave this optimization out of
 the core comparison.
 
 %----------------------------------------------------------------------------
-\section{Vertex Block Descent (VBD) and successors}
+\section{Vertex Block Descent (VBD)}
 \label{sec:VBDLineage}
 %----------------------------------------------------------------------------
 Vertex Block Descent, due to Chen et~al.~\cite{Chen2024}, treats each vertex as a
@@ -74,8 +75,9 @@ involving a high number of nodes [35].''
 The original VBD paper contributes three features beyond the basic block descent.
 \emph{Chebyshev acceleration} is an over-relaxation that significantly speeds
 convergence, at the cost of the method's energy guarantees. \emph{Adaptive
-initialization} seeds each iteration from a blend of the inertial and
-previous-step positions. \emph{Graph-coloring parallelism} lets vertices that
+initialization} seeds each step's initial guess from a blend of the full inertial (\emph{TODO: Write example equations here for adaptive init})
+prediction and an inertia-only extrapolation, leaning on the latter for vertices
+near rest to avoid over-shooting under gravity. \emph{Graph-coloring parallelism} lets vertices that
 share no constraint be updated independently, enabling massive parallelism.
 
 A follow-up, Augmented VBD (AVBD)~\cite{Giles2025}, improves stiffness-ratio
@@ -98,12 +100,14 @@ better than PBD with node count. My work differs in four substantial ways:
         distinction.
     \item \textbf{Canonical VBD.} Ma et~al.'s pseudocode departs in several
         details (initialization, Chebyshev handling) from \cite{Chen2024}. I
-        follow canonical VBD and disable Chebyshev acceleration and adaptive
-        initialization for the core comparison, so that I read off algorithmic
-        properties rather than acceleration tricks.
+        follow canonical VBD, but disable Chebyshev acceleration for the core
+        comparison, so that I read off algorithmic properties rather than
+        acceleration tricks. Adaptive initialization is kept enabled, since it is
+        VBD's inertial prediction and has a direct counterpart in XPBD's explicit
+        guess (see \autoref{ssec:DisableChebyshev}).
     \item \textbf{Beyond frame rate.} Ma et~al.\ report fps and node counts. I add
-        a Newton ground truth, an equal-wall-clock quality frontier, and targeted
-        stress tests (mass ratio, stiffness ratio, large $dt$) keyed to the
+        a Newton ground truth, a solution quality vs.\ computational cost comparison,
+        and targeted stress tests (mass ratio, stiffness ratio, large $dt$) keyed to the
         primal/dual distinction.
     \item \textbf{Varying the substep count.} Their comparison kept the substep
         count fixed throughout, so it did not consider how changing it affects each
