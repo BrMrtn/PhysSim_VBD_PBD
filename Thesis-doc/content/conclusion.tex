@@ -8,17 +8,31 @@
 \label{sec:Summary}
 %----------------------------------------------------------------------------
 \begin{itemize}
-    \item This thesis presented a controlled comparison of XPBD and VBD, one of the most dominant solvers for real-time deformable simulation and a relatively new approach.
+    \item This thesis presented a controlled comparison of XPBD --- one of the most established solvers for real-time deformable simulation --- and VBD, a primal alternative introduced in 2024.
     \item The contribution is threefold:
     \begin{itemize}
-        \item a shared Unity codebase implementing both solvers under matched material parameters and compute budget;
-        \item a Newton ground-truth reference, enabling reporting of solution error rather than only relative performance;
+        \item a shared Unity codebase implementing both solvers under matched material parameters and a matched compute budget;
+        \item a Newton ground-truth reference, enabling reporting of absolute solution error rather than only relative performance;
+        \item an evaluation along four axes --- efficiency, robustness, physical realism, and flexibility --- read against the primal/dual distinction that motivated the stress tests.
     \end{itemize}
 \end{itemize}
-\emph{TODO: once results are finalised, a single paragraph summary of
-\autoref{sec:Verdicts} goes here: how each solver behaves in the scenarios the
-primal/dual lens flags, what the equal-wall-clock frontier looks like, and the
-scenario-based recommendation for practitioners.}
+
+The headline finding is that neither solver dominates; each wins in the regime
+its update direction is suited to. On the equal-wall-clock frontier VBD leads
+when the per-step problem is hard (large time steps), while XPBD overtakes it
+once finer substepping makes each sub-problem easy enough to converge in one or
+two cheap iterations. Robustness splits exactly as the primal/dual lens predicts:
+XPBD, the dual solver, handles extreme stiffness ratios and near-rigid
+constraints but stalls under a $1000\times$ mass ratio; VBD, the primal solver,
+handles the mass ratio but becomes unstable under the wide stiffness ratios of a
+realistic cloth model unless its vertex mass is tuned. At sufficient iterations
+both reach the Newton reference and are physically indistinguishable, so realism
+reduces to a per-iteration-quality question already captured by the efficiency
+axis. On flexibility, XPBD is easier to extend with scalar constraints and
+benefits from a decade of deployment across many domains, whereas VBD's
+per-vertex structure is heavier to extend but parallelises more cleanly. The
+practical recommendation is therefore scenario-based rather than absolute, and is
+set out in full in \autoref{sec:Verdicts}.
 
 %----------------------------------------------------------------------------
 \section{Future work}

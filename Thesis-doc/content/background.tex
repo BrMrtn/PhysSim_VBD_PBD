@@ -91,7 +91,7 @@ where
     \item $\mathbf{y}$ is the \emph{inertial target} (the position reached under external forces alone).
     \item $\|\cdot\|_{\mathbf{M}}$ is the mass-weighted length; $E(\mathbf{x})$ is the total potential energy evaluated at $\mathbf{x}$.
     \item Equation~\eqref{eq:G} is central: \textbf{both XPBD and VBD are approximate minimisers of the same $G(\mathbf{x})$}.
-    \item XPBD reaches a stationary point by descending on the Lagrange-dual problem; VBD reaches one by block-coordinate descent on the primal.
+    \item They differ in \emph{which unknowns} they optimise over. VBD minimises $G$ directly over the positions $\mathbf{x}$ --- the \emph{primal} variables --- by block-coordinate descent. XPBD instead rewrites the elastic energy as a set of compliant constraints and solves for the Lagrange multipliers (the constraint forces) that enforce them --- the \emph{dual} variables. This is precisely what makes one a primal and the other a dual method; \autoref{sec:PrimalDual} develops the distinction and what it predicts.
     \item This shared target licenses a Newton solve of \eqref{eq:G} to serve as unambiguous ground truth in \autoref{chap:Experiments}.
 \end{itemize}
 
@@ -150,7 +150,8 @@ I will introduce the exact mass-spring structure used to represent cloth in \aut
 \paragraph{Dual.}
 \begin{itemize}
     \item Reformulate the energy through compliant constraints (each spring is a soft constraint with compliance $\alpha = 1/k$) and solve for Lagrange multipliers $\boldsymbol{\lambda}$ on each constraint.
-    \item XPBD is a Gauss--Seidel iteration on the resulting saddle-point system.
+    \item Introducing the multipliers turns the pure minimisation over $\mathbf{x}$ into a coupled problem in both $\mathbf{x}$ and $\boldsymbol{\lambda}$: a \emph{saddle-point} (or KKT) system, so called because its solution minimises the energy in the position variables while maximising it in the multipliers, rather than minimising in all unknowns at once.
+    \item XPBD solves this system with a Gauss--Seidel sweep, updating one constraint's multiplier --- and the positions it touches --- at a time.
 \end{itemize}
 
 This duality is the lens is the motivation in the thesis for choosing the stress tests in \autoref{ssec:ChainWithHeavyWeight} and \autoref{ssec:StiffnessRatioChain}.

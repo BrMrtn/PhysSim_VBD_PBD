@@ -9,7 +9,14 @@ This chapter describes the implementation that produces the data in \autoref{cha
 \section{Platform and environment}
 \label{sec:Platform}
 %----------------------------------------------------------------------------
-Both simulators are implemented inside the Unity Editor. All measurements reported in \autoref{chap:Experiments} were collected in the same environment: an \emph{AMD Ryzen 7 5800H} CPU, \emph{16~GB DDR4} RAM, an \emph{NVIDIA GeForce RTX 3060 Laptop GPU}, running \emph{Windows 11 Pro}, with \emph{Unity 6000.4.0f1} as the development tool.
+Both simulators are implemented inside the Unity Editor. All measurements reported in \autoref{chap:Experiments} were collected in the same environment:
+\begin{itemize}
+    \item \textbf{CPU:} AMD Ryzen 7 5800H
+    \item \textbf{Memory:} 16~GB DDR4
+    \item \textbf{GPU:} NVIDIA GeForce RTX 3060 (Laptop)
+    \item \textbf{Operating System:} Windows 11 Pro
+    \item \textbf{Development tool:} Unity 6000.4.0f1
+\end{itemize}
 
 Several of Unity's built-in functionalities proved useful and easy to use while conducting the experiments: the Profiler for gathering FPS statistics, the Recorder for recording videos of the simulations, and Shader Graph for creating textures in a straightforward way.
 
@@ -23,6 +30,7 @@ The Update method in the Unity Editor gets called as often as the environment al
 
 \paragraph{Overhead of the shared scaffolding.}
 The scaffolding adds a small, practically constant per-frame overhead, mostly from Unity-specific calls and rendering. I measure FPS with the Unity Profiler, which calculates based on the actual frames being drawn, so the value includes this overhead; but because both solvers pay this overhead identically, it does not bias the comparison.
+To keep performance as high as possible, I lean towards using primitive types, arrays and structs over classes and lists. I also cached the often-accessed variables globally to shift the strain from the CPU to the memory.
 
 \subsection{Cloth model construction}
 \label{ssec:ClothModel}
@@ -63,6 +71,11 @@ For all experiments, unless otherwise noted, I use gravity $\mathbf{g} = (0, -9.
 \label{ssec:DisableChebyshev}
 The 2024 VBD paper~\cite{Chen2024} reports significant speedups from Chebyshev acceleration and adaptive initialisation. Adaptive initialisation is VBD's own inertial prediction, which is also present in XPBD (it guesses with explicit Euler), so I keep it enabled. Chebyshev acceleration is likewise part of VBD, but it confounds an apples-to-apples comparison, as XPBD could also implement the same method, as shown in \cite{10.1145/2816795.2818063}.
 
+\subsection{Hessian projection for stability}
+\label{ssec:HessianProjection}
+The original VBD paper says the Hessian does not need to be positive-definite, as even if it may not take us into the descent direction, the small number of these steps will not influence the overall convergence.
+But projecting the matrix did make the method able to handle more extreme scenarios without noticably changing on the behaviour or performance, so I projected the Hessian to be positive-definite.
+
 %----------------------------------------------------------------------------
 \section{Self-collision handling}
 \label{sec:SelfCollision}
@@ -76,6 +89,6 @@ This is a model difference, not a solver difference: a penalty model \emph{could
 \label{sec:Parallelisation}
 \label{ssec:Parallelisation}
 %----------------------------------------------------------------------------
-All measurements in this thesis are run single-threaded on the CPU. As noted here, and revisited in \autoref{sec:ThreatsValidity}, the two solvers have different parallelisation profiles. \emph{VBD} parallelises naturally over vertex blocks via graph colouring: vertices sharing no constraint can be updated independently within a colour class, which is well-suited to GPU execution. \emph{XPBD} can be parallelised via edge colouring, but this colouring is finer-grained (per constraint --- of which there are usually many more than vertices --- rather than per vertex), thus creates more colours so the dependency structure is less regular.
+All measurements in this thesis are run single-threaded on the CPU. As noted here, and revisited in \autoref{sec:ThreatsValidity}, the two solvers have different parallelisation profiles. \emph{VBD} parallelises naturally over vertex blocks via graph colouring: vertices sharing no constraint can be updated independently within a colour class, which is well-suited to GPU execution. \emph{XPBD} can be parallelised via edge colouring, but this colouring is finer-grained (per constraint --- of which there are usually many more than vertices --- rather than per vertex), thus creates more colours, meaning more sequential dependencies.
 
 The expected result --- that parallelisation favours VBD more than XPBD --- is plausible but unverified by my experiments. This stands as a threat to external validity for any claim about which solver is ``faster overall''.

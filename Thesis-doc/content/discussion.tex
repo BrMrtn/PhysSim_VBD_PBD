@@ -15,33 +15,87 @@
 \end{itemize}
 
 %----------------------------------------------------------------------------
-\section{Reading the results through the primal/dual lens}
+\section{Verdicts across the four axes}
 \label{sec:Verdicts}
 %----------------------------------------------------------------------------
 
-\paragraph{Mass-ratio scenario.}
-\begin{itemize}
-    \item Tied to \autoref{ssec:MassRatioPendulum} and \autoref{ssec:MassRatioChain}.
-    \item Interpretation: dual updates propagate slowly through chains of strongly mismatched masses, because each Gauss--Seidel sweep changes only one constraint's multiplier, and the change couples to the next constraint only through the position update on the shared particle. \emph{TODO: state what the measurements actually show here.}
-\end{itemize}
+\paragraph{Efficiency.}
+On the equal-wall-clock frontier (\autoref{ssec:ErrorVsMs}) neither solver
+dominates outright; the winner depends on how hard the per-step problem is. A
+single VBD iteration always lands closer to the Newton reference than a single
+XPBD iteration, but it costs more. When the time step is large --- few substeps,
+a stiff sub-problem --- VBD reaches a given accuracy for less wall-clock, because
+it spends its budget on iterations that carry second-order information about the
+energy. As the step shrinks, each sub-problem becomes easy enough for both
+solvers to converge in one or two iterations, and XPBD's cheaper per-iteration
+cost lets it take the frontier. The scaling test (\autoref{ssec:NodeCountVsFPS})
+tells the same story at fixed settings: with early stopping,
+$VBD_{sub4\times it_{\max}4}$ beats XPBD on the easy, low-resolution scenes and
+converges toward it as the mesh grows, while the cheaper $VBD_{sub4\times it2}$
+configuration outperforms $XPBD_{sub4\times it4}$ across the board. These figures
+are single-threaded and therefore understate VBD's standing
+(\autoref{ssec:ThreatSingleThread}).
 
-\paragraph{Stiffness-ratio scenario.}
-\begin{itemize}
-    \item Tied to \autoref{ssec:StiffnessRatioChain} and \autoref{ssec:StiffRatioTest}.
-    \item Interpretation: the local Hessian block $\mathbf{H}_{i}$ at a vertex sums contributions from every incident spring, so widely varying stiffnesses inflate the block's condition number and can slow the Newton step.
-\end{itemize}
+\paragraph{Robustness.}
+This is the axis where the primal/dual distinction (\autoref{sec:PrimalDual})
+makes a concrete prediction, and the two stress tests confirm it directly. Under
+a $1000\times$ mass ratio (\autoref{ssec:ChainWithHeavyWeight}) XPBD --- the dual
+solver --- fails to reach the Newton reference within 100 iterations, while VBD
+approaches it: a dual update propagates a mass disparity only one shared particle
+per Gauss--Seidel sweep. Under a $1{:}10000$ stiffness ratio
+(\autoref{ssec:StiffnessRatioChain}) the roles reverse: VBD --- the primal
+solver --- stalls while XPBD matches the reference almost exactly, because the
+per-vertex Hessian block collects every incident spring stiffness and becomes
+ill-conditioned. The self-collision drop (\autoref{ssec:SelfCollisionDrop}) is
+the same VBD weakness in a practical setting: my 12-spring cloth model carries
+exactly the wide stiffness ratios that hurt VBD, so the cloth was unstable unless
+I raised vertex mass by two-to-three orders of magnitude relative to the largest
+stiffness. XPBD tolerated these constraints, including near-rigid ones, without
+hand-tuning. Overall XPBD is the more robust solver for stiff cloth, with the
+caveat that this failure is specific to canonical 2024 VBD and is reportedly
+addressed by AVBD (\autoref{ssec:ThreatAVBD}).
 
-\paragraph{Per-iteration convergence under stiffness.}
-\begin{itemize}
-    \item Tied to \autoref{ssec:ResidualConvergence} and \autoref{ssec:IterIndepStiff}.
-    \item Interpretation: VBD uses second-order information about $E$ locally, so increasing $k$ need not change the number of Newton steps to convergence much, whereas XPBD discards this information.
-\end{itemize}
+\paragraph{Physical realism.}
+At matched, sufficient iteration counts the two solvers are essentially
+indistinguishable from Newton and from each other. The harmonic oscillator
+(\autoref{ssec:HarmonicOscillator}) converges in a single iteration for both,
+leaving only the damping intrinsic to implicit Euler. The energy traces
+(\autoref{ssec:EnergyTracking}) follow one shared exponential decay; at four
+iterations both sit on the reference, and the only ordering visible at very low
+budgets is that one VBD iteration falls between one and two XPBD iterations ---
+the same per-iteration-quality story as the efficiency axis, since the residual
+oscillations are convergence artefacts rather than a physical difference.
+Realism is therefore a question of how much iteration budget each solver needs to
+reach a converged state, not of the converged state itself.
+
+\paragraph{Flexibility.}
+Here the comparison favours each solver on a different sub-question. Both make
+the converged shape independent of iteration count
+(\autoref{ssec:IterIndepStiff}), so neither couples material stiffness to solver
+budget. For adding new constraints (\autoref{ssec:NewFunctionality}), XPBD was
+easier to extend with the scalar dihedral-bending constraint: it needs only the
+first derivative and a single extra solve call, whereas VBD needs the second
+derivative and stores each hinge once per incident vertex, recomputing its
+Hessian block four times an iteration. This advantage is constraint-shaped rather
+than absolute --- for tensor-valued energies such as StVK it would be XPBD doing
+the extra work. On domain coverage (\autoref{ssec:DomainCoverage}) XPBD's decade
+of deployment across cloth, fluids, rigid bodies and hair is decisive against a
+2024 method still largely confined to elastic bodies.
 
 \paragraph{Joint reading.}
-\begin{itemize}
-    \item Read together, the three scenarios describe where each solver's update direction sees the information it needs and where it does not.
-    \item Where the results bear this out, the practical recommendation is scenario-based rather than absolute --- a useful outcome in its own right. \emph{TODO: finalise once results are in.}
-\end{itemize}
+No solver wins on every axis, so the honest recommendation is scenario-based.
+VBD is the better choice when the per-step problem is hard --- large time steps,
+heavy mass ratios --- and when the target is parallel hardware that suits its
+per-vertex blocks. XPBD is the better choice when constraints are stiff or
+near-rigid, when robustness out of the box matters more than peak accuracy per
+millisecond, or when the breadth of an established ecosystem is an asset. The
+primal/dual lens earns its place here not as a verdict on which solver is better,
+but as the thing that predicted --- ahead of the measurements --- exactly which
+scenario would break which solver.
+
+\paragraph{Additional remarks.}
+Based on my experiments, there is a gread difference in the failure of the two solvers.
+When XPBD fails, it becomes really stretchy but still looks plausible. VBD however either shows noticable artifacts at failure of explodes.
 
 %----------------------------------------------------------------------------
 \section{Limitations and Threats to validity}
