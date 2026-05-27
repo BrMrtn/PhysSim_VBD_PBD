@@ -3,81 +3,85 @@
 \label{chap:Background}
 %----------------------------------------------------------------------------
 
-\begin{itemize}
-    \item This chapter establishes the mathematical foundations for the rest of the thesis.
-    \item The central object is the variational form of implicit Euler, which unifies XPBD and VBD as two approximate minimisers of the same energy function, and therefore justifies a shared Newton reference as ground truth.
-    \item Theory from \cite{li2026physics}. It contains detaild descriptions and case-studies about the theory and algorithms of most areas of physics-based simulations.
-\end{itemize}
+This chapter establishes the mathematical foundations for the rest of the
+thesis. Its central object is the variational form of implicit Euler, which
+unifies XPBD and VBD as two approximate minimizers of the same energy function
+and therefore justifies a shared Newton solver as ground truth. The theoretical
+treatment follows Li et~al.~\cite{li2026physics}, which gives detailed
+descriptions and case studies of the theory and algorithms across most areas of
+physics-based simulation.
 
 %----------------------------------------------------------------------------
 \section{Time-stepping schemes for physical simulation}
 \label{sec:Integration}
 %----------------------------------------------------------------------------
-\begin{itemize}
-    \item Real-time physics reduces to advancing a state $(\mathbf{x}, \mathbf{v})$ --- positions and velocities of $n$ particles --- forward in time.
-    \item In modern physics engines three families of approaches can be identified by splitting them based on how they resolve constraints and calculate motion.
-\end{itemize}
+At its core, real-time physics reduces to advancing a state
+$(\mathbf{x}, \mathbf{v})$ --- the positions and velocities of $n$ particles ---
+forward in time. Modern physics engines can be grouped into three families
+according to how they resolve constraints and compute motion: force-based,
+impulse-based, and position-based methods.
 
-\paragraph{Force-based, Newtonian.}
-\begin{itemize}
-    \item Forces $\mathbf{f}(\mathbf{x}, \mathbf{v}, t)$ produce accelerations via Newton's second law $f = M \dfrac{dv}{dt}$ and $v = \dfrac{dx}{dt}$.
-    \item We get $\ddot{\mathbf{x}} = \mathbf{M}^{-1} \mathbf{f}$.
-    \item Where $\mathbf{M}$ is the mass matrix.
-    \item The most intuitive approach.
-    \item This is mostly obsolete for real-time applications, but is still used for scenarios where high precision is required (engineering problems, offline VFX).
-\end{itemize}
+\paragraph{Force-based (Newtonian).}
+Forces $\mathbf{f}(\mathbf{x}, \mathbf{v}, t)$ produce accelerations through
+Newton's second law, $\mathbf{f} = \mathbf{M}\,\tfrac{d\mathbf{v}}{dt}$ with
+$\mathbf{v} = \tfrac{d\mathbf{x}}{dt}$, which rearranges to
+$\ddot{\mathbf{x}} = \mathbf{M}^{-1}\mathbf{f}$, where $\mathbf{M}$ is the mass
+matrix. This is the most intuitive approach. It is largely obsolete for real-time
+applications but is still used where high precision is required, such as
+engineering problems and offline visual effects.
 
 \paragraph{Impulse-based.}
-\begin{itemize}
-    \item Velocities are manipulated directly via collision or constraint impulses.
-    \item Popular for rigid bodies, as it handles collisions as instantaneous changes.
-    \item Not pursued here, because instantaneous change is not suitable for deformable bodies.
-\end{itemize}
+Velocities are manipulated directly through collision or constraint impulses.
+This family is popular for rigid bodies because it handles collisions as
+instantaneous changes in velocity. I do not pursue it here, since instantaneous
+velocity changes are not well suited to deformable bodies.
 
 \paragraph{Position-based.}
-\begin{itemize}
-    \item Resolves consstraints by directly updating positions, without explicitly calculating forces or accelerations.
-    \item PBD and XPBD belong in this cathegory.
-    \item VBD is a hybrid: it is mathematically a position-based solver, as it directly updates positions, but does it by solving a local optimization problem that mimics a forced-based solver, so it is also a force-based solver in spirit.
-\end{itemize}
+Constraints are resolved by directly updating positions, without explicitly
+computing forces or accelerations. PBD and XPBD belong to this category. VBD is a
+hybrid: mathematically it is a position-based solver, since it directly updates
+positions, but it does so by solving a local optimization problem that mimics a
+force-based solver, so it is force-based in spirit as well.
 
-\subsection{Explicit Time Integration (Forward Euler) and why it fails}
+\subsection{Explicit time integration (forward Euler) and why it fails}
 \label{ssec:ExplicitEuler}
-It's explicit because it's a direct method to calculate $\mathbf{x}_{t+h}$ and $\mathbf{v}_{t+h}$ by substituting known values into simple formulas.
-The explicit Euler scheme is
+The scheme is called explicit because it computes $\mathbf{x}_{t+h}$ and
+$\mathbf{v}_{t+h}$ directly, by substituting known values into simple formulas:
 \begin{align}
     \mathbf{v}_{t+h} &= \mathbf{v}_t + h\,\mathbf{M}^{-1}\mathbf{f}(\mathbf{x}_t), \\
     \mathbf{x}_{t+h} &= \mathbf{x}_t + h\,\mathbf{v}_{t+h}.
 \end{align}
-\begin{itemize}
-    \item Where $\mathbf{v_t}$ and $\mathbf{x}_t$ are the velocity and position at time $t$, and $h$ is the time step.
-    \item This method is considered unconditionally unstable, meaning that irrespective of $h$ the simulation will eventually explode for equations with nonconstant $\mathbf{f}$.
-\end{itemize}
+Here $\mathbf{v}_t$ and $\mathbf{x}_t$ are the velocity and position at time $t$,
+and $h$ is the time step. The method is considered unconditionally unstable:
+regardless of $h$, the simulation will eventually explode for equations with a
+nonconstant $\mathbf{f}$.
 
-\subsection{Implicit Time Integration (Backward Euler)}
+\subsection{Implicit time integration (backward Euler)}
 \label{ssec:ImplicitEuler}
-In contrast, implicit time integration requires solving a system of equations to determine the values of $\mathbf{x}_{t+h}$ and $\mathbf{v}_{t+h}$.
-The (backward) implicit Euler scheme evaluates forces at the unknown
-end-of-step state:
+Implicit time integration, in contrast, requires solving a system of equations to
+determine $\mathbf{x}_{t+h}$ and $\mathbf{v}_{t+h}$. The backward Euler scheme
+evaluates forces at the unknown end-of-step state:
 \begin{align}
     \mathbf{v}_{t+h} &= \mathbf{v}_t + h\,\mathbf{M}^{-1}\mathbf{f}(\mathbf{x}_{t+h}), \\
     \mathbf{x}_{t+h} &= \mathbf{x}_t + h\,\mathbf{v}_{t+h}.
 \end{align}
-\begin{itemize}
-    \item Note that the calculation of $\mathbf{v}_{t+h}$ depends on $\mathbf{x}_{t+h}$, and $\mathbf{x}_{t+h}$ depends on $\mathbf{v}_{t+h}$.
-    \item This gets resolved by substituting the$\mathbf{v}_{t+h} = (\mathbf{x}_{t+h} - \mathbf{x}_t)/h$ estimate into the position update equation.
-    \item Unconditionally stable for linear systems.
-    \item If the approximation is far from the actual solution, the method might not converge.
-    \item Cost: a non-linear root-finding problem each step.
-\end{itemize}
+Now $\mathbf{v}_{t+h}$ depends on $\mathbf{x}_{t+h}$, and $\mathbf{x}_{t+h}$
+depends on $\mathbf{v}_{t+h}$. This circular dependency is resolved by
+substituting the estimate
+$\mathbf{v}_{t+h} = (\mathbf{x}_{t+h} - \mathbf{x}_t)/h$ into the position-update
+equation. The scheme is unconditionally stable for linear systems, but it may
+fail to converge if the initial approximation is far from the true solution, and
+it carries a real cost: a nonlinear root-finding problem must be solved at every
+step.
 
 %----------------------------------------------------------------------------
-\section{Implicit Euler as energy minimisation}
+\section{Implicit Euler as energy minimization}
 \label{sec:Variational}
 %----------------------------------------------------------------------------
-Eliminating the velocity equation gives the well-known variational form (also called minimization or optimization form) of
-implicit Euler: $x$ is the minimiser of the energy function $G$:
-$x_{t+h} = \argmin_{\mathbf{x}} G(\mathbf{x})$
+Eliminating the velocity equation yields the well-known variational form (also
+called the minimization or optimization form) of implicit Euler: $\mathbf{x}$ is
+the minimizer of an energy function $G$, so that
+$\mathbf{x}_{t+h} = \argmin_{\mathbf{x}} G(\mathbf{x})$, with
 \begin{equation}
     \label{eq:G}
     G(\mathbf{x}) \;=\; \tfrac{1}{2 h^{2}} \,\|\mathbf{x} - \mathbf{y}\|_{\mathbf{M}}^{2}
@@ -85,79 +89,92 @@ $x_{t+h} = \argmin_{\mathbf{x}} G(\mathbf{x})$
 \end{equation}
 where
 \begin{equation*}
-    \mathbf{y} \;=\; \mathbf{x}_{t} + h\,\mathbf{v}_{t} + h^{2}\,\mathbf{M}^{-1}\mathbf{f}_{\mathrm{ext}}
+    \mathbf{y} \;=\; \mathbf{x}_{t} + h\,\mathbf{v}_{t} + h^{2}\,\mathbf{M}^{-1}\mathbf{f}_{\mathrm{ext}}.
 \end{equation*}
-\begin{itemize}
-    \item $\mathbf{y}$ is the \emph{inertial target} (the position reached under external forces alone).
-    \item $\|\cdot\|_{\mathbf{M}}$ is the mass-weighted length; $E(\mathbf{x})$ is the total potential energy evaluated at $\mathbf{x}$.
-    \item Equation~\eqref{eq:G} is central: \textbf{both XPBD and VBD are approximate minimisers of the same $G(\mathbf{x})$}.
-    \item They differ in \emph{which unknowns} they optimise over. VBD minimises $G$ directly over the positions $\mathbf{x}$ --- the \emph{primal} variables --- by block-coordinate descent. XPBD instead rewrites the elastic energy as a set of compliant constraints and solves for the Lagrange multipliers (the constraint forces) that enforce them --- the \emph{dual} variables. This is precisely what makes one a primal and the other a dual method; \autoref{sec:PrimalDual} develops the distinction and what it predicts.
-    \item This shared target licenses a Newton solve of \eqref{eq:G} to serve as unambiguous ground truth in \autoref{chap:Experiments}.
-\end{itemize}
+Here $\mathbf{y}$ is the \emph{inertial target} (the position reached under
+external forces alone), $\|\cdot\|_{\mathbf{M}}$ is the mass-weighted length, and
+$E(\mathbf{x})$ is the total potential energy evaluated at $\mathbf{x}$.
+
+Equation~\eqref{eq:G} is central to the thesis, because \textbf{both XPBD and VBD
+are approximate minimizers of the same $G(\mathbf{x})$}. They differ only in
+\emph{which unknowns} they optimize over. VBD minimizes $G$ directly over the
+positions $\mathbf{x}$ --- the \emph{primal} variables --- by block-coordinate
+descent. XPBD instead rewrites the elastic energy as a set of compliant
+constraints and solves for the Lagrange multipliers (the constraint forces) that
+enforce them --- the \emph{dual} variables. This is precisely what makes one a
+primal and the other a dual method; \autoref{sec:PrimalDual} develops the
+distinction and what it predicts. Because both target the same minimizer, a
+Newton solve of \eqref{eq:G} can serve as an unambiguous ground truth in
+\autoref{chap:Experiments}.
 
 %----------------------------------------------------------------------------
 \section{Mass-spring systems}
 \label{sec:MassSpring}
 %----------------------------------------------------------------------------
-\begin{itemize}
-    \item I use a mass-spring discretisation of cloth: vertices carry point masses, edges of the cloth mesh carry springs.
-    \item For a spring between particles $i$ and $j$ with rest length $\ell_0$ and stiffness $k$, the constraint function and energy are:
-\end{itemize}
+I use a mass-spring discretization of cloth: vertices carry point masses, and the
+edges of the cloth mesh carry springs. For a spring between particles $i$ and $j$
+with rest length $\ell_0$ and stiffness $k$, the constraint function and the
+associated energy are
 \begin{align}
     C(\mathbf{x}_i, \mathbf{x}_j) &= \|\mathbf{x}_i - \mathbf{x}_j\| - \ell_0, \\
     E(\mathbf{x}_i, \mathbf{x}_j) &= \tfrac{1}{2}\, k\, C^{2}.
 \end{align}
+The exact mass-spring structure used to represent cloth is introduced in
+\autoref{ssec:ClothModel}.
 
-I will introduce the exact mass-spring structure used to represent cloth in \autoref{ssec:ClothModel}.
-
-\subsection{Limitations of mass-spring}
+\subsection{Limitations of mass-spring models}
 \label{ssec:MSSLimits}
-\begin{itemize}
-    \item Mass-spring is cheap and easy to differentiate, but is well known to be \emph{simulation-mesh-dependent}: effective material parameters, like macroscopic stiffness, depend on the discretisation.
-    \item Therefore conclusions about absolute material parameters are not transferable to FEM-based models.
-    \item Conclusions about \emph{relative} solver behaviour --- my subject --- are transferable.
-\end{itemize}
+The mass-spring model is cheap and easy to differentiate, but it is well known to
+be \emph{simulation-mesh-dependent}: effective material parameters, such as
+macroscopic stiffness, depend on the discretization. Conclusions about absolute
+material parameters therefore do not transfer to FEM-based models. Conclusions
+about \emph{relative} solver behavior --- my actual subject --- do transfer.
 
 %----------------------------------------------------------------------------
 \section{Solver structure: Gauss--Seidel vs.\ Jacobi}
 \label{sec:GSJacobi}
 %----------------------------------------------------------------------------
-\begin{itemize}
-    \item Both XPBD's constraint sweep and VBD's vertex-block sweep are Gauss--Seidel-style iterations: each local update uses the most recent neighbour values, not start-of-iteration values.
-    \item A Jacobi variant updates all blocks from the start-of-iteration state in parallel: slower convergence in serial, but maps better to the GPU.
-    \item Consequence (revisited in \autoref{sec:ThreatsValidity}): both solvers are \textbf{order-dependent}.
-    \begin{itemize}
-        \item Constraint-traversal order (XPBD) and vertex-traversal order (VBD) both affect convergence rate and, in some (but relatively rare) cases, the converged solution.
-        \item My experiments fix a deterministic order for reproducibility, I do not use randomisation, as none of the canonical solver implementations do.
-    \end{itemize}
-\end{itemize}
+Both XPBD's constraint sweep and VBD's vertex-block sweep are Gauss--Seidel-style
+iterations: each local update uses the most recent neighbor values rather than
+the start-of-iteration values. A Jacobi variant, by contrast, updates all blocks
+in parallel from the start-of-iteration state; it converges more slowly in serial
+execution but maps better to the GPU.
+
+A consequence, revisited in \autoref{sec:ThreatsValidity}, is that both solvers
+are \textbf{order-dependent}. The constraint-traversal order (XPBD) and the
+vertex-traversal order (VBD) both affect the convergence rate and, in some
+relatively rare cases, the converged solution itself. My experiments fix a
+deterministic order for reproducibility; I do not use randomization, since none
+of the canonical solver implementations do.
 
 %----------------------------------------------------------------------------
 \section{The primal/dual distinction}
 \label{sec:PrimalDual}
 %----------------------------------------------------------------------------
-\begin{itemize}
-    \item The unifying framing is the primal/dual perspective due to Macklin et~al.~\cite{10.1111/cgf.14104}.
-    \item Minimising $G(\mathbf{x})$ in \eqref{eq:G} can be approached two ways:
-\end{itemize}
+The unifying framing of this thesis is the primal/dual perspective of Macklin
+et~al.~\cite{10.1111/cgf.14104}. Minimizing $G(\mathbf{x})$ in \eqref{eq:G} can be
+approached in two ways.
 
 \paragraph{Primal.}
-\begin{itemize}
-    \item Directly minimise over positions $\mathbf{x}$.
-    \item A vertex-by-vertex block-coordinate descent on $G$ is exactly VBD.
-\end{itemize}
+The energy is minimized directly over the positions $\mathbf{x}$. A
+vertex-by-vertex block-coordinate descent on $G$ is exactly VBD.
 
 \paragraph{Dual.}
-\begin{itemize}
-    \item Reformulate the energy through compliant constraints (each spring is a soft constraint with compliance $\alpha = 1/k$) and solve for Lagrange multipliers $\boldsymbol{\lambda}$ on each constraint.
-    \item Introducing the multipliers turns the pure minimisation over $\mathbf{x}$ into a coupled problem in both $\mathbf{x}$ and $\boldsymbol{\lambda}$: a \emph{saddle-point} (or KKT) system, so called because its solution minimises the energy in the position variables while maximising it in the multipliers, rather than minimising in all unknowns at once.
-    \item XPBD solves this system with a Gauss--Seidel sweep, updating one constraint's multiplier --- and the positions it touches --- at a time.
-\end{itemize}
+The energy is reformulated through compliant constraints --- each spring becomes a
+soft constraint with compliance $\alpha = 1/k$ --- and the solver works for the
+Lagrange multipliers $\boldsymbol{\lambda}$ on those constraints. Introducing the
+multipliers turns the pure minimization over $\mathbf{x}$ into a coupled problem
+in both $\mathbf{x}$ and $\boldsymbol{\lambda}$: a \emph{saddle-point} (or KKT)
+system, so called because its solution minimizes the energy in the position
+variables while maximizing it in the multipliers, rather than minimizing in all
+unknowns at once. XPBD solves this system with a Gauss--Seidel sweep, updating one
+constraint's multiplier --- and the positions it touches --- at a time.
 
-This duality is the lens is the motivation in the thesis for choosing the stress tests in \autoref{ssec:ChainWithHeavyWeight} and \autoref{ssec:StiffnessRatioChain}.
-It also shows us where the two
-approaches naturally differ:
-\begin{itemize}
-    \item Dual variables couple constraints that share a particle, so mass disparities at a shared particle are a scenario where XPBD's per-constraint updates may propagate slowly.
-    \item The primal Hessian block at a vertex collects all spring stiffnesses meeting there, so widely varying stiffnesses produce an ill-conditioned block --- a scenario where VBD's per-vertex update may struggle.
-\end{itemize}
+This duality is the thesis's motivation for choosing the stress tests of
+\autoref{ssec:ChainWithHeavyWeight} and \autoref{ssec:StiffnessRatioChain},
+because it also reveals where the two approaches naturally differ. Dual variables
+couple constraints that share a particle, so a mass disparity at a shared particle
+is a scenario in which XPBD's per-constraint updates may propagate slowly. The
+primal Hessian block at a vertex, on the other hand, collects all spring
+stiffnesses meeting there, so widely varying stiffnesses produce an
+ill-conditioned block --- a scenario in which VBD's per-vertex update may struggle.

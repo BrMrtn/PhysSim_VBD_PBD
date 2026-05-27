@@ -3,10 +3,9 @@
 \label{chap:Algorithms}
 %----------------------------------------------------------------------------
 
-\begin{itemize}
-    \item This chapter states XPBD and VBD in the form actually implemented in \autoref{chap:Methodology}.
-    \item Both target the same variational problem \eqref{eq:G} but reach it through opposite descent directions.
-\end{itemize}
+This chapter states XPBD and VBD in the form actually implemented in
+\autoref{chap:Methodology}. Both target the same variational problem \eqref{eq:G},
+but they reach it through opposite descent directions.
 
 %----------------------------------------------------------------------------
 \section{XPBD: dual-variable position projection}
@@ -15,36 +14,36 @@
 
 \subsection{Derivation}
 \label{ssec:XPBDDeriv}
-\begin{itemize}
-    \item For each elastic spring, associate a constraint $C(\mathbf{x}) = 0$ at zero deformation and a compliance $\alpha = 1/k$.
-    \item $\lambda = -\alpha^{-1} C$ is the Lagrange multiplier for the constraint, which can be interpreted as the spring force magnitude.
-    \item The augmented Lagrangian of \eqref{eq:G} with a single substep $h$ has stationarity conditions, and the constrained equation of motion:
-\end{itemize}
+For each elastic spring, XPBD associates a constraint $C(\mathbf{x}) = 0$ at zero
+deformation with a compliance $\alpha = 1/k$. The quantity
+$\lambda = -\alpha^{-1} C$ is the Lagrange multiplier for that constraint and can
+be interpreted as the magnitude of the spring force. The augmented Lagrangian of
+\eqref{eq:G} with a single substep $h$ has the stationarity conditions
 \begin{align}
     \mathbf{M}(\mathbf{x} - \mathbf{y}) - \nabla C(\mathbf{x})^{T}\,\boldsymbol{\lambda} &= \mathbf{0}, \\
     C(\mathbf{x}) + \tilde{\alpha}\,\boldsymbol{\lambda} &= \mathbf{0},
 \end{align}
-\begin{itemize}
-    \item $\tilde{\alpha} = \alpha / h^{2}$ is the time-step-scaled compliance.
-    \item XPBD solves this coupled system by a Gauss--Seidel sweep over constraints: for each constraint $j$, the multiplier increment is
-\end{itemize}
+where $\tilde{\alpha} = \alpha / h^{2}$ is the time-step-scaled compliance. XPBD
+solves this coupled system with a Gauss--Seidel sweep over the constraints: for
+each constraint $j$, the multiplier increment is
 \begin{equation}
     \label{eq:XPBDLambda}
     \Delta \lambda_{j} \;=\; \frac{-C_{j}(\mathbf{x}) - \tilde{\alpha}_{j}\, \lambda_{j}}
                                 {\nabla C_{j}^{\!\top}\,\mathbf{M}^{-1}\nabla C_{j}
-                                 + \tilde{\alpha}_{j}},
+                                 + \tilde{\alpha}_{j}}.
 \end{equation}
-\begin{itemize}
-    \item After XPBD omits the calculation of the Hessian by approximating their stiffness matrix with the mass matrix, we get the following equation for the position correction:
-    \item $\Delta \mathbf{x} = \mathbf{M}^{-1}\nabla C_{j}^{\!\top}\,\Delta \lambda_{j}$.
-    \item Velocities are recovered at substep end by $\mathbf{v}_{t+h} = (\mathbf{x}_{t+h} - \mathbf{x}_{t}) / h$.
-\end{itemize}
+XPBD then omits the Hessian by approximating the stiffness matrix with the mass
+matrix, which gives the position correction
+$\Delta \mathbf{x} = \mathbf{M}^{-1}\nabla C_{j}^{\!\top}\,\Delta \lambda_{j}$.
+Velocities are recovered at the end of each substep by
+$\mathbf{v}_{t+h} = (\mathbf{x}_{t+h} - \mathbf{x}_{t}) / h$.
 
 \subsection{Algorithm}
 \label{ssec:XPBDPseudo}
-The simplified form of the XPBD algorithm used for the core comparisons can be seen on \autoref{alg:XPBDCore}: no damping or
-collision handling, only one type of constraint. The full implemented version, with
-damping and self-collision and with more detailed pseudocode is in \autoref{sec:AppXPBD}.
+\autoref{alg:XPBDCore} shows the simplified form of XPBD used for the core
+comparison: no damping or collision handling, and only one type of constraint.
+The full implemented version --- with damping, self-collision, and more detailed
+pseudocode --- is given in \autoref{sec:AppXPBD}.
 
 \begin{algorithm}[!ht]
 \caption{XPBD step (core comparison). $n_{\mathrm{sub}}$ substeps, each with
@@ -83,12 +82,15 @@ damping and self-collision and with more detailed pseudocode is in \autoref{sec:
 
 \subsection{Characteristics}
 \label{ssec:XPBDChar}
-\begin{itemize}
-    \item \emph{Dual-variable.} An iteration's state is encoded in the multipliers $\boldsymbol{\lambda}$; positions are derived.
-    \item \emph{Stiffness-by-compliance.} Material stiffness enters only through $\tilde{\alpha} = 1/(k h^{2})$, so very stiff constraints naturally degenerate to projection ($\tilde\alpha \to 0$).
-    \item \emph{First-order gradient information only.} Each constraint contributes its gradient $\nabla C_j$; no Hessian of $E$ is built.
-    \item \emph{Substeps preferred over iterations.} Following the small-steps result, I use many short substeps with one inner iteration.
-\end{itemize}
+XPBD has four defining characteristics. It is \emph{dual-variable}: an iteration's
+state is encoded in the multipliers $\boldsymbol{\lambda}$, and positions are
+derived from them. It handles \emph{stiffness through compliance}, since material
+stiffness enters only via $\tilde{\alpha} = 1/(k h^{2})$, so very stiff
+constraints naturally degenerate to hard projection ($\tilde\alpha \to 0$). It
+uses \emph{first-order gradient information only}: each constraint contributes its
+gradient $\nabla C_j$, and no Hessian of $E$ is built. Finally, it \emph{prefers
+substeps over iterations}: following the small-steps result, I use many short
+substeps with a single inner iteration.
 
 %----------------------------------------------------------------------------
 \section{VBD: primal block-coordinate descent}
@@ -97,32 +99,34 @@ damping and self-collision and with more detailed pseudocode is in \autoref{sec:
 
 \subsection{Derivation}
 \label{ssec:VBDDeriv}
-\begin{itemize}
-    \item VBD performs block-coordinate descent on $G$ in \eqref{eq:G} with one block per vertex.
-    \item Holding all other vertices fixed, the update for vertex $i$ is the Newton step on the local 3-vector problem:
-\end{itemize}
+VBD performs block-coordinate descent on $G$ in \eqref{eq:G}, with one block per
+vertex. Holding all other vertices fixed, the update for vertex $i$ is the Newton
+step on the local 3-vector problem
 \begin{equation}
     \mathbf{x}_{i} \;\leftarrow\; \mathbf{x}_{i} - \mathbf{H}_{i}^{-1}\,\mathbf{g}_{i},
 \end{equation}
 where
 \begin{align}
     \mathbf{g}_{i} &= \frac{m_{i}}{h^{2}}\,(\mathbf{x}_{i} - \mathbf{y}_{i})
-                      + \sum_{e \in \mathcal{N_i}} \nabla_{i} E_{e}(\mathbf{x}), \\
+                      + \sum_{e \in \mathcal{N}_i} \nabla_{i} E_{e}(\mathbf{x}), \\
     \mathbf{H}_{i} &= \frac{m_{i}}{h^{2}}\,\mathbf{I}_{3}
-                      + \sum_{e \in \mathcal{N_i}} \nabla_{ii}^{2}\, E_{e}(\mathbf{x}).
+                      + \sum_{e \in \mathcal{N}_i} \nabla_{ii}^{2}\, E_{e}(\mathbf{x}).
 \end{align}
-\begin{itemize}
-    \item where $\mathbf{g}_{i}$ is the derivative of the local variational energy around vertex $i$, \mathcal{N_i} is the set of force elements acting on vertex $i$, and $\mathbf{H}_{i}$ is the local Hessian.
-    \item $\nabla_{ii}^{2}\, E_{e}(\mathbf{x})$ is second derivative of the energy of element $e$ with respect to vertex $i$'s position.
-    \item For a distance-spring energy $E_{e} = \tfrac{1}{2} k\,(\|\mathbf{x}_{i} - \mathbf{x}_{j}\| - \ell_{0})^{2}$, the per-vertex gradient and Hessian are closed-form and inexpensive.
-\end{itemize}
+Here $\mathbf{g}_{i}$ is the gradient of the local variational energy around
+vertex $i$, $\mathcal{N}_i$ is the set of force elements acting on vertex $i$, and
+$\mathbf{H}_{i}$ is the local Hessian; $\nabla_{ii}^{2}\, E_{e}(\mathbf{x})$ is the
+second derivative of the energy of element $e$ with respect to vertex $i$'s
+position. For a distance-spring energy
+$E_{e} = \tfrac{1}{2} k\,(\|\mathbf{x}_{i} - \mathbf{x}_{j}\| - \ell_{0})^{2}$, the
+per-vertex gradient and Hessian are closed-form and inexpensive to evaluate.
 
 \subsection{Algorithm}
 \label{ssec:VBDPseudo}
-As with XPBD, the form below is the simplified variant of the core-comparison version: no damping, no
-collisions. Here I use the fixed iteration count version in place of the convergence early-stopping one.
-The full implemented version, with adaptive initialisation, damping and self-collision,
-is in \autoref{sec:AppVBD}.
+As with XPBD, the form below is the simplified, core-comparison version: no
+damping and no collisions. Here I use the fixed-iteration-count variant in place
+of the convergence-based early-stopping one. The full implemented version --- with
+adaptive initialization, damping, and self-collision --- is given in
+\autoref{sec:AppVBD}.
 
 \begin{algorithm}[!ht]
 \caption{VBD step (core comparison). $n_{\mathrm{sub}}$ substeps, each with
@@ -161,12 +165,14 @@ is in \autoref{sec:AppVBD}.
 
 \subsection{Characteristics}
 \label{ssec:VBDChar}
-\begin{itemize}
-    \item \emph{Primal.} An iteration's state is positions $\mathbf{x}$; no extra multipliers.
-    \item \emph{Second-order locally.} Each block update is a Newton step on the true elastic Hessian restricted to one vertex.
-    \item \emph{Iterations over substeps.} VBD is normally used with one long step subdivided by many block iterations; the implicit Hessian handles stiffness with larger $h$ too.
-    \item \emph{Parallel-friendly.} Vertices sharing no constraint can be updated independently (graph colouring).
-\end{itemize}
+VBD likewise has four defining characteristics. It is \emph{primal}: an
+iteration's state is the positions $\mathbf{x}$, with no extra multipliers. It is
+\emph{second-order locally}, since each block update is a Newton step on the true
+elastic Hessian restricted to one vertex. It \emph{prefers iterations over
+substeps}: VBD is normally used with one long step subdivided into many block
+iterations, and the implicit Hessian handles stiffness even at larger $h$.
+Finally, it is \emph{parallel-friendly}: vertices that share no constraint can be
+updated independently through graph coloring.
 
 %----------------------------------------------------------------------------
 \section{Side-by-side: where the algorithms differ}
@@ -185,13 +191,13 @@ is in \autoref{sec:AppVBD}.
         Block size                & per-constraint                & per-vertex \\
         Stiffness handled by      & compliance $\tilde{\alpha}$   & implicit Hessian \\
         Typical configuration     & many substeps, $1$ iteration  & one step, many iterations \\
-        Parallelism strategy      & constraint colouring (harder) & vertex colouring (easier) \\
+        Parallelism strategy      & constraint coloring (harder)  & vertex coloring (easier) \\
         \bottomrule
     \end{tabular}
     \caption{Algorithmic contrast between XPBD and VBD.}
     \label{tab:XPBDvsVBD}
 \end{table}
 
-\begin{itemize}
-    \item The first and third rows are the distinction the primal/dual lens (\autoref{sec:PrimalDualLens}) builds on, and the one the experiments return to when interpreting each result.
-\end{itemize}
+The first and third rows capture the distinction that the primal/dual lens
+(\autoref{sec:PrimalDualLens}) builds on, and the one the experiments return to
+when interpreting each result.

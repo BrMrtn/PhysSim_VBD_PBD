@@ -7,12 +7,14 @@
 \section{Synthesis across axes}
 \label{sec:Synthesis}
 %----------------------------------------------------------------------------
-\begin{itemize}
-    \item Efficiency: which solver dominates the equal-wall-clock frontier, and in which scenario?
-    \item Robustness: where do the stability envelopes diverge, and does the divergence match the primal/dual prediction?
-    \item Realism: which solver's converged state is closer to Newton at matched compute?
-    \item Flexibility: how does the ease-of-extension cost compare against the per-frame cost benefit?
-\end{itemize}
+Reading the results back against the four evaluation axes raises one guiding
+question per axis. For \emph{efficiency}, which solver dominates the
+equal-wall-clock frontier, and in which scenario? For \emph{robustness}, where do
+the stability envelopes diverge, and does that divergence match the primal/dual
+prediction? For \emph{realism}, which solver's converged state is closer to Newton
+at matched compute? And for \emph{flexibility}, how does the cost of extending each
+solver weigh against its per-frame benefit? The verdicts below answer these
+questions axis by axis.
 
 %----------------------------------------------------------------------------
 \section{Verdicts across the four axes}
@@ -94,8 +96,10 @@ but as the thing that predicted --- ahead of the measurements --- exactly which
 scenario would break which solver.
 
 \paragraph{Additional remarks.}
-Based on my experiments, there is a gread difference in the failure of the two solvers.
-When XPBD fails, it becomes really stretchy but still looks plausible. VBD however either shows noticable artifacts at failure of explodes.
+My experiments also reveal a marked difference in \emph{how} the two solvers fail.
+When XPBD fails, the material becomes overly stretchy but still looks plausible.
+VBD, by contrast, either shows noticeable artifacts at the point of failure or
+explodes outright.
 
 %----------------------------------------------------------------------------
 \section{Limitations and Threats to validity}
@@ -104,34 +108,42 @@ When XPBD fails, it becomes really stretchy but still looks plausible. VBD howev
 
 \subsection{Single-threaded execution}
 \label{ssec:ThreatSingleThread}
-\begin{itemize}
-    \item All measurements run single-threaded on CPU.
-    \item Because VBD parallelises better than XPBD (\autoref{sec:Parallelisation}), the ms/frame figures are biased against VBD: they understate the advantage it would show in a production, multi-threaded deployment.
-    \item This is a threat to the external validity of the quantitative efficiency claims only; it leaves the qualitative claims about convergence quality and stability envelopes untouched, since those do not depend on how the work is scheduled across cores.
-    \item Lifting this limitation --- the multithreaded and GPU comparison --- is the principal direction of \autoref{ssec:FWParallel}.
-\end{itemize}
+All measurements run single-threaded on the CPU. Because VBD parallelizes better
+than XPBD (\autoref{sec:Parallelisation}), the ms/frame figures are biased against
+VBD: they understate the advantage it would show in a production, multi-threaded
+deployment. This is a threat to the external validity of the quantitative
+efficiency claims only; it leaves the qualitative claims about convergence quality
+and stability envelopes untouched, since those do not depend on how the work is
+scheduled across cores. Lifting this limitation --- the multithreaded and GPU
+comparison --- is the principal direction of \autoref{ssec:FWParallel}.
 
-\subsection{Mass-spring discretisation only}
+\subsection{Mass-spring discretization only}
 \label{ssec:ThreatMassSpring}
-\begin{itemize}
-    \item I use distance-spring energies throughout, including for bending. Dihedral bending constraints were implemented (with LLM assistance) but I deliberately did not run the evaluation on this newer model.
-    \item This choice is not neutral between the solvers: VBD's original paper uses an energy-based model (StVK), and such a discretisation would likely favour VBD to a similar degree that my mass-spring model favours XPBD.
-    \item The results are therefore not necessarily transferable to other cloth models. The primal/dual framing still carries over --- both XPBD and VBD admit arbitrary elastic energies --- but the specific stiffness ratios encountered, and hence the magnitude of the stiffness-ratio and per-iteration-convergence effects, may differ.
-    \item Re-running the comparison on energy-based and alternative-connectivity models is taken up as future work in \autoref{ssec:FWFEM}.
-\end{itemize}
+I use distance-spring energies throughout, including for bending. Dihedral bending
+constraints were implemented (with LLM assistance), but I deliberately did not run
+the evaluation on this newer model. This choice is not neutral between the
+solvers: VBD's original paper uses an energy-based model (StVK), and such a
+discretization would likely favor VBD to a similar degree that my mass-spring model
+favors XPBD. The results are therefore not necessarily transferable to other cloth
+models. The primal/dual framing still carries over --- both XPBD and VBD admit
+arbitrary elastic energies --- but the specific stiffness ratios encountered, and
+hence the magnitude of the stiffness-ratio and per-iteration-convergence effects,
+may differ. Re-running the comparison on energy-based and alternative-connectivity
+models is taken up as future work in \autoref{ssec:FWFEM}.
 
 \subsection{Gauss--Seidel order dependence}
 \label{ssec:ThreatOrder}
-\begin{itemize}
-    \item Both solvers are order-sensitive (\autoref{sec:GSJacobi}).
-    \item I fix a single deterministic order; an adversarial reordering could in principle shift results.
-    \item I do not investigate this, and it is a real threat to reproducibility on other implementations.
-\end{itemize}
+Both solvers are order-sensitive (\autoref{sec:GSJacobi}). I fix a single
+deterministic order, but an adversarial reordering could in principle shift the
+results. I do not investigate this, and it remains a real threat to
+reproducibility across other implementations.
 
 \subsection{Augmented Vertex Block Descent}
 \label{ssec:ThreatAVBD}
-\begin{itemize}
-    \item I do not implement AVBD or any other post-2024 VBD extension; the comparison is restricted to canonical 2024 VBD.
-    \item AVBD fixes several weaknesses of canonical VBD (notably wide stiffness ratios and near-infinite stiffness), so the robustness and stiffness-ratio findings that go against VBD should not be read as applying to AVBD.
-    \item Whether those findings are intrinsic to the primal approach or specific to the 2024 implementation is exactly the question \autoref{ssec:FWAVBD} proposes to settle.
-\end{itemize}
+I do not implement AVBD or any other post-2024 VBD extension; the comparison is
+restricted to canonical 2024 VBD. AVBD fixes several weaknesses of canonical VBD
+--- notably wide stiffness ratios and near-infinite stiffness --- so the robustness
+and stiffness-ratio findings that go against VBD should not be read as applying to
+AVBD. Whether those findings are intrinsic to the primal approach or specific to
+the 2024 implementation is exactly the question \autoref{ssec:FWAVBD} proposes to
+settle.

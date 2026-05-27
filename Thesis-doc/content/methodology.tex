@@ -3,92 +3,164 @@
 \label{chap:Methodology}
 %----------------------------------------------------------------------------
 
-This chapter describes the implementation that produces the data in \autoref{chap:Experiments}. More importantly, it describes the decisions that keep the XPBD-vs-VBD comparison fair.
+This chapter describes the implementation that produces the data in
+\autoref{chap:Experiments} and, more importantly, the decisions that keep the
+XPBD-vs-VBD comparison fair.
 
 %----------------------------------------------------------------------------
 \section{Platform and environment}
 \label{sec:Platform}
 %----------------------------------------------------------------------------
-Both simulators are implemented inside the Unity Editor. All measurements reported in \autoref{chap:Experiments} were collected in the same environment:
+Both simulators are implemented inside the Unity Editor, and all measurements
+reported in \autoref{chap:Experiments} were collected in the same environment:
 \begin{itemize}
     \item \textbf{CPU:} AMD Ryzen 7 5800H
     \item \textbf{Memory:} 16~GB DDR4
     \item \textbf{GPU:} NVIDIA GeForce RTX 3060 (Laptop)
-    \item \textbf{Operating System:} Windows 11 Pro
+    \item \textbf{Operating system:} Windows 11 Pro
     \item \textbf{Development tool:} Unity 6000.4.0f1
 \end{itemize}
 
-Several of Unity's built-in functionalities proved useful and easy to use while conducting the experiments: the Profiler for gathering FPS statistics, the Recorder for recording videos of the simulations, and Shader Graph for creating textures in a straightforward way.
+Several of Unity's built-in tools proved useful and easy to work with while
+conducting the experiments: the Profiler for gathering FPS statistics, the
+Recorder for capturing videos of the simulations, and Shader Graph for creating
+textures in a straightforward way.
 
 %----------------------------------------------------------------------------
 \section{Integration architecture}
 \label{sec:Architecture}
 %----------------------------------------------------------------------------
-Both solvers share a common scene scaffolding, and the simulations are driven by the Update method in Unity's MonoBehaviour classes. The scaffolding handles mesh and spring topology construction at scene load, the recording of statistics such as frametime and memory, and rendering, which runs on a separate thread from the simulator.
+Both solvers share a common scene scaffolding, and the simulations are driven by
+the \texttt{Update} method of Unity's \texttt{MonoBehaviour} classes. The
+scaffolding handles mesh and spring-topology construction at scene load, the
+recording of statistics such as frame time and memory, and rendering, which runs
+on a separate thread from the simulator.
 
-The Update method in the Unity Editor gets called as often as the environment allows. If a step takes more compute time than the frame time, the next frame is delayed until it finishes. Taking this into account, the Update method effectively provides a variable frame rate that can be used to measure computation time. For the sake of keeping the experiments deterministic and easier to control, I used a fixed simulation delta time of $dt = 1/30$~s. This also counts as a relatively large time step, so it is a good test of the solvers' stability (and lets the substep count be more meaningful in \autopageref{ssec:ErrorVsMs}).
+In the Unity Editor, the \texttt{Update} method is called as often as the
+environment allows; if a step takes more compute time than the frame time, the
+next frame is delayed until it finishes. The \texttt{Update} method therefore
+effectively provides a variable frame rate that can be used to measure
+computation time. To keep the experiments deterministic and easier to control, I
+use a fixed simulation time step of $dt = 1/30$~s. This is also a relatively large
+time step, which makes it a good test of the solvers' stability and lets the
+substep count carry more meaning in \autoref{ssec:ErrorVsMs}.
 
 \paragraph{Overhead of the shared scaffolding.}
-The scaffolding adds a small, practically constant per-frame overhead, mostly from Unity-specific calls and rendering. I measure FPS with the Unity Profiler, which calculates based on the actual frames being drawn, so the value includes this overhead; but because both solvers pay this overhead identically, it does not bias the comparison.
-To keep performance as high as possible, I lean towards using primitive types, arrays and structs over classes and lists. I also cached the often-accessed variables globally to shift the strain from the CPU to the memory.
+The scaffolding adds a small, practically constant per-frame overhead, mostly from
+Unity-specific calls and rendering. I measure FPS with the Unity Profiler, which
+counts the actual frames drawn, so the reported value includes this overhead; but
+because both solvers pay it identically, it does not bias the comparison. To keep
+performance as high as possible, I favor primitive types, arrays, and structs over
+classes and lists, and I cache frequently accessed variables globally to shift the
+load from the CPU to memory.
 
 \subsection{Cloth model construction}
 \label{ssec:ClothModel}
-The mass-spring based cloth model I implement is the one used by Müller \cite{tenMinutePhysics}. Each internal vertex is connected to its neighbours by three types of distance constraints, each one having their own stiffness/compliance values:
-\begin{itemize}
-    \item \textbf{Stretching} constraints connect each vertex to its immediate horizontal and vertical neighbours.
-    \item \textbf{Shear} constraints connect each vertex to its diagonal neighbours.
-    \item \textbf{Bending} constraints connect each vertex to its second horizontal and vertical neighbours.
-\end{itemize}
-So an internal vertex has 12 constraints connected to it.
-Note, that the bending constraints are not dihedral-angle constraints. I deliberately only use one constraint form, to keep the comparison less complex.
-The mass of vertices is set proportionally to the area of the cloth they represent: each vertex gets a mass of a quarter of the sum of quadrilateral areas it touches. The parameter the user gives is the total mass of the cloth.
-This was done so that the cloth behaviour will stay consistent across different resolutions. But without this, giving the same mass to each vertex would also leave us with heavier side and corner vertices.
+The mass-spring cloth model I implement is the one used by
+M\"uller~\cite{tenMinutePhysics}. Each internal vertex is connected to its
+neighbors by three types of distance constraint, each with its own
+stiffness/compliance value. \textbf{Stretching} constraints connect a vertex to
+its immediate horizontal and vertical neighbors; \textbf{shear} constraints
+connect it to its diagonal neighbors; and \textbf{bending} constraints connect it
+to its second horizontal and vertical neighbors. An internal vertex therefore has
+twelve constraints attached to it. Note that the bending constraints are not
+dihedral-angle constraints: I deliberately use a single constraint form to keep
+the comparison less complex.
+
+The mass of each vertex is set proportionally to the area of cloth it represents:
+a vertex receives a quarter of the summed area of the quadrilaterals it touches,
+and the parameter the user supplies is the total mass of the cloth. This keeps the
+cloth's behavior consistent across resolutions. Assigning the same mass to every
+vertex instead would also leave the side and corner vertices effectively
+heavier relative to the area they represent.
 
 %----------------------------------------------------------------------------
 \section{How the comparison is kept fair}
 \label{sec:Fairness}
 %----------------------------------------------------------------------------
-I adopt four explicit fairness controls.
+I adopt several explicit fairness controls, described below.
 
 \subsection{Stiffness $\leftrightarrow$ compliance mapping}
 \label{ssec:StiffCompl}
-VBD takes a stiffness $k$ directly, whereas XPBD takes a compliance $\alpha = 1/k$. To match materials I set
+VBD takes a stiffness $k$ directly, whereas XPBD takes a compliance
+$\alpha = 1/k$. To match materials, I set
 \begin{equation}
     \alpha_{\mathrm{XPBD}} \;=\; 1/k_{\mathrm{VBD}}.
 \end{equation}
-This mapping is verified in \autoref{ssec:HarmonicOscillator}: a single spring with known analytic parameters results in the same oscillation frequency and decay rate in both solvers.
+This mapping is verified in \autoref{ssec:HarmonicOscillator}: a single spring
+with known analytic parameters yields the same oscillation frequency and decay
+rate in both solvers.
 
 \subsection{Matched compute budget --- and the substep/iteration caveat}
 \label{ssec:ComputeBudget}
-The natural unit of work differs between the two methods: XPBD's primary lever is the substep count, while VBD's is the inner iteration count. \textbf{A substep is not an iteration.} A substep recomputes the inertial target $\mathbf{y}$ and solves a fresh constraint system, whereas an iteration refines the same step. Because of this asymmetry, I try to compare the two methods based on \emph{wall-clock time} throughout \autoref{chap:Experiments}. One measure that creates bias is that VBD uses a maximum iteration count while XPBD uses a fixed iteration count. Both could implement either, but these decisions are inherently parts of each method's design (even when I consider their future optimisations), so I keep them as they are.
+The natural unit of work differs between the two methods: XPBD's primary lever is
+the substep count, while VBD's is the inner iteration count. \textbf{A substep is
+not an iteration.} A substep recomputes the inertial target $\mathbf{y}$ and
+solves a fresh constraint system, whereas an iteration refines the same step.
+Because of this asymmetry, I compare the two methods on the basis of
+\emph{wall-clock time} throughout \autoref{chap:Experiments}. One source of bias
+is that VBD uses a maximum iteration count while XPBD uses a fixed iteration
+count. Either method could implement either scheme, but these choices are
+inherent to each method's design (even allowing for their future optimizations),
+so I keep them as they are.
 
 \subsection{Matched gravity, $dt$, and damping}
 \label{ssec:MatchedDtGravity}
-For all experiments, unless otherwise noted, I use gravity $\mathbf{g} = (0, -9.81, 0)$~m/s$^{2}$ and a simulation time step of $dt = 1/30$~s. Rayleigh damping is not used in either method, because the difference in solver structure creates different results with the same parameters.
+Unless otherwise noted, all experiments use gravity
+$\mathbf{g} = (0, -9.81, 0)$~m/s$^{2}$ and a simulation time step of
+$dt = 1/30$~s. Rayleigh damping is disabled in both methods, because the
+difference in solver structure produces different results from the same damping
+parameters.
 
 \subsection{Handling VBD's accelerations for the core comparison}
 \label{ssec:DisableChebyshev}
-The 2024 VBD paper~\cite{Chen2024} reports significant speedups from Chebyshev acceleration and adaptive initialisation. Adaptive initialisation is VBD's own inertial prediction, which is also present in XPBD (it guesses with explicit Euler), so I keep it enabled. Chebyshev acceleration is likewise part of VBD, but it confounds an apples-to-apples comparison, as XPBD could also implement the same method, as shown in \cite{10.1145/2816795.2818063}.
+The 2024 VBD paper~\cite{Chen2024} reports significant speedups from Chebyshev
+acceleration and adaptive initialization. Adaptive initialization is VBD's own
+inertial prediction, which is also present in XPBD (which guesses with explicit
+Euler), so I keep it enabled. Chebyshev acceleration is likewise part of VBD, but
+it confounds an apples-to-apples comparison, since XPBD could implement the same
+technique, as shown in \cite{10.1145/2816795.2818063}; I therefore disable it for
+the core comparison.
 
 \subsection{Hessian projection for stability}
 \label{ssec:HessianProjection}
-The original VBD paper says the Hessian does not need to be positive-definite, as even if it may not take us into the descent direction, the small number of these steps will not influence the overall convergence.
-But projecting the matrix did make the method able to handle more extreme scenarios without noticably changing on the behaviour or performance, so I projected the Hessian to be positive-definite.
+The original VBD paper argues that the Hessian need not be positive-definite: even
+if a step occasionally does not point in a descent direction, the small number of
+such steps does not affect overall convergence. In my experiments, however,
+projecting the matrix to be positive-definite let the method handle more extreme
+scenarios without noticeably changing its behavior or performance, so I project
+the Hessian to be positive-definite.
 
 %----------------------------------------------------------------------------
 \section{Self-collision handling}
 \label{sec:SelfCollision}
 %----------------------------------------------------------------------------
-The two solvers implement self-collision differently, by necessity. \emph{XPBD self-collision} uses non-penetration constraints projected each iteration --- contact enforced as a position constraint. \emph{VBD self-collision}, in contrast, uses an elastic penalty potential added to $E$, contributing a gradient and Hessian to the affected vertex blocks.
+The two solvers implement self-collision differently, by necessity.
+\emph{XPBD self-collision} uses non-penetration constraints projected each
+iteration --- contact is enforced as a position constraint. \emph{VBD
+self-collision}, in contrast, uses an elastic penalty potential added to $E$,
+contributing a gradient and Hessian to the affected vertex blocks.
 
-This is a model difference, not a solver difference: a penalty model \emph{could} be implemented in XPBD and a projection model \emph{could} be implemented in VBD, but the natural, most solver-fitting form differs. Thus the self-collision comparison experiment in \autoref{ssec:SelfCollisionDrop} is purely qualitative.
+This is a model difference, not a solver difference: a penalty model \emph{could}
+be implemented in XPBD and a projection model \emph{could} be implemented in VBD,
+but the natural, most solver-fitting form differs between them. The self-collision
+experiment in \autoref{ssec:SelfCollisionDrop} is therefore purely qualitative.
 
 %----------------------------------------------------------------------------
-\section{Parallelisation (forward-looking)}
+\section{Parallelization (forward-looking)}
 \label{sec:Parallelisation}
 \label{ssec:Parallelisation}
 %----------------------------------------------------------------------------
-All measurements in this thesis are run single-threaded on the CPU. As noted here, and revisited in \autoref{sec:ThreatsValidity}, the two solvers have different parallelisation profiles. \emph{VBD} parallelises naturally over vertex blocks via graph colouring: vertices sharing no constraint can be updated independently within a colour class, which is well-suited to GPU execution. \emph{XPBD} can be parallelised via edge colouring, but this colouring is finer-grained (per constraint --- of which there are usually many more than vertices --- rather than per vertex), thus creates more colours, meaning more sequential dependencies.
+All measurements in this thesis are run single-threaded on the CPU. As noted here
+and revisited in \autoref{sec:ThreatsValidity}, the two solvers have different
+parallelization profiles. \emph{VBD} parallelizes naturally over vertex blocks
+through graph coloring: vertices that share no constraint can be updated
+independently within a color class, which suits GPU execution well. \emph{XPBD}
+can be parallelized through edge coloring, but this coloring is finer-grained
+(per constraint --- of which there are usually many more than vertices --- rather
+than per vertex), so it produces more color classes and hence more sequential
+dependencies.
 
-The expected result --- that parallelisation favours VBD more than XPBD --- is plausible but unverified by my experiments. This stands as a threat to external validity for any claim about which solver is ``faster overall''.
+The expected result --- that parallelization favors VBD more than XPBD --- is
+plausible but unverified by my experiments. It stands as a threat to the external
+validity of any claim about which solver is ``faster overall.''

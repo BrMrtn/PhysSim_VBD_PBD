@@ -7,15 +7,14 @@
 \section{Summary}
 \label{sec:Summary}
 %----------------------------------------------------------------------------
-\begin{itemize}
-    \item This thesis presented a controlled comparison of XPBD --- one of the most established solvers for real-time deformable simulation --- and VBD, a primal alternative introduced in 2024.
-    \item The contribution is threefold:
-    \begin{itemize}
-        \item a shared Unity codebase implementing both solvers under matched material parameters and a matched compute budget;
-        \item a Newton ground-truth reference, enabling reporting of absolute solution error rather than only relative performance;
-        \item an evaluation along four axes --- efficiency, robustness, physical realism, and flexibility --- read against the primal/dual distinction that motivated the stress tests.
-    \end{itemize}
-\end{itemize}
+This thesis presented a controlled comparison of XPBD --- one of the most
+established solvers for real-time deformable simulation --- and VBD, a primal
+alternative introduced in 2024. The contribution is threefold: a shared Unity
+codebase that implements both solvers under matched material parameters and a
+matched compute budget; a Newton ground-truth reference that enables reporting
+absolute solution error rather than only relative performance; and an evaluation
+along four axes --- efficiency, robustness, physical realism, and flexibility ---
+read against the primal/dual distinction that motivated the stress tests.
 
 The headline finding is that neither solver dominates; each wins in the regime
 its update direction is suited to. On the equal-wall-clock frontier VBD leads
@@ -41,31 +40,40 @@ set out in full in \autoref{sec:Verdicts}.
 
 \subsection{Multithreaded and GPU comparison}
 \label{ssec:FWParallel}
-\begin{itemize}
-    \item The most consequential extension is to repeat the experiments on a multithreaded CPU and on the GPU, directly lifting the single-threaded limitation of \autoref{ssec:ThreatSingleThread}.
-    \item Both solvers admit parallelisation via graph colouring, but the structures differ in granularity (\autoref{sec:Parallelisation}): VBD's per-vertex blocks should colour more cleanly than XPBD's per-constraint blocks.
-    \item The expected outcome is therefore that parallelisation widens VBD's lead; quantifying this gap is the natural next study.
-\end{itemize}
+The most consequential extension is to repeat the experiments on a multithreaded
+CPU and on the GPU, directly lifting the single-threaded limitation of
+\autoref{ssec:ThreatSingleThread}. Both solvers admit parallelization through
+graph coloring, but their structures differ in granularity
+(\autoref{sec:Parallelisation}): VBD's per-vertex blocks should color more cleanly
+than XPBD's per-constraint blocks. The expected outcome is therefore that
+parallelization widens VBD's lead, and quantifying that gap is the natural next
+study.
 
-\subsection{Extend research to other domains of dynamics}
+\subsection{Extending the research to other domains of dynamics}
 \label{ssec:FWOtherDynamics}
-\begin{itemize}
-    \item Beside mass-spring systems, in theory both solvers could also handle other cloth representations, soft bodies, and rigid bodies as well.
-    \item It would be interesting to see how the two solvers perform on these other types of dynamics, and whether the same conclusions hold.
-\end{itemize}
+Beyond mass-spring systems, both solvers could in theory also handle other cloth
+representations, soft bodies, and rigid bodies. It would be valuable to see how the
+two perform on these other kinds of dynamics, and whether the same conclusions
+continue to hold.
 
 \subsection{Using a different cloth model}
 \label{ssec:FWFEM}
-\begin{itemize}
-    \item The mass-spring discretisation is the source of the bias discussed in \autoref{ssec:ThreatMassSpring}, which makes the cloth model the most informative ingredient to vary next.
-    \item The cheapest change is to replace my 12-neighbour-per-vertex model with a 4- or 8-neighbour one; this narrows the range of representable materials but would reveal how sensitive the comparison is to mesh connectivity.
-    \item The more substantial change is to swap the mass-spring energy for an energy-based model such as Saint-Venant--Kirchhoff (StVK), the model the original VBD paper uses; I would expect it to favour XPBD far less.
-    \item A particularly informative variant would pair the models asymmetrically --- mass-spring XPBD against StVK VBD --- letting each solver run on the discretisation that suits it best.
-\end{itemize}
+The mass-spring discretization is the source of the bias discussed in
+\autoref{ssec:ThreatMassSpring}, which makes the cloth model the most informative
+ingredient to vary next. The cheapest change is to replace my
+twelve-neighbor-per-vertex model with a four- or eight-neighbor one; this narrows
+the range of representable materials but would reveal how sensitive the comparison
+is to mesh connectivity. A more substantial change is to swap the mass-spring
+energy for an energy-based model such as Saint-Venant--Kirchhoff (StVK), the model
+the original VBD paper uses; I would expect it to favor XPBD far less. A
+particularly informative variant would pair the models asymmetrically ---
+mass-spring XPBD against StVK VBD --- letting each solver run on the discretization
+that suits it best.
 
 \subsection{AVBD and post-2024 variants}
 \label{ssec:FWAVBD}
-\begin{itemize}
-    \item Augmented VBD~\cite{Giles2025} reportedly handles wide stiffness ratios and high stiffness substantially better than canonical VBD.
-    \item Re-running the stiffness-ratio experiments with AVBD would resolve the question left open in \autoref{ssec:ThreatAVBD}: whether the gap I observe is intrinsic to the primal approach or an artefact of the canonical 2024 implementation.
-\end{itemize}
+Augmented VBD~\cite{Giles2025} reportedly handles wide stiffness ratios and high
+stiffness substantially better than canonical VBD. Re-running the stiffness-ratio
+experiments with AVBD would resolve the question left open in
+\autoref{ssec:ThreatAVBD}: whether the gap I observe is intrinsic to the primal
+approach or an artifact of the canonical 2024 implementation.

@@ -19,31 +19,35 @@ Chebyshev acceleration disabled in VBD for the core comparison.
 \label{ssec:ErrorVsMs}
 
 For each solver I sweep over a range of substep and iteration configurations and
-plot the Pareto front of the resulting runs --- the set of configurations that
-are not dominated by any other, meaning no run is simultaneously faster and more
-accurate --- using average ms/frame against the average
-root-mean-squared position error measured from a Newton reference. Both solvers are swept
-over the combination of all of the following substep and iteration counts $n_{\mathrm{sub}} \in \{1, 2, 4, 8, 16, 32\}$,
-$n_{\mathrm{it}} \in \{1, 2, 4, 8, 16, 32\}$. For the sake of comparison, for this problem, the number of iterations is enforced within VBD (no early stopping).
-Each diagram in \autoref{fig:ErrorVsMs} uses a Newton reference computed with a different number of substeps.
+plot the Pareto front of the resulting runs --- the set of configurations not
+dominated by any other, meaning that no run is simultaneously faster and more
+accurate --- using average ms/frame against the average root-mean-squared
+position error measured against a Newton reference. Both solvers are swept over
+every combination of the substep and iteration counts
+$n_{\mathrm{sub}} \in \{1, 2, 4, 8, 16, 32\}$ and
+$n_{\mathrm{it}} \in \{1, 2, 4, 8, 16, 32\}$. For this problem the iteration count
+is enforced within VBD (no early stopping), to keep the comparison clean. Each
+diagram in \autoref{fig:ErrorVsMs} uses a Newton reference computed with a
+different number of substeps.
 
-The test problem is a chain of 10 nodes with one end pinned and a weight of 100 at the
-free end. The nodes are simply connected in sequence from one to the next with no other constraints between them.
-Initially, the free end is raised to the same height as the pinned end, positioned such that the chain is not stretched or compressed.
-Only gravity acts on the system.
+The test problem is a chain of ten nodes with one end pinned and a weight of 100
+at the free end. The nodes are connected in sequence, one to the next, with no
+other constraints between them. Initially the free end is raised to the same
+height as the pinned end and positioned so that the chain is neither stretched nor
+compressed, and only gravity acts on the system.
 
-As seen in my results, a single VBD iteration always approximates the Newton
+My results show that a single VBD iteration always approximates the Newton
 solution more closely than a single XPBD iteration, but it is also more
-expensive. Especially against the lower-iteration references (1 and 4) one can
-see how VBD usually achieves better performance by increasing its iteration
-count, whereas XPBD's best solutions instead come from increasing the number of
-substeps. This is clearly visible on the diagram with the 1-substep Newton
-reference, where some of XPBD's best solutions come from raising the
-substep count rather than the number of iterations. For harder problems --- where
-the time step is large enough (fewer substeps) --- VBD takes the lead. As the
-reference gets more refined with more substeps, the sub-problems become easy
-enough for both solvers to converge in one or two iterations, and at this point
-XPBD takes over thanks to its cheaper per-iteration cost.
+expensive. Especially against the lower-iteration references (1 and 4 substeps),
+VBD usually achieves better performance by increasing its iteration count,
+whereas XPBD's best solutions instead come from increasing the number of
+substeps. This is clearest in the diagram with the 1-substep Newton reference,
+where several of XPBD's best solutions come from raising the substep count rather
+than the iteration count. For harder problems --- where the time step is large
+enough, with fewer substeps --- VBD takes the lead. As the reference becomes more
+refined with more substeps, the sub-problems become easy enough for both solvers
+to converge in one or two iterations, and at that point XPBD takes over thanks to
+its cheaper per-iteration cost.
 
 \begin{figure}[ht]
     \centering
@@ -63,17 +67,25 @@ XPBD takes over thanks to its cheaper per-iteration cost.
 \subsection{Frame time vs.\ node count}
 \label{ssec:NodeCountVsFPS}
 
-To measure how each solver scales with problem size, I record the
-average frames per second on a hanging-cloth scene with wind interaction, at
-mesh resolutions from $8\times 8$ to $128\times 128$, holding solver settings fixed.
-I primarily compare XPBD with 4 substeps and 4 iterations ($XPBD_{sub4\times it4}$) against VBD with 4 substeps and a maximum of 4 iterations ($VBD_{sub4\times it_{\max}4}$) to see the "same parameter" comparison.
-To see how much VBD gains from the early stopping of iterations, I also include VBD variants with enforced iteration counts.
-$VBD_{sub4\times it4}$ to see how the two algorithms compare with truly matching parameters,
-and $VBD_{sub4\times it2}$, as based on the Pareto fronts of
-\autoref{ssec:ErrorVsMs} this configuration performs close to $XPBD_{sub4\times it4}$ in terms of both ``realism'' and ``efficiency''.
-In my tests, $VBD_{sub4\times it2}$ always outperforms $XPBD_{sub4\times it4}$, while $VBD_{sub4\times it4}$ is always a little bit behind.
-As expected, $VBD_{sub4\times it_{\max}4}$ gives as a fair middle ground, outperforming XPBD on the easier problems and joining its enforced variant on the harder ones.
-\autoref{fig:NodeCountVsFPS} shows a cloth with 32x32 nodes in the test environment for this experiment as it progresses in time.
+To measure how each solver scales with problem size, I record the average frames
+per second on a hanging-cloth scene with wind interaction, at mesh resolutions
+from $8\times 8$ to $128\times 128$, holding the solver settings fixed. The
+primary comparison is XPBD with 4 substeps and 4 iterations
+($XPBD_{sub4\times it4}$) against VBD with 4 substeps and a maximum of 4
+iterations ($VBD_{sub4\times it_{\max}4}$), which gives the ``same parameter''
+comparison. To see how much VBD gains from early stopping, I also include VBD
+variants with enforced iteration counts: $VBD_{sub4\times it4}$, which shows how
+the two algorithms compare with truly matching parameters, and
+$VBD_{sub4\times it2}$, which the Pareto fronts of \autoref{ssec:ErrorVsMs}
+suggest performs close to $XPBD_{sub4\times it4}$ in both ``realism'' and
+``efficiency.''
+
+In my tests, $VBD_{sub4\times it2}$ always outperforms $XPBD_{sub4\times it4}$,
+while $VBD_{sub4\times it4}$ always trails it slightly. As expected,
+$VBD_{sub4\times it_{\max}4}$ provides a fair middle ground, outperforming XPBD on
+the easier problems and converging toward its own enforced variant on the harder
+ones. \autoref{fig:NodeCountVsFPS} shows a $32\times 32$-node cloth in this
+experiment's test environment as it progresses in time.
 
 \begin{table}[ht]
     \centering
@@ -123,9 +135,12 @@ As expected, $VBD_{sub4\times it_{\max}4}$ gives as a fair middle ground, outper
 \subsection{Chain with heavy weight attached}
 \label{ssec:ChainWithHeavyWeight}
 
-This scene is a chain fixes on one end. The particle on the other end has a mass 1000 times greater than the others.
-\autoref{fig:ChainHeavyWeight} compares XPBD and VBD agaist a reference created with a Newton solver. All three methods use a single substep and 100 iterations.
-As expected based on the primal/dual paper \cite{10.1111/cgf.14104}, XPBD - being a dual solver - fails to converge to the reference solution, while VBD approaches it much better.
+This scene is a chain fixed at one end, with the particle at the other end given
+a mass 1000 times greater than the others. \autoref{fig:ChainHeavyWeight} compares
+XPBD and VBD against a reference produced by a Newton solver; all three methods use
+a single substep and 100 iterations. As predicted by the primal/dual
+paper~\cite{10.1111/cgf.14104}, XPBD --- a dual solver --- fails to converge to the
+reference solution, whereas VBD approaches it far more closely.
 
 \begin{figure}[ht]
     \centering
@@ -142,10 +157,11 @@ As expected based on the primal/dual paper \cite{10.1111/cgf.14104}, XPBD - bein
 \label{ssec:StiffnessRatioChain}
 
 This scene is a chain of alternating soft and stiff springs, with a stiffness
-ratio of $1{:}10000$ to mirror the experiment in the original VBD
-paper~\cite{Chen2024}.
-Similarly to the previous experiment, \autoref{fig:StiffnessRatioChain} here I also use one substep and 100 iterations for all three methods.
-Similarly to the previous experiment, VBD - being a primal solver - does not converge to the reference solution, while XPBD matches it almost perfectly.
+ratio of $1{:}10000$, mirroring the experiment in the original VBD
+paper~\cite{Chen2024}. As in the previous experiment, all three methods in
+\autoref{fig:StiffnessRatioChain} use one substep and 100 iterations. The roles
+are now reversed: VBD --- a primal solver --- does not converge to the reference
+solution, while XPBD matches it almost perfectly.
 
 \begin{figure}[ht]
     \centering
@@ -158,38 +174,42 @@ Similarly to the previous experiment, VBD - being a primal solver - does not con
     \label{fig:StiffnessRatioChain}
 \end{figure}
 
-These two experiments have also reinforced that my XPBD and VBD implementations are correct, as they behave as expected.
-This also increases confidence in the rest of my results, makes it more clear that the results I report are not bugs or implementation errors.
+These two experiments also reinforce that my XPBD and VBD implementations are
+correct, since both behave exactly as the theory predicts. This raises confidence
+in the rest of my results and makes clearer that the behavior I report reflects
+the algorithms rather than bugs or implementation errors.
 
 \subsection{Self-collision: cloth folded onto itself}
 \label{ssec:SelfCollisionDrop}
 
-Both solvers can be used to simulate collisions as well.
-In this I scene drop a cloth onto the ground so that it folds onto itself.
-As noted in \autoref{sec:SelfCollision}, the two solvers implement self-collision differently, so I will not give exact measurements, but provide my observations instead.
+Both solvers can also be used to simulate collisions. In this scene I drop a cloth
+onto the ground so that it folds onto itself. As noted in
+\autoref{sec:SelfCollision}, the two solvers implement self-collision
+differently, so rather than give exact measurements I report my observations.
 
-Physically accurate cloth requires handling a lot of stiff
-constraints: woven fabrics, for instance, only stretch by about 5--10\%.
+Physically accurate cloth requires handling many stiff constraints: woven
+fabrics, for instance, stretch by only about 5--10\%. My cloth model attaches
+twelve springs with three different stiffness values to each interior node, and
+those values can differ greatly. As the stiffness-ratio experiment above shows,
+this is a serious disadvantage for VBD. The result is very unstable behavior:
+even when the simulation does not blow up, the cloth overshoots most
+configurations. Initial vertex noise on the scale of $0.001$ produces large
+movements --- visible in the first image, where the cloth changes shape even
+before colliding with the ground --- and the cloth keeps shifting along the floor
+even after it appears to have settled.
 
-My cloth model attaches 12 springs with three different stiffness values to each
-interior node. And these values can differ geatly.
-As the stiffness-ratio experiment above shows, this is a serious
-disadvantage for VBD. The result is very unstable behaviour: even when the
-simulation does not blow up, the cloth overshoots most configurations, with
-initial vertex noise on the scale of $0.001$ producing large movements
-(can be seen on the 1st image, where it changes form even before colliding with the ground),
-and the cloth moving around on the floor even after once it looked like it settled.
+The instability can be tamed by giving the vertices a large enough mass; my
+experiments suggest the vertex mass needs to be at minimum within two to three
+orders of magnitude of the largest stiffness value. This is exactly why the
+original VBD paper~\cite{Chen2024} uses a different cloth model, and it shows that
+VBD sometimes has to be hand-tuned to stay stable. VBD also cannot handle
+infinitely stiff constraints. AVBD~\cite{Giles2025} improves substantially on this
+axis and is more robust, but between canonical VBD and XPBD, XPBD is the more
+robust solver for this problem.
 
-The instability can be tamed by giving the vertices a large enough mass --- my
-practical experiments suggest it needs to be at minimum 2--3 orders of magnitude smaller
-than the largest stiffness value. This is exactly why the original VBD
-paper~\cite{Chen2024} uses a different cloth model, and it shows that VBD
-sometimes has to be hand-tuned to stay stable.
-VBD is also not able to handle infinitely stiff constraints.
-AVBD~\cite{Giles2025} improves substantially on this axis, making it more robust, but between VBD and XPBD, XPBD is the more robust solver for this problem.
-
-\autoref{fig:SelfCollisionW1} and \autoref{fig:SelfCollisionW1e4} show the drop at a total cloth mass of 1 and of
-10000 respectively; in each, the top row is XPBD and the bottom row is VBD.
+\autoref{fig:SelfCollisionW1} and \autoref{fig:SelfCollisionW1e4} show the drop at
+a total cloth mass of 1 and of 10000, respectively; in each, the top row is XPBD
+and the bottom row is VBD.
 
 \begin{figure}[ht]
     \centering
@@ -260,18 +280,18 @@ AVBD~\cite{Giles2025} improves substantially on this axis, making it more robust
 \subsection{Harmonic oscillator}
 \label{ssec:HarmonicOscillator}
 
-The harmonic oscillator implemented as a single distance constraint between a
-pinned top node and a free bottom node. I measure its amplitude over time.
-To compare against Fig.~2 of the XPBD paper~\cite{10.1145/2994258.2994272} I use
-the same parameters, only with the direction reversed: rest length 1, compliance
-$\alpha = 10^{-3}$, rest position $x = -1$, initial position $x_0 = -0.5$, and
-mass $m = 1$.
+The harmonic oscillator is implemented as a single distance constraint between a
+pinned top node and a free bottom node, and I measure its amplitude over time. To
+compare against Fig.~2 of the XPBD paper~\cite{10.1145/2994258.2994272}, I use the
+same parameters, only with the direction reversed: rest length 1, compliance
+$\alpha = 10^{-3}$, rest position $x = -1$, initial position $x_0 = -0.5$, and mass
+$m = 1$.
 
 Regardless of $dt$, both solvers converge in a single iteration and follow the
 same reference curve perfectly. \autoref{fig:Oscillator} also shows the analytic solution
 $x(t) = x_0\cos(\omega t)$ with $\omega = \sqrt{k/m} = 31.62~\mathrm{s}^{-1}$ as
 dashed lines. As in the XPBD example, all of the visible damping is a
-side-effect of the implicit discretisation of the equations of motion.
+side effect of the implicit discretization of the equations of motion.
 
 \begin{figure}[ht]
     \centering
@@ -292,7 +312,7 @@ substepping.
 
 Over a longer time frame, \autoref{fig:EnergyLong} shows that both solvers lose
 energy along the same exponential decay curve. The oscillations around that
-curve are purely a convergence artefact: the solver over- and undershoots
+curve are purely a convergence artifact: the solver over- and undershoots
 because of its gradient estimate.
 
 \begin{figure}[ht]
@@ -325,9 +345,10 @@ extremely close to the reference.
 \subsection{Iteration-count independence of stiffness}
 \label{ssec:IterIndepStiff}
 
-For each solver I go through iteration counts to see if there is any noticable change in stiffness.
-For both methods the resting configuration is essentially unchanged as the count grows, so the converged
-shape does not depend on how many iterations are spent.
+For each solver I sweep over a range of iteration counts to check for any
+noticeable change in stiffness. For both methods the resting configuration is
+essentially unchanged as the count grows, so the converged shape does not depend
+on how many iterations are spent.
 
 \begin{figure}[ht]
     \centering
@@ -351,30 +372,31 @@ shape does not depend on how many iterations are spent.
 
 To compare how easily each solver can be extended, I had Claude Code implement
 dihedral bending constraints in both. Both methods already include this
-constraint in their original papers, so I follow that those implementations. The existing
-bending constraint is a distance constraint acting as a skip-spring between two
-non-adjacent nodes; the task was to implement the dihedral version and make
-bending toggleable between the dihedral and distance formulations.
-\autoref{tab:Extension} summarises the effort.
+constraint in their original papers, so I follow those implementations. The
+existing bending constraint is a distance constraint acting as a skip-spring
+between two non-adjacent nodes; the task was to implement the dihedral version and
+make bending toggleable between the dihedral and distance formulations.
+\autoref{tab:Extension} summarizes the effort.
 
-The two implementations share a new $\approx$30-LOC file that computes the gradients from
-the four hinge node positions, and the in-solver addition that solves the new
-constraint is about 28 LOC and essentially identical in both. XPBD was easier to
-extend: the new constraint resembles the existing distance constraint (but using four
-particles instead of two), introduces no new concept, and plugs in with a single
-extra \texttt{SolveDihedralConstraints} call without changing any existing code.
-Each hinge is visited once per iteration. VBD needed more setup code because it
-is vertex-based, so each hinge has to be stored four times --- once per
-incident vertex --- and its data type carries an extra parameter naming which of
-the four vertices is currently being processed. The hinge Hessian block is
-therefore recomputed four times per iteration, allaround resulting in the VBD extension
-having 4 times higher computational cost than XPBD one. Mathematically, XPBD needs only
-the first derivative of the constraint, whereas VBD needs the second derivative,
-which is arguably harder to derive and implement.
+The two implementations share a new $\approx$30-LOC file that computes the
+gradients from the four hinge-node positions, and the in-solver addition that
+solves the new constraint is about 28 LOC and essentially identical in both. XPBD
+was easier to extend: the new constraint resembles the existing distance
+constraint (but on four particles instead of two), introduces no new concept, and
+plugs in through a single extra \texttt{SolveDihedralConstraints} call without
+changing any existing code, with each hinge visited once per iteration. VBD needed
+more setup code because it is vertex-based: each hinge has to be stored four times
+--- once per incident vertex --- and its data type carries an extra parameter
+naming which of the four vertices is currently being processed. The hinge Hessian
+block is therefore recomputed four times per iteration, which makes the VBD
+extension roughly four times as expensive as the XPBD one. Mathematically, XPBD
+needs only the first derivative of the constraint, whereas VBD needs the second
+derivative, which is arguably harder to derive and implement.
 
-In general, for scalar constraints (which quantify a condition using a single numerical value, such as distance or angle), XPBD is the easier solver to extend. For
-tensor-valued energies (Neo-Hookean, StVK), which describe continuous material deformation using tensors, it is XPBD that has to do the
-extra work.
+In general, for scalar constraints --- which quantify a condition with a single
+numerical value, such as a distance or an angle --- XPBD is the easier solver to
+extend. For tensor-valued energies (Neo-Hookean, StVK), which describe continuous
+material deformation through tensors, it is XPBD that has to do the extra work.
 
 \begin{table}[ht]
     \centering
