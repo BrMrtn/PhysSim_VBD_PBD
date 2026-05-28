@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  28 MAY 2026 18:29
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  28 MAY 2026 22:09
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1085,24 +1085,24 @@ Underfull \hbox (badness 10000) in paragraph at lines 81--89
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 13--63
+Underfull \hbox (badness 10000) in paragraph at lines 13--62
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 13--63
+Underfull \hbox (badness 10000) in paragraph at lines 13--62
 
  []
 
 ) [37
 
-] (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstlang1.sty
+] [38] (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2025/11/14 1.11b listings language file
 )
 Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 28.
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <8> not available
 (Font)              Font shape `TU/lmtt/b/n' tried instead on input line 34.
- [38] [39]) [40]
+ [39] [40]) [41]
 \tf@thm=\write5
 \openout5 = `thesis.thm'.
 
@@ -1121,10 +1121,10 @@ Package rerunfilecheck Info: File `thesis.out' has not changed.
 Here is how much of TeX's memory you used:
  19910 strings out of 469581
  392056 string characters out of 5461843
- 1779876 words of memory out of 5000000
+ 1778876 words of memory out of 5000000
  48117 multiletter control sequences out of 15000+600000
  642373 words of font info for 125 fonts, out of 8000000 for 9000
  376 hyphenation exceptions out of 8191
  78i,14n,82p,913b,1985s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on thesis.pdf (47 pages).
+Output written on thesis.pdf (48 pages).
