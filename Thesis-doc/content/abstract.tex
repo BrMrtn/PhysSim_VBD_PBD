@@ -14,7 +14,7 @@ fizikai pontosság és a számítási költség közötti kompromisszumra kénys
 Extended Position-Based Dynamics (XPBD) évek óta a valós idejű deformálható
 testek solvereinek az egyik legelterjedtebb fajtája, míg a 2024-ben bemutatott Vertex Block Descent
 (VBD) egy ígéretes \textit{primal} alternatíva, amelyet még nem hasonlítottak össze
-alaposan vele. Ez a szakdolgozat --- legjobb tudomásom szerint --- a két
+alaposan vele. Ez a szakdolgozat a két
 módszer első hűséges, közvetlen összehasonlítását mutatja be.
 
 Mindkét megoldót ugyanabban a Unity-alapú kódbázisban valósítom meg, ugyanazokra
@@ -22,10 +22,10 @@ a tömeg-rugó modellekre alkalmazom őket, és egyező iterációs- és
 lépés-költséggel futtatom őket, hogy a wall-clock költségük összehasonlítható
 legyen. Egy magas iterációszámú Newton-solver szolgál ground-truth
 referenciaként, így abszolút megoldási hibáról is be tudok számolni, nem csak relatív
-teljesítményről. Az elemzés során támaszkodom Macklin et al. primal/dual
-keretrendszerére --- az XPBD a kényszerek Lagrange-szorzóin dolgozó dual
+teljesítményről. Az elemzés során Macklin et al. primal/dual
+keretrendszerére támaszkodom --- az XPBD a kényszerek Lagrange-szorzóin dolgozó dual
 megoldó, a VBD pedig a csúcspontpozíciókon dolgozó primal megoldó ---, amely
-néhány stressztesztet motivál és egyes eredmények értelmezésében segít.
+néhány stresszteszt elvégzését motiválja és egyes eredmények értelmezésében segít.
 
 Mindkét megoldót négy tengely mentén értékelem ki: hatékonyság, robusztusság,
 fizikai realizmus és rugalmasság. A fő megállapítás az, hogy egyik sem
@@ -35,7 +35,7 @@ milliszekundumonként, amikor a részlépésenkénti feladat nehéz, míg az XPB
 veszi át a vezetést, amint a finomabb részlépés elég könnyűvé teszi az
 egyes részfeladatokat ahhoz, hogy egy-két olcsó iterációval konvergáljanak. Az
 XPBD jól tűri a szélsőséges merevségarányokat és a közel-merev kényszereket, de
-elakad egy $1000\times$-es tömegaránynál; a VBD kezeli a tömegarányt, de széles
+elakad egy $1000\times$-es tömegaránynál; a VBD kezeli a tömegarányt, viszont széles
 merevségarányok mellett instabillá válik, hacsak a csúcspontok tömege nincs
 hangolva. Elegendő iterációszámnál mindkettő eléri a Newton-referenciát, és
 fizikailag megkülönböztethetetlenek. Rugalmasság tekintetében az XPBD könnyebben

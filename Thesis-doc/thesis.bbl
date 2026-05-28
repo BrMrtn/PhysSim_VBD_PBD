@@ -1,9 +1,19 @@
-\begin{thebibliography}{10}
+\begin{thebibliography}{12}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Baraff and Witkin(1998)]{10.1145/280814.280821}
+David Baraff and Andrew Witkin.
+\newblock Large steps in cloth simulation.
+\newblock In \emph{Proceedings of the 25th Annual Conference on Computer
+  Graphics and Interactive Techniques}, SIGGRAPH '98, page 43–54, New York,
+  NY, USA, 1998. Association for Computing Machinery.
+\newblock ISBN 0897919998.
+\newblock \doi{10.1145/280814.280821}.
+\newblock URL \url{https://doi.org/10.1145/280814.280821}.
 
 \bibitem[Chen et~al.(2024)Chen, Liu, Yang, and Yuksel]{Chen2024}
 Anka~He Chen, Ziheng Liu, Yin Yang, and Cem Yuksel.
@@ -86,6 +96,11 @@ Matthias Müller, Bruno Heidelberger, Marcus Hennix, and John Ratcliff.
 \newblock \doi{https://doi.org/10.1016/j.jvcir.2007.01.005}.
 \newblock URL
   \url{https://www.sciencedirect.com/science/article/pii/S1047320307000065}.
+
+\bibitem[Nikishkov(2004)]{nikishkov2004introfem}
+G.~P. Nikishkov.
+\newblock \emph{Introduction to the Finite Element Method}.
+\newblock University of Aizu, Aizu-Wakamatsu, Japan, 2004.
 
 \bibitem[Wang(2015)]{10.1145/2816795.2818063}
 Huamin Wang.
