@@ -27,10 +27,10 @@ assigned by dragging them onto the component in the editor, with no extra wiring
 code.
 
 Unity makes it easy to set up experiments, as most of the time it's enough to create a
-new scene, drag and drop objects into it (in my example, cloth models were simple plane 
-meshes imporetd from Blender), and assign the relevant components to them, which then
-decides what solver it will run. It also has several built-in tools that proved really
-useful for data collection: the Profiler for gathering FPS statistics, the Recorder for
+new scene, drag and drop objects into it (in my case, cloth models were simple plane
+meshes imported from Blender), and assign the relevant components to them, which then
+determine what solver runs. It also has several built-in tools that proved useful
+for data collection: the Profiler for gathering FPS statistics, the Recorder for
 capturing videos of the experiments, and Shader Graph for creating textures in a straightforward way.
 
 \subsection{Pinning vertices through Unity components}
@@ -57,8 +57,8 @@ turning, or stretching that object drags the pinned edge with it.
 \section{Platform and environment}
 \label{sec:Platform}
 %----------------------------------------------------------------------------
-As it's probably obvious from the previous chapter, the simulators are implemented inside the Unity Editor.
-All measurements reported in \autoref{chap:Experiments} were collected in the following environment:
+The simulators are implemented inside the Unity Editor. All measurements
+reported in \autoref{chap:Experiments} were collected in the following environment:
 \begin{itemize}
     \item \textbf{CPU:} AMD Ryzen 7 5800H
     \item \textbf{Memory:} 16~GB DDR4
@@ -168,9 +168,9 @@ the core comparison.
 The original VBD paper argues that the Hessian need not be positive-definite: even
 if a step occasionally does not point in a descent direction, the small number of
 such steps does not affect overall convergence. In my experiments, however,
-keeping each local Hessian positive-definite let the method handle more extreme
-scenarios without noticeably changing its behavior or performance, so I keep each
-local Hessian positive-definite.
+projecting each local Hessian to positive-definite let the method handle more
+extreme scenarios without noticeably changing its behavior or performance, so I
+keep the projection on throughout.
 
 %----------------------------------------------------------------------------
 \section{Self-collision handling}
@@ -194,8 +194,7 @@ fast-moving vertices cannot tunnel through each other.
 
 %----------------------------------------------------------------------------
 \section{Parallelization (forward-looking)}
-\label{sec:Parallelisation}
-\label{ssec:Parallelisation}
+\label{sec:Parallelization}
 %----------------------------------------------------------------------------
 All measurements in this thesis are run single-threaded on the CPU. As noted here
 and revisited in \autoref{sec:ThreatsValidity}, the two solvers have different

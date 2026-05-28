@@ -188,10 +188,11 @@ onto the ground so that it folds onto itself. As noted in
 differently, so rather than give exact measurements I report my observations.
 
 Physically accurate cloth requires handling many stiff constraints: woven
-fabrics, for instance, stretch by only about 5--10\%. My cloth model attaches
-twelve springs with three different stiffness values to each interior node, and
-those values can differ greatly. As the stiffness-ratio experiment above shows,
-this is a serious disadvantage for VBD. The result is very unstable behavior:
+fabrics, for instance, stretch by only about 5--10\%. The cloth model of
+\autoref{ssec:ClothModel} attaches twelve springs of three different stiffness
+values to each interior node, and those values can differ greatly --- exactly
+the setup that the stiffness-ratio experiment above shows to be a serious
+disadvantage for VBD. The result is very unstable behavior:
 even when the simulation does not blow up, the cloth overshoots most
 configurations. Initial vertex noise on the scale of $0.001$ produces large
 movements --- visible in the first image, where the cloth changes shape even
@@ -267,7 +268,7 @@ and the bottom row is VBD.
             \scimg{figures/SelfCollisionDrop/VBD-w1e4/frame_7.png} \\
     \end{tabular}
     \caption{The same cloth drop at total mass~10000, over time
-    (left to right). Top: XPBD. Bottom: VBD. The larger vertex mass stabilises
+    (left to right). Top: XPBD. Bottom: VBD. The larger vertex mass stabilizes
     the VBD solve.}
     \label{fig:SelfCollisionW1e4}
 \end{figure}

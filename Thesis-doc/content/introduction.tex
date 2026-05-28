@@ -106,12 +106,10 @@ The two solvers sit on opposite sides of the \emph{primal/dual} duality
 identified by Macklin et~al.~\cite{10.1111/cgf.14104}: XPBD is the dual solver,
 solving for Lagrange multipliers on the constraints, while VBD is the primal
 solver, solving directly for vertex positions. This duality is the organizing
-lens of the thesis. It anticipates complementary weak spots --- the dual solver
-struggles where information must propagate along chains of coupled constraints,
-the primal solver where a wide spread of stiffnesses meets at a single vertex ---
-and the stress tests in \autoref{chap:Experiments} are built around exactly these
-scenarios. \autoref{sec:PrimalDual} develops the distinction and its consequences
-in full.
+lens of the thesis: it predicts complementary weak spots --- one per solver ---
+that the stress tests in \autoref{chap:Experiments} are built around.
+\autoref{sec:PrimalDual} derives the distinction and the failure-mode
+predictions in full.
 
 %----------------------------------------------------------------------------
 \section{Evaluation axes}

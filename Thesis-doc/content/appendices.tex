@@ -30,38 +30,32 @@ Optional terms are guarded by flags and disabled for the core comparison.
 
 Step(dt):
     sdt = dt / numSubsteps
-    invSdt2 = 1 / sdt^2
-    maxVelocity = (thickness > 0) ? velCapPerFrame * thickness / dt : +infinity
 
-    if handleSelfCollisions:                                  // build spatial hash once per frame
-        spatialHash.Create(positions)
-        maxTravel = thickness + maxVelocity * dt
-        spatialHash.QueryAll(positions, maxTravel)
-        CacheSelfCollisionMinDist()
+    spatialHash.Create(positions)                             // build spatial hash once per frame
+    maxTravel = thickness + maxVelocity * dt
+    spatialHash.QueryAll(positions, maxTravel)
 
     for step = 1 to numSubsteps:
         AccumulateExternalForces()                            // e.g. wind, refreshed each substep
-        Integrate(sdt, maxVelocity)
+        Integrate(sdt)
         ResetLambdas()
         for iter = 1 to numIterations:
-            SolveDistanceConstraints(sdt, invSdt2)
-            if handleSelfCollisions: SolveSelfCollisions()
-        SolveExternalCollisions()                             // ground / sphere, generalized
+            SolveDistanceConstraints(sdt)
+            SolveSelfCollisions()
+        SolveExternalCollisions()
         UpdateVelocities(sdt)
 
-Integrate(sdt, maxVelocity):
-    invMassDamp = 1 / (1 + rayleighMassDamping * sdt)         // implicit mass-proportional damping
+Integrate(sdt):
     for each vertex i with invMasses[i] != 0:
         velocities[i] += gravity * sdt
         velocities[i] += externalForces[i] * sdt * invMasses[i]
-        velocities[i] *= invMassDamp
-        if handleSelfCollisions and |velocities[i]| > maxVelocity:
+        velocities[i] /= 1 + rayleighMassDamping * sdt        // mass damping
+        if |velocities[i]| > maxVelocity:
             velocities[i] *= maxVelocity / |velocities[i]|    // velocity capping
         previousPositions[i] = positions[i]
         positions[i] += velocities[i] * sdt
 
-SolveDistanceConstraints(sdt, invSdt2):
-    betaOverSdt = rayleighStiffnessDamping / sdt
+SolveDistanceConstraints(sdt):
     for each constraint c = (id0, id1, restLength, compliance):
         w0 = invMasses[id0];  w1 = invMasses[id1];  w = w0 + w1
         if w == 0: continue
@@ -69,13 +63,10 @@ SolveDistanceConstraints(sdt, invSdt2):
         len = |grad|;  if len == 0: continue
         grad /= len
         C = len - restLength
-        alpha = compliance * invSdt2
-        gamma = 0;  gradDotDx = 0
-        if rayleighStiffnessDamping > 0:                      // XPBD stiffness damping (gamma)
-            gamma = compliance * betaOverSdt
-            dx = (positions[id0]-previousPositions[id0]) - (positions[id1]-previousPositions[id1])
-            gradDotDx = grad . dx
-        deltaLambda = (-C - alpha*lambdas[c] - gamma*gradDotDx) / ((1 + gamma)*w + alpha)
+        alphaTilde = compliance / sdt^2                        // time-step-scaled compliance
+        gamma = compliance * rayleighStiffnessDamping / sdt    // stiffness damping
+        dx = (positions[id0]-previousPositions[id0]) - (positions[id1]-previousPositions[id1])
+        deltaLambda = (-C - alphaTilde*lambdas[c] - gamma*(grad (*@$\cdot$@*) dx)) / ((1 + gamma)*w + alphaTilde)
         lambdas[c] += deltaLambda
         positions[id0] += grad * (deltaLambda * w0)
         positions[id1] -= grad * (deltaLambda * w1)
@@ -85,7 +76,7 @@ SolveSelfCollisions():
         for each id1 in spatialHash.Adjacent(id0):
             w0 = invMasses[id0];  w1 = invMasses[id1];  w = w0 + w1
             if w == 0: continue
-            minDist = cachedSelfCollisionMinDist[id0, id1]
+            minDist = min(thickness, |restPositions[id0] - restPositions[id1]|)
             delta = positions[id0] - positions[id1]
             dist = |delta|
             if dist == 0 or dist >= minDist: continue
@@ -94,7 +85,7 @@ SolveSelfCollisions():
             positions[id0] += correction * (w0 / w)
             positions[id1] -= correction * (w1 / w)
             relDisp = (positions[id0]-previousPositions[id0]) - (positions[id1]-previousPositions[id1])
-            dispTangent = relDisp - (relDisp . normal) * normal
+            dispTangent = relDisp - (relDisp (*@$\cdot$@*) normal) * normal
             positions[id0] -= dispTangent * (selfCollisionFriction * w0 / w)
             positions[id1] += dispTangent * (selfCollisionFriction * w1 / w)
 
@@ -121,13 +112,9 @@ UpdateVelocities(sdt):
 Step(dt):
     sdt = dt / numSubsteps
 
-    if handleSelfCollisions:                                  // build spatial hash once per frame
-        spatialHash.Create(positions)
-        velCap = velCapPerFrame * thickness / dt
-        maxVel = min(MaxVelocityMagnitude(), velCap)
-        maxTravel = thickness + maxVel * dt
-        spatialHash.QueryAllSymmetric(positions, maxTravel)
-        CacheSelfCollisionMinDist()
+    spatialHash.Create(positions)                             // build spatial hash once per frame
+    maxTravel = thickness + maxVelocity * dt
+    spatialHash.QueryAllSymmetric(positions, maxTravel)
 
     for step = 1 to numSubsteps:
         AccumulateExternalForces()
@@ -135,13 +122,12 @@ Step(dt):
         ClearIsColliding()
         omega = 1
         for iter = 1 to maxIterations:
-            if useAcceleration: prevIterPositions = positions
+            prevIterPositions = positions
             maxStep = Solve(sdt)
-            if useAcceleration:                               // Chebyshev acceleration
-                omega = GetAcceleratorOmega(iter, accelerationRho, omega)
-                ApplyAccelerator(omega)
-                prevPrevIterPositions = prevIterPositions
-            if maxStep < convergenceTolerance: break          // early-out at fixed point
+            omega = GetAcceleratorOmega(iter, accelerationRho, omega)   // Chebyshev acceleration
+            ApplyAccelerator(omega)
+            prevPrevIterPositions = prevIterPositions
+            if maxStep < convergenceTolerance: break          // early-out if converged
         UpdateVelocities(sdt)
 
 AdaptiveInitialization(sdt):
@@ -149,26 +135,20 @@ AdaptiveInitialization(sdt):
     for each vertex i with invMasses[i] != 0:
         aExt = gravity + externalForces[i] * invMasses[i]
         inertia[i] = previousPositions[i] + sdt*velocities[i] + sdt^2 * aExt
-        alpha = 1
-        if hasPrevVelocities and |aExt|^2 > eps:
-            prevAcc = (velocities[i] - previousVelocities[i]) / sdt
-            alpha = Clamp01( (prevAcc . aExt) / |aExt|^2 )     // adaptive warm start
-        positions[i] = previousPositions[i] + sdt*velocities[i] + alpha*sdt^2*aExt
+        prevAcc = (velocities[i] - previousVelocities[i]) / sdt
+        aTilde = Clamp01( (prevAcc . aExt) / |aExt|^2 )        // adaptive warm start
+        positions[i] = previousPositions[i] + sdt*velocities[i] + aTilde*sdt^2*aExt
 
 Solve(sdt):                                                   // one Gauss-Seidel block-descent pass
-    invDt2 = 1 / sdt^2;  invDt = 1 / sdt
-    alphaOverDt = rayleighMassDamping * invDt
-    betaOverDt  = rayleighStiffnessDamping * invDt
     maxStep2 = 0
     for each vertex i with invMasses[i] != 0:
-        massInvDt2 = masses[i] * invDt2
-        f = (inertia[i] - positions[i]) * massInvDt2          // inertial force
-        H = massInvDt2 * Identity3x3                          // inertial Hessian (symmetric)
+        m_h2 = masses[i] / sdt^2
+        f = (inertia[i] - positions[i]) * m_h2                // inertial force
+        H = m_h2 * Identity3x3                                // inertial Hessian (symmetric)
 
-        if rayleighMassDamping > 0:                           // implicit mass damping
-            cMass = alphaOverDt * masses[i]
-            f -= cMass * (positions[i] - previousPositions[i])
-            H += cMass * Identity3x3
+        cMass = rayleighMassDamping * masses[i] / sdt         // mass damping
+        f -= cMass * (positions[i] - previousPositions[i])
+        H += cMass * Identity3x3
 
         for each spring edge (i, j) with restLength l0, stiffness k:
             diff = positions[i] - positions[j]
@@ -176,33 +156,31 @@ Solve(sdt):                                                   // one Gauss-Seide
             d = diff / len;  ratio = l0 / len
             coeff1 = k * max(0, 1 - ratio)                    // compression-clamped (PSD) Hessian
             coeff2 = k * ratio
-            if rayleighStiffnessDamping > 0:                  // implicit stiffness damping
-                dv = (positions[i]-previousPositions[i]) - (positions[j]-previousPositions[j])
-                f -= betaOverDt * (coeff1*dv + coeff2*(d . dv)*d)
-                coeff1 *= (1 + betaOverDt);  coeff2 *= (1 + betaOverDt)
+            dv = (positions[i]-previousPositions[i]) - (positions[j]-previousPositions[j])
+            betaOverDt = rayleighStiffnessDamping / sdt       // stiffness damping
+            f -= betaOverDt * (coeff1*dv + coeff2*(d (*@$\cdot$@*) dv)*d)
+            coeff1 *= (1 + betaOverDt);  coeff2 *= (1 + betaOverDt)
             H += coeff1 * Identity3x3 + coeff2 * (d * d^T)
             f += (k * (l0 - len) / len) * diff
 
-        if handleSelfCollisions and selfCollisionStiffness > 0:
-            kc = selfCollisionStiffness
-            for each j in spatialHash.Adjacent(i):
-                diff = positions[i] - positions[j]
-                dist = |diff|;  if dist < eps: continue
-                minDist = cachedSelfCollisionMinDist[i, j]
-                if dist >= minDist: continue
-                n = diff / dist
-                f += (kc * (minDist - dist)) * n              // penalty contact force
-                H += kc * (n * n^T)                           // PSD rank-1 Hessian
-                isColliding[i] = true
+        for each j in spatialHash.Adjacent(i):                // self-collision handling
+            diff = positions[i] - positions[j]
+            dist = |diff|;  if dist < eps: continue
+            minDist = min(thickness, |restPositions[i] - restPositions[j]|)
+            if dist >= minDist: continue
+            n = diff / dist
+            f += (selfCollisionStiffness * (minDist - dist)) * n        // penalty contact force
+            H += selfCollisionStiffness * (n * n^T)
+            isColliding[i] = true
 
-        AddExternalCollisions(i, f, H)                        // ground/sphere penalties, generalized
+        AddExternalCollisions(i, f, H)                        // ground/sphere penalties
 
         dx = Solve3x3(H, f)                                   // local Newton step, H dx = f
         positions[i] += dx
         maxStep2 = max(maxStep2, |dx|^2)
     return sqrt(maxStep2)
 
-GetAcceleratorOmega(order, rho, prevOmega):                   // Chebyshev (VBD paper)
+GetAcceleratorOmega(order, rho, prevOmega):                   // Chebyshev-acceleration parameter
     if order == 1: return 1
     if order == 2: return 2 / (2 - rho^2)
     return 4 / (4 - rho^2 * prevOmega)
@@ -214,12 +192,9 @@ ApplyAccelerator(omega):
 
 UpdateVelocities(sdt):
     previousVelocities = velocities
-    velCap = handleSelfCollisions ? velCapPerFrame*thickness / (sdt*numSubsteps) : +infinity
     for each vertex i:
         if invMasses[i] == 0: velocities[i] = 0; continue
         v = (positions[i] - previousPositions[i]) / sdt
-        if handleSelfCollisions and |v| > velCap:
-            v *= velCap / |v|                                 // velocity capping
+        if |v| > maxVelocity: v *= maxVelocity / |v|          // velocity capping
         velocities[i] = v
-    hasPrevVelocities = true
 \end{lstlisting}

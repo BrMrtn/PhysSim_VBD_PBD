@@ -28,22 +28,15 @@ et~al.~\cite{app142311072} summarize the lineage:
 
 \begin{quote}
 ``Early research focused on force--object relationships, leading to the
-development of models such as the Mass-Spring System [30], Finite Element Method
-[31], and Rigid Body Dynamics [32]. However, these models have limitations,
+development of models such as the Mass-Spring System, Finite Element Method,
+and Rigid Body Dynamics. However, these models have limitations,
 including performance degradation, lack of real-time capability, and unrealistic
 motion as simulation complexity increases. PBD was introduced to address these
-limitations. Initially developed by Jakobsen [33], PBD provides a stable and
+limitations. Initially developed by Jakobsen, PBD provides a stable and
 efficient approach by applying wedge-based constraints instead of force-based
-methods. Macklin et al. [34] further refined and optimized PBD for real-time
+methods. Macklin et al.\ further refined and optimized PBD for real-time
 interaction.''
 \end{quote}
-
-In short, XPBD was introduced to resolve the fundamental limitation of the
-original PBD, in which the stiffness of the material was inherently coupled to the
-time-step size and the number of iterations. By introducing a compliant
-constraint formulation that incorporates Lagrange multipliers, XPBD allows soft
-and stiff materials to be simulated with physical parameters that remain
-consistent regardless of the solver's configuration.
 
 \paragraph{Small steps in physics simulation.}
 Macklin et~al.~\cite{Macklin2019SmallSI} (the ``Small Steps'' note) later argued
@@ -69,22 +62,28 @@ et~al.~\cite{app142311072} place the method as follows:
 ``More recently, the VBD algorithm that has been proposed provides an efficient
 approach to parallelize large-scale computations. By processing nodes in block
 units, VBD significantly enhances performance, particularly in simulations
-involving a high number of nodes [35].''
+involving a high number of nodes.''
 \end{quote}
 
 The original VBD paper contributes three features beyond the basic block descent.
 \emph{Chebyshev acceleration} is an over-relaxation that significantly speeds
 convergence, at the cost of the method's energy guarantees. \emph{Adaptive
-initialization} seeds each step's initial guess from a blend of the full inertial (\emph{TODO: Write example equations here for adaptive init})
+initialization} seeds each step's initial guess from a blend of the full inertial
 prediction and an inertia-only extrapolation, leaning on the latter for vertices
-near rest to avoid over-shooting under gravity. \emph{Graph-coloring parallelism} lets vertices that
-share no constraint be updated independently, enabling massive parallelism.
+near rest to avoid over-shooting under gravity; the exact blend formula is given
+in \autoref{ssec:VBDAdaptiveInit}. \emph{Graph-coloring parallelism} lets
+vertices that share no constraint be updated independently, enabling massive
+parallelism. The fairness rationale for enabling adaptive initialization while
+disabling Chebyshev in the core comparison is given in
+\autoref{ssec:DisableChebyshev}.
 
 A follow-up, Augmented VBD (AVBD)~\cite{Giles2025}, improves stiffness-ratio
-handling, infinite-stiffness handling, and convergence behavior. I restrict the
-comparison to the canonical 2024 VBD, since AVBD post-dates my implementation
-window; I cite AVBD in \autoref{sec:FlexResults} as the most relevant
-counter-evidence on the stiffness-ratio axis.
+handling, infinite-stiffness handling, and convergence behavior. To keep the
+baseline comparison anchored to the established formulation, I restrict the
+implementation to the canonical 2024 VBD; I cite AVBD in
+\autoref{sec:FlexResults} as the most relevant counter-evidence on the
+stiffness-ratio axis, and revisit the question it raises in
+\autoref{ssec:ThreatAVBD}.
 
 %----------------------------------------------------------------------------
 \section{Prior comparison: Ma et~al.\ (2024)}
@@ -98,13 +97,19 @@ better than PBD with node count. My work differs in four substantial ways:
         XPBD was designed to fix, so a PBD-vs-VBD comparison conflates algorithmic
         differences with this known bug. Using XPBD isolates the primal/dual
         distinction.
-    \item \textbf{Canonical VBD.} Ma et~al.'s pseudocode departs in several
-        details (initialization, Chebyshev handling) from \cite{Chen2024}. I
-        follow canonical VBD, but disable Chebyshev acceleration for the core
-        comparison, so that I read off algorithmic properties rather than
-        acceleration tricks. Adaptive initialization is kept enabled, since it is
-        VBD's inertial prediction and has a direct counterpart in XPBD's explicit
-        guess (see \autoref{ssec:DisableChebyshev}).
+    \item \textbf{Canonical VBD.} Ma et~al.'s pseudocode departs from
+        \cite{Chen2024} in two concrete ways relevant to the comparison: it does
+        not include the adaptive-initialization blend
+        (\autoref{ssec:VBDAdaptiveInit}), which always starts each step from the
+        full inertial target; and it does not include Chebyshev acceleration.
+        Both omissions affect convergence on stiff problems, where the canonical
+        warm start and over-relaxation carry most of VBD's reported per-step
+        speedup. I follow canonical VBD, but disable Chebyshev for the core
+        comparison so I read off algorithmic properties rather than acceleration
+        tricks; adaptive initialization is kept enabled because it is VBD's
+        inertial prediction and has a direct counterpart in XPBD's explicit
+        guess. The fairness rationale is detailed in
+        \autoref{ssec:DisableChebyshev}.
     \item \textbf{Beyond frame rate.} Ma et~al.\ report fps and node counts. I add
         a Newton ground truth, a solution quality vs.\ computational cost comparison,
         and targeted stress tests (mass ratio, stiffness ratio, large $dt$) keyed to the

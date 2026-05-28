@@ -54,34 +54,36 @@ The full implemented version is given in \autoref{sec:AppXPBD} with a more detai
 
 \begin{algorithm}[!ht]
 \caption{XPBD step (core comparison). $n_{\mathrm{sub}}$ substeps, each with
-         $n_{\mathrm{iter}}$ Gauss--Seidel iterations over the constraints.}
+         $n_{\mathrm{it}}$ Gauss--Seidel iterations over the constraints.}
 \label{alg:XPBDCore}
 \begin{algorithmic}[1]
 \State $h \gets dt / n_{\mathrm{sub}}$ \Comment{substep size}
 \For{$s = 1$ \textbf{to} $n_{\mathrm{sub}}$}
     \ForAll{vertices $i$}
-        \State $\mathbf{v}_i \gets \mathbf{v}_i + h\,w_i\,\mathbf{f}_{\mathrm{ext}}(\mathbf{x}_i)$
-               \Comment{$w_i = 1/m_i$; gravity folded in}
-        \State $\mathbf{p}_i \gets \mathbf{x}_i + h\,\mathbf{v}_i$
-               \Comment{inertial prediction $\mathbf{y}_i$}
+        \State $\mathbf{v}_i \gets \mathbf{v}_i + h\bigl(\mathbf{g} + w_i\,\mathbf{f}_{\mathrm{ext}}(\mathbf{x}_i)\bigr)$
+               \Comment{$w_i = 1/m_i$}
+        \State $\mathbf{x}^{\mathrm{prev}}_i \gets \mathbf{x}_i$
+        \State $\mathbf{x}_i \gets \mathbf{x}_i + h\,\mathbf{v}_i$
+               \Comment{inertial target $\mathbf{y}_i$}
     \EndFor
-    \ForAll{constraints $j$}\ $\lambda_j \gets 0$ \EndFor
-        \Comment{multipliers reset every substep}
-    \For{$\mathrm{it} = 1$ \textbf{to} $n_{\mathrm{iter}}$}
-        \State \Call{ProjectConstraints}{$C_1,\dots,C_M,\ \mathbf{p},\ \boldsymbol{\lambda}$}
+    \ForAll{constraints $j$}
+        \State $\lambda_j \gets 0$ \Comment{multipliers reset every substep}
+    \EndFor
+    \For{$\mathrm{it} = 1$ \textbf{to} $n_{\mathrm{it}}$}
+        \State \Call{ProjectConstraints}{$C_1,\dots,C_M,\ \mathbf{x},\ \boldsymbol{\lambda}$}
     \EndFor
     \ForAll{vertices $i$}
-        \State $\mathbf{v}_i \gets (\mathbf{p}_i - \mathbf{x}_i)/h$;\quad $\mathbf{x}_i \gets \mathbf{p}_i$
+        \State $\mathbf{v}_i \gets (\mathbf{x}_i - \mathbf{x}^{\mathrm{prev}}_i)/h$
     \EndFor
 \EndFor
 \Statex
-\Procedure{ProjectConstraints}{$C_1,\dots,C_M,\ \mathbf{p},\ \boldsymbol{\lambda}$}
+\Procedure{ProjectConstraints}{$C_1,\dots,C_M,\ \mathbf{x},\ \boldsymbol{\lambda}$}
     \ForAll{constraints $j$} \Comment{one Gauss--Seidel sweep}
         \State $\tilde{\alpha}_j \gets \alpha_j / h^2$
-        \State $\Delta\lambda_j \gets \dfrac{-C_j(\mathbf{p}) - \tilde{\alpha}_j\,\lambda_j}
+        \State $\Delta\lambda_j \gets \dfrac{-C_j(\mathbf{x}) - \tilde{\alpha}_j\,\lambda_j}
                 {\nabla C_j\,\mathbf{M}^{-1}\nabla C_j^{T} + \tilde{\alpha}_j}$
         \State $\lambda_j \gets \lambda_j + \Delta\lambda_j$
-        \State $\mathbf{p} \gets \mathbf{p} + \mathbf{M}^{-1}\nabla C_j^{T}\,\Delta\lambda_j$
+        \State $\mathbf{x} \gets \mathbf{x} + \mathbf{M}^{-1}\nabla C_j^{T}\,\Delta\lambda_j$
     \EndFor
 \EndProcedure
 \end{algorithmic}
@@ -132,24 +134,28 @@ per-vertex gradient and Hessian are closed-form and inexpensive to evaluate.
 \subsection{Algorithm}
 \label{ssec:VBDPseudo}
 As with XPBD, the form given in Algorithm \autoref{alg:VBDCore} below is the simplified, core-comparison version: no
-damping and no collisions, no Chebyshev acceleration. Here I use the fixed-iteration-count variant in place
-of the convergence-based early-stopping one. The full implemented version --- with
-adaptive initialization, damping, and self-collision --- is given in
-\autoref{sec:AppVBD} shows the early-stopping variant.
+damping, no collisions, no Chebyshev acceleration. Adaptive initialization is kept on (defined in
+\autoref{ssec:VBDAdaptiveInit}); the fairness rationale for both choices is given in
+\autoref{ssec:DisableChebyshev}. Here I use the fixed-iteration-count variant in place of the
+convergence-based early-stopping one. The full implemented version --- with damping, self-collision,
+and Chebyshev acceleration --- is given in \autoref{sec:AppVBD} and uses the early-stopping variant.
 
 \begin{algorithm}[!ht]
 \caption{VBD step (core comparison). $n_{\mathrm{sub}}$ substeps, each with
-         $n_{\mathrm{iter}}$ block-descent iterations over the vertices.}
+         $n_{\mathrm{it}}$ block-descent iterations over the vertices.}
 \label{alg:VBDCore}
 \begin{algorithmic}[1]
 \State $h \gets dt / n_{\mathrm{sub}}$
 \For{$s = 1$ \textbf{to} $n_{\mathrm{sub}}$}
     \ForAll{vertices $i$}
-        \State $\mathbf{y}_i \gets \mathbf{x}_i + h\,\mathbf{v}_i + h^2 w_i\,\mathbf{f}_{\mathrm{ext}}(\mathbf{x}_i)$
+        \State $\mathbf{a}^{\mathrm{ext}}_i \gets \mathbf{g} + w_i\,\mathbf{f}_{\mathrm{ext}}(\mathbf{x}_i)$
+        \State $\mathbf{y}_i \gets \mathbf{x}_i + h\,\mathbf{v}_i + h^2\,\mathbf{a}^{\mathrm{ext}}_i$
                \Comment{inertial target}
-        \State $\mathbf{x}^{\mathrm{prev}}_i \gets \mathbf{x}_i$;\quad $\mathbf{x}_i \gets \mathbf{y}_i$
+        \State $\mathbf{x}^{\mathrm{prev}}_i \gets \mathbf{x}_i$
+        \State $\mathbf{x}_i \gets \mathbf{x}_i + h\,\mathbf{v}_i + \tilde{a}_i\,h^2\,\mathbf{a}^{\mathrm{ext}}_i$
+               \Comment{adaptive initial guess, $\tilde{a}_i \in [0,1]$}
     \EndFor
-    \For{$\mathrm{it} = 1$ \textbf{to} $n_{\mathrm{iter}}$}
+    \For{$\mathrm{it} = 1$ \textbf{to} $n_{\mathrm{it}}$}
         \State \Call{Sweep}{$\mathbf{x},\ \mathbf{y}$}
                \Comment{one Gauss--Seidel pass over vertices}
     \EndFor
@@ -161,16 +167,43 @@ adaptive initialization, damping, and self-collision --- is given in
 \Procedure{Sweep}{$\mathbf{x},\ \mathbf{y}$}
     \ForAll{vertices $i$}
         \State $\mathbf{g}_i \gets \dfrac{m_i}{h^2}(\mathbf{x}_i - \mathbf{y}_i)
-                + \displaystyle\sum_{e \in \mathcal{N}(i)} \nabla_i E_e(\mathbf{x})$
-               \Comment{negative force}
+                + \displaystyle\sum_{e \in \mathcal{F}_i} \dfrac{\partial E_e(\mathbf{x})}{\partial \mathbf{x}_i}$
+               \Comment{gradient ($=-\mathbf{f}_i$)}
         \State $\mathbf{H}_i \gets \dfrac{m_i}{h^2}\mathbf{I}_3
-                + \displaystyle\sum_{e \in \mathcal{N}(i)} \nabla^2_{ii} E_e(\mathbf{x})$
+                + \displaystyle\sum_{e \in \mathcal{F}_i} \dfrac{\partial^2 E_e(\mathbf{x})}{\partial \mathbf{x}_i \mathbf{x}_i}$
         \State $\mathbf{x}_i \gets \mathbf{x}_i - \mathbf{H}_i^{-1}\mathbf{g}_i$
                \Comment{local $3\times 3$ Newton step}
     \EndFor
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
+
+\subsection{Adaptive initialization}
+\label{ssec:VBDAdaptiveInit}
+The starting guess on line~5 of Algorithm \autoref{alg:VBDCore} blends two extremes per
+vertex: the full inertial target $\mathbf{x}_i + h\mathbf{v}_i + h^{2}\mathbf{a}^{\mathrm{ext}}_i$
+($\tilde{a}_i = 1$) and the pure velocity extrapolation
+$\mathbf{x}_i + h\mathbf{v}_i$ ($\tilde{a}_i = 0$). The blend factor is read off
+the previous step's acceleration
+$\mathbf{a}^{\mathrm{prev}}_i = (\mathbf{v}_i^{t} - \mathbf{v}_i^{t-h})/h$ as
+\begin{equation}
+    \label{eq:VBDAdaptive}
+    \tilde{a}_i \;=\; \mathrm{clamp}_{[0,1]}\!\left(
+        \frac{\mathbf{a}^{\mathrm{prev}}_i \cdot \mathbf{a}^{\mathrm{ext}}_i}
+             {\|\mathbf{a}^{\mathrm{ext}}_i\|^{2}}
+    \right),
+\end{equation}
+which is the projection of the realized acceleration onto the external one.
+$\tilde{a}_i \approx 1$ identifies a vertex that was in free fall last step,
+so the inertial target is a good warm start. $\tilde{a}_i \approx 0$ identifies
+a vertex that was held in place by stiff springs or a pin, where the inertial
+target sits far from the minimizer of $G$ and the block-descent sweep would
+otherwise spend iterations dragging it back; starting close to the previous
+position is the better option there. XPBD has no analogous adaptive blend --- it
+always starts from the full inertial target ($\tilde{a}=1$) and lets the
+constraint sweeps do the rest. The reasoning for keeping adaptive initialization
+enabled, and its acknowledged bias toward VBD, is
+discussed in \autoref{ssec:DisableChebyshev}.
 
 \subsection{Characteristics}
 \label{ssec:VBDChar}

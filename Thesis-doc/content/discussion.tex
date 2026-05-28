@@ -39,23 +39,25 @@ are single-threaded and therefore understate VBD's standing
 (\autoref{ssec:ThreatSingleThread}).
 
 \paragraph{Robustness.}
-This is the axis where the primal/dual distinction (\autoref{sec:PrimalDual})
-makes a concrete prediction, and the two stress tests confirm it directly. Under
-a $1000\times$ mass ratio (\autoref{ssec:ChainWithHeavyWeight}) XPBD --- the dual
-solver --- fails to reach the Newton reference within 100 iterations, while VBD
-approaches it: a dual update propagates a mass disparity only one shared particle
-per Gauss--Seidel sweep. Under a $1{:}10000$ stiffness ratio
-(\autoref{ssec:StiffnessRatioChain}) the roles reverse: VBD --- the primal
-solver --- stalls while XPBD matches the reference almost exactly, because the
-per-vertex Hessian block collects every incident spring stiffness and becomes
-ill-conditioned. The self-collision drop (\autoref{ssec:SelfCollisionDrop}) is
-the same VBD weakness in a practical setting: my 12-spring cloth model carries
-exactly the wide stiffness ratios that hurt VBD, so the cloth was unstable unless
-I raised vertex mass by two-to-three orders of magnitude relative to the largest
-stiffness. XPBD tolerated these constraints, including near-rigid ones, without
+This is the axis where the primal/dual distinction makes its sharpest
+prediction, and the two stress tests confirm it directly. The mechanisms ---
+why a dual update is slow to propagate a shared-particle mass disparity, and
+why a per-vertex primal Hessian becomes ill-conditioned under wide stiffness
+ratios --- are derived in \autoref{sec:PrimalDual}; here I only read the
+results off them. Under a $1000\times$ mass ratio
+(\autoref{ssec:ChainWithHeavyWeight}) XPBD --- the dual solver --- fails to
+reach the Newton reference within 100 iterations while VBD approaches it. Under
+a $1{:}10000$ stiffness ratio (\autoref{ssec:StiffnessRatioChain}) the roles
+reverse: VBD stalls while XPBD matches the reference almost exactly. The
+self-collision drop (\autoref{ssec:SelfCollisionDrop}) is the same VBD weakness
+in a practical setting: my 12-spring cloth model carries exactly the wide
+stiffness ratios that hurt VBD, so the cloth was unstable unless I raised vertex
+mass by two-to-three orders of magnitude relative to the largest stiffness.
+XPBD tolerated these constraints, including near-rigid ones, without
 hand-tuning. Overall XPBD is the more robust solver for stiff cloth, with the
-caveat that this failure is specific to canonical 2024 VBD and is reportedly
-addressed by AVBD (\autoref{ssec:ThreatAVBD}).
+caveat --- expanded in \autoref{ssec:ThreatAVBD} --- that this VBD failure is
+specific to the canonical 2024 formulation and is reportedly addressed by
+AVBD~\cite{Giles2025}.
 
 \paragraph{Physical realism.}
 At matched, sufficient iteration counts the two solvers are essentially
@@ -66,12 +68,12 @@ leaving only the damping intrinsic to implicit Euler. The energy traces
 iterations both sit on the reference, and the only ordering visible at very low
 budgets is that one VBD iteration falls between one and two XPBD iterations ---
 the same per-iteration-quality story as the efficiency axis, since the residual
-oscillations are convergence artefacts rather than a physical difference.
+oscillations are convergence artifacts rather than a physical difference.
 Realism is therefore a question of how much iteration budget each solver needs to
 reach a converged state, not of the converged state itself.
 
 \paragraph{Flexibility.}
-Here the comparison favours each solver on a different sub-question. Both make
+Here the comparison favors each solver on a different sub-question. Both make
 the converged shape independent of iteration count
 (\autoref{ssec:IterIndepStiff}), so neither couples material stiffness to solver
 budget. For adding new constraints (\autoref{ssec:NewFunctionality}), XPBD was
@@ -109,7 +111,7 @@ explodes outright.
 \subsection{Single-threaded execution}
 \label{ssec:ThreatSingleThread}
 All measurements run single-threaded on the CPU. Because VBD parallelizes better
-than XPBD (\autoref{sec:Parallelisation}), the ms/frame figures are biased against
+than XPBD (\autoref{sec:Parallelization}), the ms/frame figures are biased against
 VBD: they understate the advantage it would show in a production, multi-threaded
 deployment. This is a threat to the external validity of the quantitative
 efficiency claims only; it leaves the qualitative claims about convergence quality
@@ -137,3 +139,16 @@ Both solvers are order-sensitive (\autoref{sec:GSJacobi}). I fix a single
 deterministic order, but an adversarial reordering could in principle shift the
 results. I do not investigate this, and it remains a real threat to
 reproducibility across other implementations.
+
+\subsection{Canonical 2024 VBD only --- the AVBD caveat}
+\label{ssec:ThreatAVBD}
+The VBD half of the comparison is the canonical 2024 formulation~\cite{Chen2024}.
+Augmented VBD~\cite{Giles2025} targets exactly the failure modes I observe on
+the stiffness-ratio axis (\autoref{ssec:StiffnessRatioChain}) and the
+self-collision drop (\autoref{ssec:SelfCollisionDrop}): wide stiffness ratios,
+near-rigid constraints, and convergence under stiff sub-problems. It is
+therefore an open question whether the primal-side gap I report is intrinsic to
+a primal block-coordinate update or specific to the canonical algorithm. I do
+not resolve this here; re-running the stiffness experiments under AVBD is the
+follow-up that would settle it, and is listed as future work in
+\autoref{ssec:FWAVBD}.

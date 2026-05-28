@@ -29,7 +29,7 @@ both reach the Newton reference and are physically indistinguishable, so realism
 reduces to a per-iteration-quality question already captured by the efficiency
 axis. On flexibility, XPBD is easier to extend with scalar constraints and
 benefits from a decade of deployment across many domains, whereas VBD's
-per-vertex structure is heavier to extend but parallelises more cleanly. The
+per-vertex structure is heavier to extend but parallelizes more cleanly. The
 practical recommendation is therefore scenario-based rather than absolute, and is
 set out in full in \autoref{sec:Verdicts}.
 
@@ -44,7 +44,7 @@ The most consequential extension is to repeat the experiments on a multithreaded
 CPU and on the GPU, directly lifting the single-threaded limitation of
 \autoref{ssec:ThreatSingleThread}. Both solvers admit parallelization through
 graph coloring, but their structures differ in granularity
-(\autoref{sec:Parallelisation}): VBD's per-vertex blocks should color more cleanly
+(\autoref{sec:Parallelization}): VBD's per-vertex blocks should color more cleanly
 than XPBD's per-constraint blocks. The expected outcome is therefore that
 parallelization widens VBD's lead, and quantifying that gap is the natural next
 study.
