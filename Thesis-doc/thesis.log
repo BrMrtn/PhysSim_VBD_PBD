@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  29 MAY 2026 03:27
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  29 MAY 2026 04:01
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -995,6 +995,7 @@ File: figures/EnergyTracking/energy_dissipation_s0_e5.png Graphic file (type bmp
 <figures/EnergyTracking/energy_dissipation_s0_e5.png>
 File: figures/EnergyTracking/energy_dissipation_s0_e10.png Graphic file (type bmp)
 <figures/EnergyTracking/energy_dissipation_s0_e10.png>
+ [24]
 File: figures/IterationIndependence/XPBD_i20_16x16.png Graphic file (type bmp)
 <figures/IterationIndependence/XPBD_i20_16x16.png>
 File: figures/IterationIndependence/XPBD_i40_16x16.png Graphic file (type bmp)
@@ -1011,12 +1012,12 @@ File: figures/IterationIndependence/VBD_i80.png Graphic file (type bmp)
 <figures/IterationIndependence/VBD_i80.png>
 File: figures/IterationIndependence/VBD_i160.png Graphic file (type bmp)
 <figures/IterationIndependence/VBD_i160.png>
- [24] [25]
-Overfull \hbox (32.0514pt too wide) in paragraph at lines 400--412
+ [25] [26]
+Overfull \hbox (32.0514pt too wide) in paragraph at lines 403--415
  [][] 
  []
 
-[26]) [27]
+) [27]
 \openout2 = `content/discussion.aux'.
 
  (./content/discussion.tex
@@ -1097,7 +1098,7 @@ Package rerunfilecheck Info: File `thesis.out' has not changed.
 Here is how much of TeX's memory you used:
  19922 strings out of 469581
  392370 string characters out of 5461843
- 1793922 words of memory out of 5000000
+ 1793924 words of memory out of 5000000
  48128 multiletter control sequences out of 15000+600000
  642373 words of font info for 125 fonts, out of 8000000 for 9000
  376 hyphenation exceptions out of 8191

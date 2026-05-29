@@ -66,7 +66,7 @@
 \select@language {english} \contentsline {subsection}{\numberline {6.3.2}Energy tracking}{24}{subsection.6.3.2}%
 \select@language {english} \contentsline {section}{\numberline {6.4}Flexibility}{25}{section.6.4}%
 \select@language {english} \contentsline {subsection}{\numberline {6.4.1}Iteration-count independence of stiffness}{25}{subsection.6.4.1}%
-\select@language {english} \contentsline {subsection}{\numberline {6.4.2}Ease of adding a new functionality}{25}{subsection.6.4.2}%
+\select@language {english} \contentsline {subsection}{\numberline {6.4.2}Ease of adding a new functionality}{26}{subsection.6.4.2}%
 \select@language {english} \contentsline {subsection}{\numberline {6.4.3}Coverage of different physical domains}{27}{subsection.6.4.3}%
 \select@language {english} \contentsline {chapter}{\numberline {7}Discussion}{28}{chapter.7}%
 \select@language {english} \contentsline {section}{\numberline {7.1}Synthesis across axes}{28}{section.7.1}%
