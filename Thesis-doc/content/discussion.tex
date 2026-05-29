@@ -10,7 +10,7 @@
 Reading the results back against the four evaluation axes raises one guiding
 question per axis. For \emph{efficiency}, which solver dominates the
 equal-wall-clock frontier, and in which scenario? For \emph{robustness}, where do
-the stability envelopes diverge, and does that divergence match the primal/dual
+the stability boundaries diverge, and does that divergence match the primal/dual
 prediction? For \emph{realism}, which solver's converged state is closer to Newton
 at matched compute? And for \emph{flexibility}, how does the cost of extending each
 solver weigh against its per-frame benefit? The verdicts below answer these
@@ -115,7 +115,7 @@ than XPBD (\autoref{sec:Parallelization}), the ms/frame figures are biased again
 VBD: they understate the advantage it would show in a production, multi-threaded
 deployment. This is a threat to the external validity of the quantitative
 efficiency claims only; it leaves the qualitative claims about convergence quality
-and stability envelopes untouched, since those do not depend on how the work is
+and stability boundaries untouched, since those do not depend on how the work is
 scheduled across cores. Lifting this limitation --- the multithreaded and GPU
 comparison --- is the principal direction of \autoref{ssec:FWParallel}.
 

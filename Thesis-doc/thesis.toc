@@ -93,6 +93,6 @@
 \select@language {english} \contentsline {chapter}{Bibliography}{34}{chapter*.32}%
 \select@language {english} \contentsline {chapter}{Appendix}{36}{appendix*.34}%
 \select@language {english} \contentsline {section}{\numberline {A.1}Declaration on the Use of Generative Artificial Intelligence}{37}{section.A.1}%
-\select@language {english} \contentsline {section}{\numberline {A.2}Full solver pseudocode}{39}{section.A.2}%
-\select@language {english} \contentsline {subsection}{\numberline {A.2.1}XPBD, full implementation}{39}{subsection.A.2.1}%
-\select@language {english} \contentsline {subsection}{\numberline {A.2.2}VBD, full implementation}{40}{subsection.A.2.2}%
+\select@language {english} \contentsline {section}{\numberline {A.2}Full solver pseudocode}{38}{section.A.2}%
+\select@language {english} \contentsline {subsection}{\numberline {A.2.1}XPBD, full implementation}{38}{subsection.A.2.1}%
+\select@language {english} \contentsline {subsection}{\numberline {A.2.2}VBD, full implementation}{39}{subsection.A.2.2}%

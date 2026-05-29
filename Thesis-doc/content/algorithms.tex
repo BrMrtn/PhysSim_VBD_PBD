@@ -14,7 +14,7 @@ but they reach it through opposite descent directions.
 
 \subsection{Derivation}
 \label{ssec:XPBDDeriv}
-For each elastic spring, XPBD associates a constraint $C(\mathbf{x}) = 0$ at zero
+For each elastic spring, XPBD~\cite{10.1145/2994258.2994272} associates a constraint $C(\mathbf{x}) = 0$ at zero
 deformation with a compliance $\alpha = 1/k$, the inverse of the spring stiffness.
 Because the implicit time stepping (\autoref{ssec:ImplicitEuler}) carries a factor
 of $1/h^{2}$ on the inertial term of \eqref{eq:G}, the compliance enters the update
@@ -112,7 +112,7 @@ integration and keeps the per-step cost low.
 
 \subsection{Derivation}
 \label{ssec:VBDDeriv}
-VBD performs block-coordinate descent on $G$ in \eqref{eq:G}, with one block per
+VBD~\cite{Chen2024} performs block-coordinate descent on $G$ in \eqref{eq:G}, with one block per
 vertex. Holding all other vertices fixed, the update for vertex $i$ is the Newton
 step on the local 3-vector problem
 \begin{equation}
@@ -180,7 +180,7 @@ and Chebyshev acceleration --- is given in \autoref{sec:AppVBD} and uses the ear
 
 \subsection{Adaptive initialization}
 \label{ssec:VBDAdaptiveInit}
-The starting guess on line~5 of Algorithm \autoref{alg:VBDCore} blends two extremes per
+The starting guess on line~5 of Algorithm \autoref{alg:VBDCore}, taken from Chen et~al.~\cite{Chen2024}, blends two extremes per
 vertex: the full inertial target $\mathbf{x}_i + h\mathbf{v}_i + h^{2}\mathbf{a}^{\mathrm{ext}}_i$
 ($\tilde{a}_i = 1$) and the pure velocity extrapolation
 $\mathbf{x}_i + h\mathbf{v}_i$ ($\tilde{a}_i = 0$). The blend factor is read off
@@ -211,7 +211,7 @@ VBD is \emph{primal}: an
 iteration's state is the positions $\mathbf{x}$, with no extra multipliers. It is
 \emph{second-order locally}, since each block update is a Newton step on the true
 elastic Hessian restricted to one vertex. It \emph{prefers iterations over
-substeps}: VBD is normally used with one long step subdivided into many block
+substeps}: VBD is normally used~\cite{Chen2024} with one long step subdivided into many block
 iterations, and the implicit Hessian handles stiffness even at larger $h$, thus
 being \emph{stable even under large time steps}, which is especially valuable
 when computational resources are constrained. Finally, it is \emph{parallel-friendly}: vertices that share

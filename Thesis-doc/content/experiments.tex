@@ -107,7 +107,6 @@ experiment's test environment as it progresses in time.
 \begin{figure}[ht]
     \centering
     \setlength{\tabcolsep}{1.5pt}
-    \renewcommand{\arraystretch}{0.4}
     \newcommand{\fpsimg}[1]{\raisebox{-0.5\height}{\includegraphics[width=0.18\textwidth,keepaspectratio]{#1}}}
     \begin{tabular}{c ccccc}
         \raisebox{-0.5\height}{\rotatebox[origin=c]{90}{\small XPBD}} &
@@ -115,7 +114,7 @@ experiment's test environment as it progresses in time.
             \fpsimg{figures/NodeCountVsFPS/XPBD/frame_1.png} &
             \fpsimg{figures/NodeCountVsFPS/XPBD/frame_2.png} &
             \fpsimg{figures/NodeCountVsFPS/XPBD/frame_3.png} &
-            \fpsimg{figures/NodeCountVsFPS/XPBD/frame_4.png} \\[10ex]
+            \fpsimg{figures/NodeCountVsFPS/XPBD/frame_4.png} \\[4ex]
         \raisebox{-0.5\height}{\rotatebox[origin=c]{90}{\small VBD}} &
             \fpsimg{figures/NodeCountVsFPS/VBD/frame_0.png} &
             \fpsimg{figures/NodeCountVsFPS/VBD/frame_1.png} &
@@ -215,7 +214,6 @@ and the bottom row is VBD.
 \begin{figure}[ht]
     \centering
     \setlength{\tabcolsep}{1pt}
-    \renewcommand{\arraystretch}{0.4}
     \newcommand{\scimg}[1]{\raisebox{-0.5\height}{\includegraphics[width=0.115\textwidth,keepaspectratio]{#1}}}
     \begin{tabular}{c cccccccc}
         \raisebox{-0.5\height}{\rotatebox[origin=c]{90}{\small XPBD}} &
@@ -226,7 +224,7 @@ and the bottom row is VBD.
             \scimg{figures/SelfCollisionDrop/XPBD-w1/frame_4.png} &
             \scimg{figures/SelfCollisionDrop/XPBD-w1/frame_5.png} &
             \scimg{figures/SelfCollisionDrop/XPBD-w1/frame_6.png} &
-            \scimg{figures/SelfCollisionDrop/XPBD-w1/frame_7.png} \\[4ex]
+            \scimg{figures/SelfCollisionDrop/XPBD-w1/frame_7.png} \\[20pt]
         \raisebox{-0.5\height}{\rotatebox[origin=c]{90}{\small VBD}} &
             \scimg{figures/SelfCollisionDrop/VBD-w1/frame_0.png} &
             \scimg{figures/SelfCollisionDrop/VBD-w1/frame_1.png} &
@@ -245,7 +243,6 @@ and the bottom row is VBD.
 \begin{figure}[ht]
     \centering
     \setlength{\tabcolsep}{1pt}
-    \renewcommand{\arraystretch}{0.4}
     \newcommand{\scimg}[1]{\raisebox{-0.5\height}{\includegraphics[width=0.115\textwidth,keepaspectratio]{#1}}}
     \begin{tabular}{c cccccccc}
         \raisebox{-0.5\height}{\rotatebox[origin=c]{90}{\small XPBD}} &
@@ -256,7 +253,7 @@ and the bottom row is VBD.
             \scimg{figures/SelfCollisionDrop/XPBD-w1e4/frame_4.png} &
             \scimg{figures/SelfCollisionDrop/XPBD-w1e4/frame_5.png} &
             \scimg{figures/SelfCollisionDrop/XPBD-w1e4/frame_6.png} &
-            \scimg{figures/SelfCollisionDrop/XPBD-w1e4/frame_7.png} \\[4ex]
+            \scimg{figures/SelfCollisionDrop/XPBD-w1e4/frame_7.png} \\[20pt]
         \raisebox{-0.5\height}{\rotatebox[origin=c]{90}{\small VBD}} &
             \scimg{figures/SelfCollisionDrop/VBD-w1e4/frame_0.png} &
             \scimg{figures/SelfCollisionDrop/VBD-w1e4/frame_1.png} &
@@ -373,7 +370,7 @@ on how many iterations are spent.
 
 To compare how easily each solver can be extended, I had Claude Code (Opus 4.7) implement
 dihedral bending constraints in both. Both methods already include this
-constraint in their original papers, so I follow those implementations. The
+constraint in their original papers (XPBD~\cite{10.1145/2994258.2994272}, VBD~\cite{Chen2024}), so I follow those implementations. The
 existing bending constraint is a distance constraint acting as a skip-spring
 between two non-adjacent nodes; the task was to implement the dihedral version and
 make bending toggleable between the dihedral and distance formulations.

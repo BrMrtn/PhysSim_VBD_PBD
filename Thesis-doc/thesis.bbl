@@ -1,4 +1,4 @@
-\begin{thebibliography}{12}
+\begin{thebibliography}{13}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -14,6 +14,11 @@ David Baraff and Andrew Witkin.
 \newblock ISBN 0897919998.
 \newblock \doi{10.1145/280814.280821}.
 \newblock URL \url{https://doi.org/10.1145/280814.280821}.
+
+\bibitem[Chen(2024)]{vbdGithub}
+Anka~He Chen.
+\newblock Tinyvbd.
+\newblock \url{https://github.com/AnkaChan/TinyVBD}, 2024.
 
 \bibitem[Chen et~al.(2024)Chen, Liu, Yang, and Yuksel]{Chen2024}
 Anka~He Chen, Ziheng Liu, Yin Yang, and Cem Yuksel.
@@ -38,7 +43,7 @@ Chris Giles, Elie Diaz, and Cem Yuksel.
 Minchen Li, Chenfanfu Jiang, Zhaofeng Luo, Wenxin Du, Chang Yu, {\v{Z}}iga
   Kova{\v{c}}i{\v{c}}, and Tianyi Xie.
 \newblock \emph{Physics-Based Simulation}.
-\newblock March 2026.
+\newblock Self-published, March 2026.
 \newblock URL \url{https://phys-sim-book.github.io/}.
 
 \bibitem[Ma et~al.(2024)Ma, Sung, Choi, and Hong]{app142311072}
