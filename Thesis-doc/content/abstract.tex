@@ -12,40 +12,33 @@ A valós idejű deformálható testek szimulációjának néhány milliszekundum
 kell hihető dinamikát szolgáltatnia képkockánként, ami minden \textit{solvert} a
 fizikai pontosság és a számítási költség közötti kompromisszumra kényszerít. Az
 Extended Position-Based Dynamics (XPBD) évek óta a valós idejű deformálható
-testek solvereinek az egyik legelterjedtebb fajtája, míg a 2024-ben bemutatott Vertex Block Descent
-(VBD) egy ígéretes \textit{primal} alternatíva, amelyet még nem hasonlítottak össze
-alaposan vele. Ez a szakdolgozat a két
-módszer első hűséges, közvetlen összehasonlítását mutatja be.
+testek solvereinek egyik legelterjedtebb változata, míg a 2024-ben bemutatott Vertex Block Descent
+(VBD) egy ígéretes alternatíva, amelyet még nem hasonlítottak össze
+alaposan az XPBD-vel. Ez a szakdolgozat a két
+módszer első, az eredeti cikkekhez hű, közvetlen összehasonlítását mutatja be.
 
-Mindkét megoldót ugyanabban a Unity-alapú kódbázisban valósítom meg, ugyanazokra
-a tömeg-rugó modellekre alkalmazom őket, és egyező iterációs- és
-lépés-költséggel futtatom őket, hogy a wall-clock költségük összehasonlítható
-legyen. Egy magas iterációszámú Newton-solver szolgál ground-truth
-referenciaként, így abszolút megoldási hibáról is be tudok számolni, nem csak relatív
-teljesítményről. Az elemzés során Macklin et al. primal/dual
-keretrendszerére támaszkodom --- az XPBD a kényszerek Lagrange-szorzóin dolgozó dual
-megoldó, a VBD pedig a csúcspontpozíciókon dolgozó primal megoldó ---, amely
-néhány stresszteszt elvégzését motiválja és egyes eredmények értelmezésében segít.
+Mindkét solvert ugyanabban a környezetben valósítom meg, ugyanazokra a
+modellekre alkalmazom, és egyező számítási költséggel futtatom, hogy
+a wall-clock költségük közvetlenül összehasonlítható legyen. Egy
+magas iterációszámú Newton solver szolgál ground-truth referenciaként, így nemcsak a
+relatív teljesítményről, de az abszolút
+megoldási hibáról is be tudok számolni. Az
+eredményeket Macklin et al. primal/dual keretrendszerén keresztül vizsgálom,
+amely a két módszert ugyanazon probléma különböző irányból történő
+megközelítésének tekinti, és segít az eredmények értelmezésében.
 
-Mindkét megoldót négy tengely mentén értékelem ki: hatékonyság, robusztusság,
-fizikai realizmus és rugalmasság. A fő megállapítás az, hogy egyik sem
-dominál; mindegyik ott nyer, ahol a frissítési iránya illik a feladathoz. A
-pontosság--költség Pareto-fronton a VBD ér el alacsonyabb hibát
-milliszekundumonként, amikor a részlépésenkénti feladat nehéz, míg az XPBD
-veszi át a vezetést, amint a finomabb részlépés elég könnyűvé teszi az
-egyes részfeladatokat ahhoz, hogy egy-két olcsó iterációval konvergáljanak. Az
-XPBD jól tűri a szélsőséges merevségarányokat és a közel-merev kényszereket, de
-elakad egy $1000\times$-es tömegaránynál; a VBD kezeli a tömegarányt, viszont széles
-merevségarányok mellett instabillá válik, hacsak a csúcspontok tömege nincs
-hangolva. Elegendő iterációszámnál mindkettő eléri a Newton-referenciát, és
-fizikailag megkülönböztethetetlenek. Rugalmasság tekintetében az XPBD könnyebben
-bővíthető skaláris kényszerekkel, míg a VBD csúcspont-alapú szerkezete
-tisztábban párhuzamosítható.
+Mindkét solvert négy szempont alapján értékelem ki: hatékonyság, robusztusság,
+fizikai valósághűség és rugalmasság. A fő megállapítás az, hogy egyik módszer sem
+dominál; mindegyik ott teljesít jobban, ahol a frissítési iránya illik a feladathoz. A
+pontosság--költség kompromisszum terén a relatív helyzetük a részlépésenkénti
+feladat nehézségével változik, és mindkét módszer jellegzetes erősségeket és
+hibamódokat mutat terhelés alatt. Elegendően magas iterációszámnál mindkettő eléri a
+Newton-referenciát, és fizikailag megkülönböztethetetlenné válik egymástól.
 
-A gyakorlati ajánlás tehát szcenárió-függő, nem abszolút, és az eredmények
+A gyakorlati ajánlás tehát feladatfüggő, nem abszolút, és az eredmények
 arra utalnak, hogy a többszálú vagy GPU-s végrehajtás --- amelyet az AVBD-vel
 és alternatív szövetmodellekkel együtt jövőbeli munkának hagyok --- tovább
-tolná a Pareto-frontot a VBD irányába.
+billentené a mérleget a VBD irányába.
 
 
 \vfill
@@ -61,36 +54,30 @@ Real-time deformable simulation has to deliver believable dynamics within a few
 milliseconds per frame, which forces every solver onto a trade-off between
 physical accuracy and computational cost. Extended Position-Based Dynamics
 (XPBD) has been the workhorse of real-time solvers for years, while Vertex Block
-Descent (VBD), introduced in 2024, is a promising primal alternative that has
+Descent (VBD), introduced in 2024, is a promising alternative that has
 not yet been thoroughly evaluated against it. This thesis presents the first
 faithful head-to-head comparison of the two.
 
-I implement both solvers in a shared Unity codebase, apply them to the same
-mass-spring models, and run them under matched iteration and substep budgets
-so that wall-clock cost is comparable. A high-iteration Newton solver serves
-as a ground-truth reference, so I can report absolute solution error rather
-than only relative performance. Throughout the analysis I draw on the
-primal/dual lens of Macklin et~al. --- XPBD as a dual solver on constraint
-Lagrange multipliers, VBD as a primal solver on vertex positions --- which
-motivates a few of the stress tests and helps interpret some of the results.
+I implement both solvers in a shared codebase, apply them to the same models,
+and run them under matched computational budgets so that their wall-clock cost
+is directly comparable. A high-iteration Newton solver provides the
+ground-truth reference, letting me report absolute solution error rather than
+only relative performance. Throughout, I read the comparison through the
+primal/dual lens of Macklin et~al., which frames the two methods as approaching
+the same problem from different directions and helps interpret the results.
 
 I evaluate both solvers along four axes: efficiency, robustness, physical
 realism, and flexibility. The headline finding is that neither dominates;
 each wins in the setting its update direction suits. On the accuracy--cost
-Pareto front VBD reaches lower error per millisecond when the per-step
-problem is hard, while XPBD takes the lead once finer substepping makes each
-sub-problem easy enough to converge in one or two cheap iterations. XPBD
-tolerates extreme stiffness ratios and near-rigid constraints but stalls
-under a $1000\times$ mass ratio; VBD handles the mass ratio but becomes
-unstable under wide stiffness ratios unless its vertex mass is tuned. At
-sufficient iterations both reach the Newton reference and are physically
-indistinguishable. On flexibility, XPBD is easier to extend with scalar
-constraints, whereas VBD's per-vertex structure parallelizes more cleanly.
+trade-off their relative standing shifts with the difficulty of the per-step
+problem, and each method shows characteristic strengths and failure modes
+under stress. With enough iterations both converge to the Newton reference
+and become physically indistinguishable.
 
 The practical recommendation is therefore scenario-based rather than absolute,
 and the results suggest that multithreaded or GPU execution --- left to future
 work, together with AVBD and alternative cloth models --- would shift the
-Pareto front further toward VBD.
+balance further toward VBD.
 
 
 \vfill

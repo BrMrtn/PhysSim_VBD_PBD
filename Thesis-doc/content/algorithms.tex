@@ -49,7 +49,7 @@ $\mathbf{v}_{t+h} = (\mathbf{x}_{t+h} - \mathbf{x}_{t}) / h$.
 \subsection{Algorithm}
 \label{ssec:XPBDPseudo}
 Algorithm \autoref{alg:XPBDCore} shows the simplified form of XPBD used for the core
-comparison: no damping, collision handling.
+comparison: no damping, no collision handling.
 The full implemented version is given in \autoref{sec:AppXPBD} with a more detailed pseudocode.
 
 \begin{algorithm}[!ht]
@@ -91,7 +91,7 @@ The full implemented version is given in \autoref{sec:AppXPBD} with a more detai
 
 \subsection{Characteristics}
 \label{ssec:XPBDChar}
-XPBD uses \emph{dual-variables}: an iteration's
+XPBD uses \emph{dual variables}: an iteration's
 state is encoded in the multipliers $\boldsymbol{\lambda}$, and positions are
 derived from them. It handles \emph{stiffness through compliance}, since material
 stiffness enters only via $\tilde{\alpha} = 1/(k h^{2})$, so very stiff
