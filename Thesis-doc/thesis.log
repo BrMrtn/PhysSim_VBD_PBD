@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  29 MAY 2026 04:01
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  31 MAY 2026 20:27
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -359,16 +359,69 @@ File: xetex.def 2025/11/01 v5.0p Graphics/color driver for xetex
 ))
 \Gin@req@height=\dimen175
 \Gin@req@width=\dimen176
+) (d:/Programok/texlive/2026/texmf-dist/tex/latex/pdfpages/pdfpages.sty
+Package: pdfpages 2025/07/23 v0.6g Insert pages of external PDF documents (AM)
+ (d:/Programok/texlive/2026/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2024/03/16 v1.1e Standard LaTeX ifthen package (DPC)
+) (d:/Programok/texlive/2026/texmf-dist/tex/latex/tools/calc.sty
+Package: calc 2025/03/01 v4.3b Infix arithmetic (KKT,FJ)
+\calc@Acount=\count314
+\calc@Bcount=\count315
+\calc@Adimen=\dimen177
+\calc@Bdimen=\dimen178
+\calc@Askip=\skip54
+\calc@Bskip=\skip55
+LaTeX Info: Redefining \setlength on input line 86.
+LaTeX Info: Redefining \addtolength on input line 87.
+\calc@Ccount=\count316
+\calc@Cskip=\skip56
+) (d:/Programok/texlive/2026/texmf-dist/tex/latex/eso-pic/eso-pic.sty
+Package: eso-pic 2025/12/10 v3.0d eso-pic (RN)
+\ESO@tempdima=\dimen179
+\ESO@tempdimb=\dimen180
+ (d:/Programok/texlive/2026/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
+ (d:/Programok/texlive/2026/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: xetex.def on input line 274.
+ (d:/Programok/texlive/2026/texmf-dist/tex/latex/graphics/mathcolor.ltx)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
+Package xcolor Info: Model `RGB' extended on input line 1365.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1367.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
+)) (d:/Programok/texlive/2026/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count317
+)
+\AM@pagewidth=\dimen181
+\AM@pageheight=\dimen182
+\AM@fboxrule=\dimen183
+ (d:/Programok/texlive/2026/texmf-dist/tex/latex/pdfpages/ppxetex.def
+File: ppxetex.def 2025/07/23 v0.6g Pdfpages driver for XeTeX (AM)
+)
+\pdfpages@includegraphics@status=\count318
+\AM@pagebox=\box55
+\AM@global@opts=\toks24
+\AM@pagecnt=\count319
+\AM@toc@title=\toks25
+\AM@lof@heading=\toks26
+\c@AM@survey=\count320
+\AM@templatesizebox=\box56
 ) (d:/Programok/texlive/2026/texmf-dist/tex/latex/anysize/anysize.sty
 Package: anysize 1994/08/13 setting margin sizes
 
 document style option `anysize' loaded
 Michael Salzenberg, Thomas Esser, Dirk Hillbrecht
 Version 1.0, Aug 13, 1994
-\@Leftmargin=\dimen177
-\@Rightmargin=\dimen178
-\@Topmargin=\dimen179
-\@Bottommargin=\dimen180
+\@Leftmargin=\dimen184
+\@Rightmargin=\dimen185
+\@Topmargin=\dimen186
+\@Bottommargin=\dimen187
 ) (d:/Programok/texlive/2026/texmf-dist/tex/latex/setspace/setspace.sty
 Package: setspace 2022/12/04 v6.7b set line spacing
 ) (d:/Programok/texlive/2026/texmf-dist/tex/latex/hyperref/hyperref.sty
@@ -400,22 +453,19 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
  (d:/Programok/texlive/2026/texmf-dist/tex/latex/kvoptions/kvoptions.sty
 Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
 ))
-\c@section@level=\count314
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/etoolbox/etoolbox.sty
-Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count315
+\c@section@level=\count321
 ) (d:/Programok/texlive/2026/texmf-dist/tex/generic/stringenc/stringenc.sty
 Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO)
 )
-\@linkdim=\dimen181
-\Hy@linkcounter=\count316
-\Hy@pagecounter=\count317
+\@linkdim=\dimen188
+\Hy@linkcounter=\count322
+\Hy@pagecounter=\count323
  (d:/Programok/texlive/2026/texmf-dist/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2026-01-29 v7.01p Hyperref: PDFDocEncoding definition (HO)
 ) (d:/Programok/texlive/2026/texmf-dist/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
-\Hy@SavedSpaceFactor=\count318
+\Hy@SavedSpaceFactor=\count324
  (d:/Programok/texlive/2026/texmf-dist/tex/latex/hyperref/puenc.def
 File: puenc.def 2026-01-29 v7.01p Hyperref: PDF Unicode definition (HO)
 )
@@ -427,21 +477,21 @@ Package hyperref Info: Plain pages OFF on input line 4216.
 Package hyperref Info: Backreferencing OFF on input line 4221.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4468.
-\c@Hy@tempcnt=\count319
+\c@Hy@tempcnt=\count325
  (d:/Programok/texlive/2026/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip18
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 4807.
-\XeTeXLinkMargin=\dimen182
+\XeTeXLinkMargin=\dimen189
  (d:/Programok/texlive/2026/texmf-dist/tex/generic/bitset/bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
  (d:/Programok/texlive/2026/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO)
 ))
-\Fld@menulength=\count320
-\Field@Width=\dimen183
-\Fld@charsize=\dimen184
+\Fld@menulength=\count326
+\Field@Width=\dimen190
+\Fld@charsize=\dimen191
 Package hyperref Info: Hyper figures OFF on input line 6084.
 Package hyperref Info: Link nesting OFF on input line 6089.
 Package hyperref Info: Hyper index ON on input line 6092.
@@ -449,18 +499,18 @@ Package hyperref Info: backreferencing OFF on input line 6099.
 Package hyperref Info: Link coloring OFF on input line 6104.
 Package hyperref Info: Link coloring with OCG OFF on input line 6109.
 Package hyperref Info: PDF/A mode OFF on input line 6114.
-\Hy@abspage=\count321
-\c@Item=\count322
-\c@Hfootnote=\count323
+\Hy@abspage=\count327
+\c@Item=\count328
+\c@Hfootnote=\count329
 )
 Package hyperref Info: Driver (autodetected): hxetex.
  (d:/Programok/texlive/2026/texmf-dist/tex/latex/hyperref/hxetex.def
 File: hxetex.def 2026-01-29 v7.01p Hyperref driver for XeTeX
-\pdfm@box=\box55
-\c@Hy@AnnotLevel=\count324
-\HyField@AnnotCount=\count325
-\Fld@listcount=\count326
-\c@bookmark@seq@number=\count327
+\pdfm@box=\box57
+\c@Hy@AnnotLevel=\count330
+\HyField@AnnotCount=\count331
+\Fld@listcount=\count332
+\c@bookmark@seq@number=\count333
  (d:/Programok/texlive/2026/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
 Package: rerunfilecheck 2025-06-21 v1.11 Rerun checks for auxiliary files (HO)
  (d:/Programok/texlive/2026/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
@@ -468,42 +518,27 @@ Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
 )
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 284.
 )
-\Hy@SectionHShift=\skip54
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/xcolor/xcolor.sty
-Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/graphics-cfg/color.cfg
-File: color.cfg 2016/01/02 v1.6 sample color configuration
-)
-Package xcolor Info: Driver file: xetex.def on input line 274.
- (d:/Programok/texlive/2026/texmf-dist/tex/latex/graphics/mathcolor.ltx)
-Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
-Package xcolor Info: Model `RGB' extended on input line 1365.
-Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1367.
-Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1368.
-Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
-Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
-Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
-Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
+\Hy@SectionHShift=\skip57
 ) (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/listings.sty
-\lst@mode=\count328
-\lst@gtempboxa=\box56
-\lst@token=\toks24
-\lst@length=\count329
-\lst@currlwidth=\dimen185
-\lst@column=\count330
-\lst@pos=\count331
-\lst@lostspace=\dimen186
-\lst@width=\dimen187
-\lst@newlines=\count332
-\lst@lineno=\count333
-\lst@maxwidth=\dimen188
+\lst@mode=\count334
+\lst@gtempboxa=\box58
+\lst@token=\toks27
+\lst@length=\count335
+\lst@currlwidth=\dimen192
+\lst@column=\count336
+\lst@pos=\count337
+\lst@lostspace=\dimen193
+\lst@width=\dimen194
+\lst@newlines=\count338
+\lst@lineno=\count339
+\lst@maxwidth=\dimen195
  (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstpatch.sty
 File: lstpatch.sty 2025/11/14 1.11b (Carsten Heinz)
 ) (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2025/11/14 1.11b (Carsten Heinz)
-\c@lstnumber=\count334
-\lst@skipnumbers=\count335
-\lst@framebox=\box57
+\c@lstnumber=\count340
+\lst@skipnumbers=\count341
+\lst@framebox=\box59
 ) (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/listings.cfg
 File: listings.cfg 2025/11/14 1.11b listings configuration
 ))
@@ -520,116 +555,114 @@ Invalid UTF-8 byte or sequence at line 11 replaced by U+FFFD.
 Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating environment
  (d:/Programok/texlive/2026/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count336
-\float@exts=\toks25
-\float@box=\box58
-\@float@everytoks=\toks26
-\@floatcapt=\box59
-) (d:/Programok/texlive/2026/texmf-dist/tex/latex/base/ifthen.sty
-Package: ifthen 2024/03/16 v1.1e Standard LaTeX ifthen package (DPC)
+\c@float@type=\count342
+\float@exts=\toks28
+\float@box=\box60
+\@float@everytoks=\toks29
+\@floatcapt=\box61
 )
-\@float@every@algorithm=\toks27
-\c@algorithm=\count337
+\@float@every@algorithm=\toks30
+\c@algorithm=\count343
 ) (d:/Programok/texlive/2026/texmf-dist/tex/latex/algorithmicx/algpseudocode.sty
 Package: algpseudocode 
  (d:/Programok/texlive/2026/texmf-dist/tex/latex/algorithmicx/algorithmicx.sty
 Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
 
 Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
-\c@ALG@line=\count338
-\c@ALG@rem=\count339
-\c@ALG@nested=\count340
-\ALG@tlm=\skip55
-\ALG@thistlm=\skip56
-\c@ALG@Lnr=\count341
-\c@ALG@blocknr=\count342
-\c@ALG@storecount=\count343
-\c@ALG@tmpcounter=\count344
-\ALG@tmplength=\skip57
+\c@ALG@line=\count344
+\c@ALG@rem=\count345
+\c@ALG@nested=\count346
+\ALG@tlm=\skip58
+\ALG@thistlm=\skip59
+\c@ALG@Lnr=\count347
+\c@ALG@blocknr=\count348
+\c@ALG@storecount=\count349
+\c@ALG@tmpcounter=\count350
+\ALG@tmplength=\skip60
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
 ) (d:/Programok/texlive/2026/texmf-dist/tex/latex/ntheorem/ntheorem.sty
 Style `ntheorem', Version 1.33 <2011/08/15>
 Package: ntheorem 2011/08/15 1.33
-\theorem@style=\toks28
-\theorem@@style=\toks29
-\theorembodyfont=\toks30
-\theoremnumbering=\toks31
-\theorempreskipamount=\skip58
-\theorempostskipamount=\skip59
-\theoremframepreskipamount=\skip60
-\theoremframepostskipamount=\skip61
-\theoreminframepreskipamount=\skip62
-\theoreminframepostskipamount=\skip63
-\theorem@preskip=\toks32
-\theorem@postskip=\toks33
-\theorem@framepreskip=\toks34
-\theorem@framepostskip=\toks35
-\theorem@inframepreskip=\toks36
-\theorem@inframepostskip=\toks37
-\theoremindent=\dimen189
-\theorem@indent=\dimen190
-\theoremrightindent=\dimen191
-\theorem@rightindent=\dimen192
-\theoremheaderfont=\toks38
-\theoremseparator=\toks39
-\theoremprework=\toks40
-\theorempostwork=\toks41
-\theoremsymbol=\toks42
-\qedsymbol=\toks43
-\theoremkeyword=\toks44
-\qedsymbol=\toks45
-\thm@topsep=\skip64
-\thm@topsepadd=\skip65
+\theorem@style=\toks31
+\theorem@@style=\toks32
+\theorembodyfont=\toks33
+\theoremnumbering=\toks34
+\theorempreskipamount=\skip61
+\theorempostskipamount=\skip62
+\theoremframepreskipamount=\skip63
+\theoremframepostskipamount=\skip64
+\theoreminframepreskipamount=\skip65
+\theoreminframepostskipamount=\skip66
+\theorem@preskip=\toks35
+\theorem@postskip=\toks36
+\theorem@framepreskip=\toks37
+\theorem@framepostskip=\toks38
+\theorem@inframepreskip=\toks39
+\theorem@inframepostskip=\toks40
+\theoremindent=\dimen196
+\theorem@indent=\dimen197
+\theoremrightindent=\dimen198
+\theorem@rightindent=\dimen199
+\theoremheaderfont=\toks41
+\theoremseparator=\toks42
+\theoremprework=\toks43
+\theorempostwork=\toks44
+\theoremsymbol=\toks45
+\qedsymbol=\toks46
+\theoremkeyword=\toks47
+\qedsymbol=\toks48
+\thm@topsep=\skip67
+\thm@topsepadd=\skip68
 Package ntheorem Info: Option `thmmarks' loaded on input line 1175.
-\c@endNonectr=\count345
-\c@currNonectr=\count346
-\mysavskip=\skip66
+\c@endNonectr=\count351
+\c@currNonectr=\count352
+\mysavskip=\skip69
 Package ntheorem Info: option `amsmath' handling for `thmmarks' loaded on input line 1175.
-\thm@amstmpdepth=\dimen193
-\tagwidth=\dimen194
+\thm@amstmpdepth=\dimen256
+\tagwidth=\dimen257
 ) (d:/Programok/texlive/2026/texmf-dist/tex/latex/caption/caption.sty
 Package: caption 2023/08/05 v3.6o Customizing captions (AR)
  (d:/Programok/texlive/2026/texmf-dist/tex/latex/caption/caption3.sty
 Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
-\caption@tempdima=\dimen195
-\captionmargin=\dimen196
-\caption@leftmargin=\dimen197
-\caption@rightmargin=\dimen198
-\caption@width=\dimen199
-\caption@indent=\dimen256
-\caption@parindent=\dimen257
-\caption@hangindent=\dimen258
+\caption@tempdima=\dimen258
+\captionmargin=\dimen259
+\caption@leftmargin=\dimen260
+\caption@rightmargin=\dimen261
+\caption@width=\dimen262
+\caption@indent=\dimen263
+\caption@parindent=\dimen264
+\caption@hangindent=\dimen265
 Package caption Info: Standard document class detected.
 Package caption Info: hungarian babel package is loaded.
 )
-\c@caption@flags=\count347
-\c@continuedfloat=\count348
+\c@caption@flags=\count353
+\c@continuedfloat=\count354
 Package caption Info: hungarian babel package is loaded.
 Package caption Info: float package is loaded.
 Package caption Info: hyperref package is loaded.
 Package caption Info: listings package is loaded.
 ) (d:/Programok/texlive/2026/texmf-dist/tex/latex/natbib/natbib.sty
 Package: natbib 2010/09/13 8.31b (PWD, AO)
-\bibhang=\skip67
-\bibsep=\skip68
+\bibhang=\skip70
+\bibsep=\skip71
 LaTeX Info: Redefining \cite on input line 694.
-\c@NAT@ctr=\count349
+\c@NAT@ctr=\count355
 )) (d:/Programok/texlive/2026/texmf-dist/tex/latex/tools/xspace.sty
 Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
 ) (./include/thesis-en.tex) (./include/preamble.tex
-Package hyperref Info: Option `unicode' set `true' on input line 39.
-Package hyperref Info: Option `pdfnewwindow' set `true' on input line 39.
-Package hyperref Info: Option `colorlinks' set `true' on input line 39.
-\c@currexamplectr=\count350
-\c@endexamplectr=\count351
-\c@example=\count352
-\c@currdefinitionctr=\count353
-\c@enddefinitionctr=\count354
-\c@definition=\count355
-\c@currtheoremctr=\count356
-\c@endtheoremctr=\count357
-\c@theorem=\count358
+Package hyperref Info: Option `unicode' set `true' on input line 62.
+Package hyperref Info: Option `pdfnewwindow' set `true' on input line 62.
+Package hyperref Info: Option `colorlinks' set `true' on input line 62.
+\c@currexamplectr=\count356
+\c@endexamplectr=\count357
+\c@example=\count358
+\c@currdefinitionctr=\count359
+\c@enddefinitionctr=\count360
+\c@definition=\count361
+\c@currtheoremctr=\count362
+\c@endtheoremctr=\count363
+\c@theorem=\count364
 ) (./thesis.aux (./include/titlepage.aux) (./include/declaration_EN.aux) (./content/abstract.aux) (./content/introduction.aux) (./content/background.aux) (./content/related-work.aux) (./content/algorithms.aux) (./content/methodology.aux) (./content/experiments.aux) (./content/discussion.aux) (./content/conclusion.aux) (./content/acknowledgement.aux) (./content/appendices.aux))
 \openout1 = `thesis.aux'.
 
@@ -720,12 +753,21 @@ LaTeX Warning: Please use \usepackage[latin2]{inputenc}
                or \usepackage[utf8]{inputenc}
                with \usepackage[magyar]{babel}.
 
+(d:/Programok/texlive/2026/texmf-dist/tex/latex/pdflscape/pdflscape.sty
+Package: pdflscape 2025-06-23 v0.14 Display of landscape pages in PDF
+ (d:/Programok/texlive/2026/texmf-dist/tex/latex/pdflscape/pdflscape-nometadata.sty
+Package: pdflscape-nometadata 2025-06-23 v0.14 Display of landscape pages in PDF (HO)
+ (d:/Programok/texlive/2026/texmf-dist/tex/latex/graphics/lscape.sty
+Package: lscape 2020/05/28 v3.02 Landscape Pages (DPC)
+)
+Package pdflscape Info: Auto-detected driver: dvipdfm (xetex) on input line 98.
+))
 Package hyperref Info: Link coloring ON on input line 31.
-(./thesis.out) (./thesis.out)
+ (./thesis.out) (./thesis.out)
 \@outlinefile=\write3
 \openout3 = `thesis.out'.
 
-\c@lstlisting=\count359
+\c@lstlisting=\count365
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
  (d:/Programok/texlive/2026/texmf-dist/tex/latex/base/report.cls
@@ -734,52 +776,73 @@ LaTeX Info: Redefining \mit on input line 578.
 )
 Package babel Info: 'magyar' activates 'magyar' shorthands.
 (babel)             Reported on input line 31.
+File: include/feladatlap.pdf Graphic file (type pdf)
+<use include/feladatlap.pdf>
+File: include/feladatlap.pdf Graphic file (type pdf)
+<use include/feladatlap.pdf, page 1>
+File: include/feladatlap.pdf Graphic file (type pdf)
+<use include/feladatlap.pdf, page 1>
+File: include/feladatlap.pdf Graphic file (type pdf)
+<use include/feladatlap.pdf, page 1>
+File: include/feladatlap.pdf Graphic file (type pdf)
+<use include/feladatlap.pdf, page 1>
+File: include/feladatlap.pdf Graphic file (type pdf)
+<use include/feladatlap.pdf, page 1>
+ [1
+
+
+
+] [2
+
+]
 \openout2 = `include/titlepage.aux'.
 
  (./include/titlepage.tex
 Package hyperref Info: Option `pageanchor' set `false' on input line 1.
 File: figures/bme_logo.pdf Graphic file (type pdf)
 <use figures/bme_logo.pdf>
-LaTeX Font Info:    Trying to load font information for U+msa on input line 20.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 27.
  (d:/Programok/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 20.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 27.
  (d:/Programok/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [1
+) [3
+
+]
+Package hyperref Info: Option `pageanchor' set `false' on input line 38.
+) [4
+
+
+
+
+] (./thesis.toc [5
+
+] [6])
+\tf@toc=\write4
+\openout4 = `thesis.toc'.
+
+ [7] [8
+
+]
+\openout2 = `include/declaration_EN.aux'.
+
+ (./include/declaration_EN.tex [1
+
+]) [2
+
 
 
 
 ]
-Package hyperref Info: Option `pageanchor' set `false' on input line 30.
-) (./thesis.toc [1
-
-
-
-] [2])
-\tf@toc=\write4
-\openout4 = `thesis.toc'.
-
- [3]
-\openout2 = `include/declaration_EN.aux'.
-
- (./include/declaration_EN.tex
-File: figures/signature.png Graphic file (type bmp)
-<figures/signature.png>
- [1
-
-])
 \openout2 = `content/abstract.aux'.
 
  (./content/abstract.tex [1
 
 
-
-
-
 ]
-\c@romanPage=\count360
+\c@romanPage=\count366
 ) [2
 
 ]
@@ -792,7 +855,11 @@ Chapter 1.
 
 
 
-] [2]) [3]
+
+]
+Underfull \vbox (badness 4595) has occurred while \output is active []
+
+ [2]) [3]
 \openout2 = `content/background.aux'.
 
  (./content/background.tex
@@ -821,19 +888,28 @@ Chapter 4.
 Package hyperref Warning: No autoref name for `algorithm' on input line 51.
 
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 57.
-[11
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [11
 
 
 
 
-] [12]
+]
+Underfull \vbox (badness 1478) has occurred while \output is active []
+
+ [12]
 
 Package hyperref Warning: No autoref name for `algorithm' on input line 136.
 
 
 Package hyperref Warning: No autoref name for `algorithm' on input line 183.
 
-[13]) [14] [15]
+
+Underfull \vbox (badness 2368) has occurred while \output is active []
+
+ [13]) [14] [15]
 \openout2 = `content/methodology.aux'.
 
  (./content/methodology.tex
@@ -882,7 +958,10 @@ Overfull \hbox (6.92471pt too wide) in paragraph at lines 55--63
  [][] 
  []
 
-[20
+
+Underfull \vbox (badness 5563) has occurred while \output is active []
+
+ [20
 
 
 
@@ -908,6 +987,9 @@ File: figures/NodeCountVsFPS/VBD/frame_3.png Graphic file (type bmp)
 <figures/NodeCountVsFPS/VBD/frame_3.png>
 File: figures/NodeCountVsFPS/VBD/frame_4.png Graphic file (type bmp)
 <figures/NodeCountVsFPS/VBD/frame_4.png>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
  [21]
 File: figures/ChainWithHeavyWeight/NewtonMassRatio.png Graphic file (type bmp)
 <figures/ChainWithHeavyWeight/NewtonMassRatio.png>
@@ -915,6 +997,9 @@ File: figures/ChainWithHeavyWeight/XPBDMassRatio.png Graphic file (type bmp)
 <figures/ChainWithHeavyWeight/XPBDMassRatio.png>
 File: figures/ChainWithHeavyWeight/VBDMassRatio.png Graphic file (type bmp)
 <figures/ChainWithHeavyWeight/VBDMassRatio.png>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
  [22]
 File: figures/StiffnessRatioChain/NewtonStiffnessRatio.png Graphic file (type bmp)
 <figures/StiffnessRatioChain/NewtonStiffnessRatio.png>
@@ -995,6 +1080,9 @@ File: figures/EnergyTracking/energy_dissipation_s0_e5.png Graphic file (type bmp
 <figures/EnergyTracking/energy_dissipation_s0_e5.png>
 File: figures/EnergyTracking/energy_dissipation_s0_e10.png Graphic file (type bmp)
 <figures/EnergyTracking/energy_dissipation_s0_e10.png>
+
+Underfull \vbox (badness 5008) has occurred while \output is active []
+
  [24]
 File: figures/IterationIndependence/XPBD_i20_16x16.png Graphic file (type bmp)
 <figures/IterationIndependence/XPBD_i20_16x16.png>
@@ -1012,7 +1100,13 @@ File: figures/IterationIndependence/VBD_i80.png Graphic file (type bmp)
 <figures/IterationIndependence/VBD_i80.png>
 File: figures/IterationIndependence/VBD_i160.png Graphic file (type bmp)
 <figures/IterationIndependence/VBD_i160.png>
- [25] [26]
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [25]
+Underfull \vbox (badness 1584) has occurred while \output is active []
+
+ [26]
 Overfull \hbox (32.0514pt too wide) in paragraph at lines 403--415
  [][] 
  []
@@ -1027,12 +1121,18 @@ Chapter 7.
 
 
 
-] [29]) [30]
+]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [29]) [30]
 \openout2 = `content/conclusion.aux'.
 
  (./content/conclusion.tex
 Chapter 8.
-[31
+
+Underfull \vbox (badness 3199) has occurred while \output is active []
+
+ [31
 
 
 
@@ -1075,7 +1175,10 @@ Underfull \hbox (badness 10000) in paragraph at lines 96--104
  (./content/appendices.tex (./include/AI_nyilatkozat_tablazat_EN.tex [36
 
 
-]) [37
+])
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [37
 
 ] (d:/Programok/texlive/2026/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2025/11/14 1.11b listings language file
@@ -1093,15 +1196,15 @@ LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: A836A460F6F508F85E85395232F07CFF;16705.
+(rerunfilecheck)             Checksum: 2FE7B52F738D40C9F0DF38D6DC6C24F0;16705.
  ) 
 Here is how much of TeX's memory you used:
- 19922 strings out of 469581
- 392370 string characters out of 5461843
- 1793924 words of memory out of 5000000
- 48128 multiletter control sequences out of 15000+600000
+ 20747 strings out of 469581
+ 407055 string characters out of 5461843
+ 1808493 words of memory out of 5000000
+ 48927 multiletter control sequences out of 15000+600000
  642373 words of font info for 125 fonts, out of 8000000 for 9000
  376 hyphenation exceptions out of 8191
- 78i,14n,82p,913b,1948s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 78i,17n,93p,913b,1954s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on thesis.pdf (47 pages).
+Output written on thesis.pdf (52 pages).

@@ -1,8 +1,8 @@
 % !TeX spellcheck = en_US
 % !TeX encoding = UTF-8
 % !TeX program = xelatex
-\documentclass[11pt,a4paper,oneside]{report}             % Single-side
-%\documentclass[11pt,a4paper,twoside,openright]{report}  % Duplex
+%\documentclass[11pt,a4paper,oneside]{report}            % Single-side
+\documentclass[11pt,a4paper,twoside,openany]{report}     % Duplex: mirrored margins; chapters may open on either side
 
 \input{include/packages}
 
@@ -34,24 +34,34 @@
 
 \selectthesislanguage
 
-%Titlepage
+% Front matter (printed one-sided unless noted)
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-\include{include/titlepage}		    % Szakdolgozat/Diplomaterv címlap
+% Task sheet (feladatlap) -- one-sided
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\includepdf[pages=-]{include/feladatlap.pdf}
+\cleardoublepage
 
 
-% Table of Contents
+\include{include/titlepage}		    % Szakdolgozat/Diplomaterv címlap -- one-sided
+\cleardoublepage
+
+
+% Table of Contents -- double-sided
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \tableofcontents\vfill
+\cleardoublepage
 
 
-% Declaration and Abstract
+% Student declaration (one-sided) and abstract (double-sided)
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \include{include/\declaration}
+\cleardoublepage
 \include{content/abstract}
 
 
 % The main part of the thesis
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\cleardoublepage
 \pagenumbering{arabic}
 
 \include{content/introduction}

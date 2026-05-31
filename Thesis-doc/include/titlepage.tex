@@ -2,7 +2,14 @@
 %--------------------------------------------------------------------------------------
 %	The title page
 %--------------------------------------------------------------------------------------
-\begin{titlepage}
+% NOTE: we deliberately avoid the standard `titlepage` environment here. That
+% environment issues \setcounter{page}{1}, which desynchronises the page counter
+% from the physical sheet number and breaks the one-sided / mirrored-margin
+% \cleardoublepage logic used for duplex printing. This manual version reproduces
+% the same appearance without resetting the page counter.
+\begingroup
+\thispagestyle{empty}
+\setlength{\parindent}{0pt}
 \begin{center}
 \includegraphics[width=60mm,keepaspectratio]{figures/bme_logo.pdf}\\
 \vspace{0.3cm}
@@ -24,8 +31,9 @@
 }
 
 \vfill
-{\large \today}
+{\large May 29, 2026}
 \end{center}
-\end{titlepage}
+\clearpage
+\endgroup
 \hypersetup{pageanchor=false}
 

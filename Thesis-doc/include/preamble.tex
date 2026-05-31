@@ -7,7 +7,30 @@
 % (like the ToC, the References, and the Chapter pages)remain in plane style
 
 \pagestyle{plain}
+% \marginsize{left}{right}{top}{bottom}. The 35 mm left value is the binding
+% margin (25 mm text margin + 10 mm binding gutter); the right margin is 25 mm.
+%
+% Mirrored binding margins for double-sided (duplex), left-to-right bound printing:
+% with the `twoside' class option (set in thesis.tex) anysize maps argument 1 to
+% \oddsidemargin and argument 2 to \evensidemargin, so the wide 35 mm binding
+% margin sits on the inner (spine) edge -- on the LEFT of recto/odd pages and on
+% the RIGHT of verso/even pages. (Verified by rendering: recto = 35/25 mm,
+% verso = 25/35 mm.) Set the class back to `oneside' to disable the mirror and
+% get a uniform 35 mm left / 25 mm right on every page.
 \marginsize{35mm}{25mm}{15mm}{15mm}
+
+% The one-sided front-matter pages (task sheet, title page, student declaration)
+% are forced onto a recto with a blank verso by \cleardoublepage in thesis.tex.
+% Make those inserted blank pages completely empty -- no header/footer/page number.
+\makeatletter
+\renewcommand{\cleardoublepage}{%
+  \clearpage
+  \if@twoside
+    \ifodd\c@page\else
+      \hbox{}\thispagestyle{empty}\newpage
+    \fi
+  \fi}
+\makeatother
 
 \setcounter{tocdepth}{3}
 %\sectionfont{\large\upshape\bfseries}
