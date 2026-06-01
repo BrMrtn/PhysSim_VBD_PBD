@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  31 MAY 2026 20:40
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.10)  1 JUN 2026 22:39
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -776,25 +776,6 @@ LaTeX Info: Redefining \mit on input line 578.
 )
 Package babel Info: 'magyar' activates 'magyar' shorthands.
 (babel)             Reported on input line 31.
-File: include/feladatlap.pdf Graphic file (type pdf)
-<use include/feladatlap.pdf>
-File: include/feladatlap.pdf Graphic file (type pdf)
-<use include/feladatlap.pdf, page 1>
-File: include/feladatlap.pdf Graphic file (type pdf)
-<use include/feladatlap.pdf, page 1>
-File: include/feladatlap.pdf Graphic file (type pdf)
-<use include/feladatlap.pdf, page 1>
-File: include/feladatlap.pdf Graphic file (type pdf)
-<use include/feladatlap.pdf, page 1>
-File: include/feladatlap.pdf Graphic file (type pdf)
-<use include/feladatlap.pdf, page 1>
- [1
-
-
-
-] [2
-
-]
 \openout2 = `include/titlepage.aux'.
 
  (./include/titlepage.tex
@@ -808,37 +789,40 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 LaTeX Font Info:    Trying to load font information for U+msb on input line 27.
  (d:/Programok/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [3
+) [1
+
+
+
 
 ]
 Package hyperref Info: Option `pageanchor' set `false' on input line 38.
-) [4
+) (./thesis.toc [2
 
 
 
 
-] (./thesis.toc [5
 
-] [6])
+] [3])
 \tf@toc=\write4
 \openout4 = `thesis.toc'.
 
- [7] [8
-
-]
+ [4]
 \openout2 = `include/declaration_EN.aux'.
 
- (./include/declaration_EN.tex [1
+ (./include/declaration_EN.tex
+File: figures/signature.png Graphic file (type bmp)
+<figures/signature.png>
+ [1
 
-]) [2
 
-
-
-
-]
+])
 \openout2 = `content/abstract.aux'.
 
  (./content/abstract.tex [1
+
+
+
+
 
 
 ]
@@ -1199,12 +1183,12 @@ Package rerunfilecheck Info: File `thesis.out' has not changed.
 (rerunfilecheck)             Checksum: 2FE7B52F738D40C9F0DF38D6DC6C24F0;16705.
  ) 
 Here is how much of TeX's memory you used:
- 20747 strings out of 469581
- 407055 string characters out of 5461843
- 1808493 words of memory out of 5000000
- 48927 multiletter control sequences out of 15000+600000
+ 20744 strings out of 469581
+ 406937 string characters out of 5461843
+ 1808462 words of memory out of 5000000
+ 48925 multiletter control sequences out of 15000+600000
  642373 words of font info for 125 fonts, out of 8000000 for 9000
  376 hyphenation exceptions out of 8191
- 78i,17n,93p,913b,1954s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 78i,14n,93p,913b,1954s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on thesis.pdf (52 pages).
+Output written on thesis.pdf (47 pages).

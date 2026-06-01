@@ -22,15 +22,15 @@
 % The one-sided front-matter pages (task sheet, title page, student declaration)
 % are forced onto a recto with a blank verso by \cleardoublepage in thesis.tex.
 % Make those inserted blank pages completely empty -- no header/footer/page number.
-\makeatletter
-\renewcommand{\cleardoublepage}{%
-  \clearpage
-  \if@twoside
-    \ifodd\c@page\else
-      \hbox{}\thispagestyle{empty}\newpage
-    \fi
-  \fi}
-\makeatother
+%\makeatletter
+%\renewcommand{\cleardoublepage}{%
+%  \clearpage
+%  \if@twoside
+%    \ifodd\c@page\else
+%      \hbox{}\thispagestyle{empty}\newpage
+%    \fi
+%  \fi}
+%\makeatother
 
 \setcounter{tocdepth}{3}
 %\sectionfont{\large\upshape\bfseries}
